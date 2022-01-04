@@ -1,4 +1,4 @@
-package com.lim.assemble.todayassemble.domain.entity;
+package com.lim.assemble.todayassemble.domain.entity.base;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,8 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-@Getter
-@Setter
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
