@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
@@ -19,6 +21,9 @@ public class Events extends BaseEntity {
 
     private String name;
 
+    private String host_email;
+
+    @Lob
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -29,13 +34,23 @@ public class Events extends BaseEntity {
     @JoinColumn(name = "places_id", nullable = false)
     private Places places;
 
-    private Integer members;
-
     private Integer maxMembers;
 
     private Integer likes;
 
     @Enumerated(EnumType.STRING)
     private EventsType eventsType;
+
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<EventsImages> eventsImagesSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Likes> likesSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Tags> tagsSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Zooms> zoomsSet = new HashSet<>();
 
 }

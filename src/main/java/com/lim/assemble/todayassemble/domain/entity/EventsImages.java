@@ -17,6 +17,6 @@ import javax.persistence.*;
 public class EventsImages extends Images {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounts_id")
+    @JoinColumn(name = "events_id")
     private Events events;
 }

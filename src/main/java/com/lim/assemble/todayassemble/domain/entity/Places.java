@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "places")
@@ -23,5 +25,8 @@ public class Places extends BaseEntity {
     private String latitude;
 
     private String longtitude;
+
+    @OneToMany(mappedBy = "places", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Events> eventsSet = new HashSet<>();
 
 }

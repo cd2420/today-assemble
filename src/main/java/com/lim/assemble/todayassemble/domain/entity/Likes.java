@@ -10,8 +10,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users_like_events")
-@Getter @Builder
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Likes extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

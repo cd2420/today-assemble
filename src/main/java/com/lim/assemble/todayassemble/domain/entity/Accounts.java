@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "accounts")
@@ -38,4 +40,16 @@ public class Accounts extends BaseEntity {
     private Boolean emailVerified;
 
     private String emailCheckToken;
+
+    @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Events> eventsSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Email> emailSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Likes> likesSet = new HashSet<>();
+
+    @OneToOne(mappedBy = "accounts")
+    private AccountsImages accountsImagesSet;
 }
