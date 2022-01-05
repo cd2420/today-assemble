@@ -51,5 +51,5 @@ public class Accounts extends BaseEntity {
     private Set<Likes> likesSet = new HashSet<>();
 
     @OneToOne(mappedBy = "accounts")
-    private AccountsImages accountsImagesSet;
+    private AccountsImages accountsImages;
 }
