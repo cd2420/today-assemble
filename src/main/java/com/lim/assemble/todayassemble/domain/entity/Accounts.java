@@ -50,6 +50,6 @@ public class Accounts extends BaseEntity {
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Likes> likesSet = new HashSet<>();
 
-    @OneToOne(mappedBy = "accounts")
+    @OneToOne(mappedBy = "accounts", fetch = FetchType.LAZY)
     private AccountsImages accountsImages;
 }

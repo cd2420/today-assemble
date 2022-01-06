@@ -5,17 +5,14 @@ import com.lim.assemble.todayassemble.type.ImagesType;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "accounts_images")
 @Getter
 public class AccountsImages extends Images {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accounts_id")
     private Accounts accounts;
 
