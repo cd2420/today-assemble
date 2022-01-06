@@ -20,22 +20,11 @@ class AccountsRepositoryTest {
     @Autowired
     private AccountsRepository accountsRepository;
 
-    Accounts basic = Accounts.builder()
-            .name("limdaegeun")
-            .email("asdw@asdw.com")
-            .password("adwdzcxasd")
-            .accountType(AccountsType.CLIENT)
-            .gender(Gender.MALE)
-            .birth(LocalDateTime.now())
-            .age(30)
-            .emailVerified(true)
-            .emailCheckToken("asdwdadwasdw")
-            .build();
-
     @Test
     @DisplayName("기본 - 저장")
     public void givenBasicData_whenSaveRepository_thenReturnsBasicData(){
         //given
+        Accounts basic = (Accounts) EntityFactory.createEntity(Entity_Type.ACCOUNTS);
         accountsRepository.save(basic);
 
         //when

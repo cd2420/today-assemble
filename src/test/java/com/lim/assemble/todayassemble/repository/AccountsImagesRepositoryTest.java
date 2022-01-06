@@ -24,28 +24,13 @@ class AccountsImagesRepositoryTest {
     @Autowired
     private AccountsRepository accountsRepository;
 
-    Accounts basicAccounts = Accounts.builder()
-            .name("limdaegeun")
-            .email("asdw@asdw.com")
-            .password("adwdzcxasd")
-            .accountType(AccountsType.CLIENT)
-            .gender(Gender.MALE)
-            .birth(LocalDateTime.now())
-            .age(30)
-            .emailVerified(true)
-            .emailCheckToken("asdwdadwasdw")
-            .build();
-
-    AccountsImages basicAccountsImage = AccountsImages.builder()
-            .accounts(basicAccounts)
-            .image("path~~~~~~~~")
-            .imagesType(ImagesType.MAIN)
-            .build();
-
     @Test
     @DisplayName("기본 계정 > 기본 계정 이미지 생성")
     void givenBasicData_whenSaveRepository_thenReturnsBasicData() {
         // given
+        AccountsImages basicAccountsImage = (AccountsImages) EntityFactory.createEntity(Entity_Type.ACCOUNTS_IMAGES);
+        Accounts basicAccounts = basicAccountsImage.getAccounts();
+
         accountsRepository.save(basicAccounts);
         accountsImagesRepository.save(basicAccountsImage);
 
