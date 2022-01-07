@@ -29,4 +29,7 @@ public class Places extends BaseEntity {
     @OneToMany(mappedBy = "places", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Events> eventsSet = new HashSet<>();
 
+    @OneToMany(mappedBy = "places", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<PlacesImages> placesImagesSet = new HashSet<>();
+
 }
