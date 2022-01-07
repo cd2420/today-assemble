@@ -1,10 +1,7 @@
 package com.lim.assemble.todayassemble.entity;
 
 import com.lim.assemble.todayassemble.domain.entity.*;
-import com.lim.assemble.todayassemble.type.AccountsType;
-import com.lim.assemble.todayassemble.type.EventsType;
-import com.lim.assemble.todayassemble.type.Gender;
-import com.lim.assemble.todayassemble.type.ImagesType;
+import com.lim.assemble.todayassemble.type.*;
 
 import java.time.LocalDateTime;
 
@@ -20,14 +17,33 @@ public class EntityFactory {
             return createEvents(createAccounts(), createPlaces());
         } else if(entity_type == Entity_Type.PLACES) {
             return createPlaces();
-        } else {
+        } else if(entity_type == Entity_Type.EVENTS_IMAGES) {
             return createEventsImages(
                     createEvents(
                             createAccounts()
                             , createPlaces()
                     )
             );
+        } else if(entity_type == Entity_Type.PLACES_IMAGES) {
+            return createPlacesImages(createPlaces());
+        } else {
+            return createEmail(createAccounts());
         }
+    }
+
+    private static Email createEmail(Accounts accounts) {
+        return Email.builder()
+                .accounts(accounts)
+                .emailType(EmailsType.SIGNUP)
+                .build();
+    }
+
+    private static PlacesImages createPlacesImages(Places places) {
+        return PlacesImages.builder()
+                .imagesType(ImagesType.MAIN)
+                .image("places image path ~~~~~~")
+                .places(places)
+                .build();
     }
 
     private static EventsImages createEventsImages(Events events) {
