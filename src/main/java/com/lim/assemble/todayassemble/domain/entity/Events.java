@@ -30,8 +30,8 @@ public class Events extends BaseEntity {
     @JoinColumn(name = "accounts_id", nullable = false)
     private Accounts accounts;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "places_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "places_id", nullable = true)
     private Places places;
 
     private Integer maxMembers;
