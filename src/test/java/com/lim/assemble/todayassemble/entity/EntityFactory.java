@@ -28,11 +28,34 @@ public class EntityFactory {
             return createPlacesImages(createPlaces());
         } else if(entity_type == Entity_Type.EMAIL) {
             return createEmail(createAccounts());
-        } else {
+        } else if(entity_type == Entity_Type.LIKES) {
             return createLikes(
                     createEvents(createAccounts(), createPlaces())
             );
+        } else if(entity_type == Entity_Type.TAGS) {
+            return createTags(
+                    createEvents(createAccounts(), createPlaces())
+            );
+        } else {
+            return createZooms(
+                    createEvents(createAccounts(), null)
+            );
         }
+    }
+
+    private static Zooms createZooms(Events events) {
+        return Zooms.builder()
+                .events(events)
+                .url("~~~~/~~~/~~~/~~~.com")
+                .status(true)
+                .build();
+    }
+
+    private static Tags createTags(Events events) {
+        return Tags.builder()
+                .events(events)
+                .name("영화")
+                .build();
     }
 
     private static Likes createLikes(Events events) {
@@ -83,7 +106,7 @@ public class EntityFactory {
                 .places(places)
                 .maxMembers(4)
                 .likes(0)
-                .eventsType(EventsType.OFFLINE)
+                .eventsType(places != null ? EventsType.OFFLINE : EventsType.ONLINE)
                 .build();
     }
 
