@@ -1,9 +1,6 @@
-package com.lim.assemble.todayassemble.repository;
+package com.lim.assemble.todayassemble.entity;
 
-import com.lim.assemble.todayassemble.domain.entity.Accounts;
-import com.lim.assemble.todayassemble.domain.entity.AccountsImages;
-import com.lim.assemble.todayassemble.domain.entity.Events;
-import com.lim.assemble.todayassemble.domain.entity.Places;
+import com.lim.assemble.todayassemble.domain.entity.*;
 import com.lim.assemble.todayassemble.type.AccountsType;
 import com.lim.assemble.todayassemble.type.EventsType;
 import com.lim.assemble.todayassemble.type.Gender;
@@ -21,9 +18,24 @@ public class EntityFactory {
             return createAccountsImages(createAccounts());
         } else if(entity_type == Entity_Type.EVENTS) {
             return createEvents(createAccounts(), createPlaces());
-        } else {
+        } else if(entity_type == Entity_Type.PLACES) {
             return createPlaces();
+        } else {
+            return createEventsImages(
+                    createEvents(
+                            createAccounts()
+                            , createPlaces()
+                    )
+            );
         }
+    }
+
+    private static EventsImages createEventsImages(Events events) {
+        return EventsImages.builder()
+                .imagesType(ImagesType.MAIN)
+                .image("events image path ~~~~~~")
+                .events(events)
+                .build();
     }
 
     private static Places createPlaces() {

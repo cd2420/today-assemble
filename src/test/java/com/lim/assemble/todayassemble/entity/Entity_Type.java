@@ -1,4 +1,4 @@
-package com.lim.assemble.todayassemble.repository;
+package com.lim.assemble.todayassemble.entity;
 
 public enum Entity_Type {
     ACCOUNTS,
