@@ -26,9 +26,20 @@ public class EntityFactory {
             );
         } else if(entity_type == Entity_Type.PLACES_IMAGES) {
             return createPlacesImages(createPlaces());
-        } else {
+        } else if(entity_type == Entity_Type.EMAIL) {
             return createEmail(createAccounts());
+        } else {
+            return createLikes(
+                    createEvents(createAccounts(), createPlaces())
+            );
         }
+    }
+
+    private static Likes createLikes(Events events) {
+        return Likes.builder()
+                .accounts(events.getAccounts())
+                .events(events)
+                .build();
     }
 
     private static Email createEmail(Accounts accounts) {
