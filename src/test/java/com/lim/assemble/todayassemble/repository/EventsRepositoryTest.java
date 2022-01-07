@@ -3,6 +3,8 @@ package com.lim.assemble.todayassemble.repository;
 import com.lim.assemble.todayassemble.domain.entity.Accounts;
 import com.lim.assemble.todayassemble.domain.entity.Events;
 import com.lim.assemble.todayassemble.domain.entity.Places;
+import com.lim.assemble.todayassemble.entity.EntityFactory;
+import com.lim.assemble.todayassemble.entity.Entity_Type;
 import com.lim.assemble.todayassemble.type.EventsType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -74,7 +76,6 @@ class EventsRepositoryTest {
     @Transactional
     void givenSeveralEventsAndOneAccounts_whenSaveRepository_thenCheckSettingAccountsEventsAndEvents() {
         //given
-
         Places places = (Places) EntityFactory.createEntity(Entity_Type.PLACES);
         Accounts accounts = (Accounts) EntityFactory.createEntity(Entity_Type.ACCOUNTS);
 
@@ -94,19 +95,18 @@ class EventsRepositoryTest {
             );
         }
 
-
+        // when
         placesRepository.save(places);
         accountsRepository.save(accounts);
         eventsRepository.saveAll(givenEventsList);
 
         entityManager.clear();
 
-        // when
+        // then
         List<Events> eventsList = eventsRepository.findAll();
         List<Places> placesList = placesRepository.findAll();
         List<Accounts> accountsList = accountsRepository.findAll();
 
-        // then
         assertEquals(eventsList.size(), 10);
 
         Iterator<Events> itEvents = accountsList.get(0).getEventsSet().iterator();

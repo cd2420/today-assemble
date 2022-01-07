@@ -2,15 +2,13 @@ package com.lim.assemble.todayassemble.repository;
 
 import com.lim.assemble.todayassemble.domain.entity.Accounts;
 import com.lim.assemble.todayassemble.domain.entity.AccountsImages;
-import com.lim.assemble.todayassemble.type.AccountsType;
-import com.lim.assemble.todayassemble.type.Gender;
-import com.lim.assemble.todayassemble.type.ImagesType;
+import com.lim.assemble.todayassemble.entity.EntityFactory;
+import com.lim.assemble.todayassemble.entity.Entity_Type;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,14 +29,15 @@ class AccountsImagesRepositoryTest {
         AccountsImages basicAccountsImage = (AccountsImages) EntityFactory.createEntity(Entity_Type.ACCOUNTS_IMAGES);
         Accounts basicAccounts = basicAccountsImage.getAccounts();
 
+        // when
         accountsRepository.save(basicAccounts);
         accountsImagesRepository.save(basicAccountsImage);
 
-        // when
+
+        // then
         List<Accounts> accountsList = accountsRepository.findAll();
         List<AccountsImages> accountsImagesList = accountsImagesRepository.findAll();
 
-        // then
         assertTrue(accountsList.size() == 1);
         assertTrue(accountsImagesList.size() == 1);
 
