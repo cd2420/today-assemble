@@ -6,7 +6,7 @@ import com.lim.assemble.todayassemble.places.entity.Places;
 import com.lim.assemble.todayassemble.places.entity.PlacesImages;
 import com.lim.assemble.todayassemble.places.repository.PlacesImagesRepository;
 import com.lim.assemble.todayassemble.places.repository.PlacesRepository;
-import com.lim.assemble.todayassemble.type.ImagesType;
+import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
