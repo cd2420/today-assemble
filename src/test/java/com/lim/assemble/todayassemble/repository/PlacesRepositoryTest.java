@@ -1,8 +1,9 @@
 package com.lim.assemble.todayassemble.repository;
 
-import com.lim.assemble.todayassemble.domain.entity.Places;
+import com.lim.assemble.todayassemble.places.entity.Places;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
+import com.lim.assemble.todayassemble.places.repository.PlacesRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

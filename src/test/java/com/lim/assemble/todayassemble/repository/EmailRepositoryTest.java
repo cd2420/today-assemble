@@ -1,7 +1,9 @@
 package com.lim.assemble.todayassemble.repository;
 
-import com.lim.assemble.todayassemble.domain.entity.Accounts;
-import com.lim.assemble.todayassemble.domain.entity.Email;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
+import com.lim.assemble.todayassemble.email.entity.Email;
+import com.lim.assemble.todayassemble.email.repository.EmailRepository;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,16 @@
 package com.lim.assemble.todayassemble.entity;
 
-import com.lim.assemble.todayassemble.domain.entity.*;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
+import com.lim.assemble.todayassemble.email.entity.Email;
+import com.lim.assemble.todayassemble.events.entity.Events;
+import com.lim.assemble.todayassemble.events.entity.EventsImages;
+import com.lim.assemble.todayassemble.likes.entity.Likes;
+import com.lim.assemble.todayassemble.places.entity.Places;
+import com.lim.assemble.todayassemble.places.entity.PlacesImages;
+import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.type.*;
+import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 
 import java.time.LocalDateTime;
 

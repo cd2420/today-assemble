@@ -1,8 +1,13 @@
 package com.lim.assemble.todayassemble.repository;
 
-import com.lim.assemble.todayassemble.domain.entity.*;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
+import com.lim.assemble.todayassemble.events.entity.Events;
+import com.lim.assemble.todayassemble.events.repository.EventsRepository;
+import com.lim.assemble.todayassemble.zooms.entity.Zooms;
+import com.lim.assemble.todayassemble.zooms.repository.ZoomsRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

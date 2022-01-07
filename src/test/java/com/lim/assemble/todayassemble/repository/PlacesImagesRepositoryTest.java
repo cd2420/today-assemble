@@ -1,8 +1,11 @@
 package com.lim.assemble.todayassemble.repository;
 
-import com.lim.assemble.todayassemble.domain.entity.*;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
+import com.lim.assemble.todayassemble.places.entity.Places;
+import com.lim.assemble.todayassemble.places.entity.PlacesImages;
+import com.lim.assemble.todayassemble.places.repository.PlacesImagesRepository;
+import com.lim.assemble.todayassemble.places.repository.PlacesRepository;
 import com.lim.assemble.todayassemble.type.ImagesType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
