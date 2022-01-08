@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -22,7 +23,7 @@ public class AccountsCUController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
-            @RequestBody CreateAccountReq createAccountReq
+            @RequestBody @Valid CreateAccountReq createAccountReq
             , HttpServletRequest request
     ) {
         log.info("api : {}, data : {}" , request.getRequestURI(), createAccountReq);
@@ -32,7 +33,7 @@ public class AccountsCUController {
 
     @PostMapping("/login")
     public ResponseEntity<AccountsDto> logIn(
-            @RequestBody LoginAccountReq loginAccountReq
+            @RequestBody @Valid LoginAccountReq loginAccountReq
             , HttpServletRequest request
     ) {
         log.info("api : {}, data : {}" , request.getRequestURI(), loginAccountReq);
@@ -43,7 +44,7 @@ public class AccountsCUController {
     @PostMapping("/{eventId}/events")
     public ResponseEntity<Void> accountLikesEvent(
             @PathVariable Long eventId
-            , @RequestBody AccountsDto accountsDto
+            , @RequestBody @Valid AccountsDto accountsDto
             , HttpServletRequest request
     ) {
         log.info("api : {}, data : {}, eventId: {}" , request.getRequestURI(), accountsDto, eventId);
@@ -54,7 +55,7 @@ public class AccountsCUController {
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountsDto> updateAccount(
             @PathVariable Long accountId
-            , @RequestBody EditAccountsReq editAccountsReq
+            , @RequestBody @Valid EditAccountsReq editAccountsReq
             , HttpServletRequest request
     ) {
         log.info("api : {}, data : {}, accountId : {}"

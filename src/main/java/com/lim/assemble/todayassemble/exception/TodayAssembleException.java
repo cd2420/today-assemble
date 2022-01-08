@@ -12,4 +12,9 @@ public class TodayAssembleException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
+    public TodayAssembleException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
+    }
+
 }
