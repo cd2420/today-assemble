@@ -6,7 +6,7 @@ import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.places.entity.Places;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
-import com.lim.assemble.todayassemble.type.EventsType;
+import com.lim.assemble.todayassemble.common.type.EventsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

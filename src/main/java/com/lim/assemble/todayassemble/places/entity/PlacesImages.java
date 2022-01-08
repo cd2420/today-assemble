@@ -1,7 +1,7 @@
 package com.lim.assemble.todayassemble.places.entity;
 
 import com.lim.assemble.todayassemble.common.entity.Images;
-import com.lim.assemble.todayassemble.type.ImagesType;
+import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.Builder;
 import lombok.Getter;
 

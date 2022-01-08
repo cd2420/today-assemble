@@ -2,7 +2,7 @@ package com.lim.assemble.todayassemble.email.entity;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
-import com.lim.assemble.todayassemble.type.EmailsType;
+import com.lim.assemble.todayassemble.common.type.EmailsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
