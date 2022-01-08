@@ -6,28 +6,36 @@ import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
 import com.lim.assemble.todayassemble.accounts.dto.LoginAccountReq;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
+@Slf4j
 public class AccountsCUController {
 
     private final AccountsService accountsService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
-            CreateAccountReq createAccountReq
+            @RequestBody CreateAccountReq createAccountReq
+            , HttpServletRequest request
     ) {
+        log.info("api : {}, data : {}" , request.getRequestURI(), createAccountReq);
         AccountsDto accountsDto = accountsService.signUp(createAccountReq);
         return ResponseEntity.ok(accountsDto);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AccountsDto> logIn(
-            LoginAccountReq loginAccountReq
+            @RequestBody LoginAccountReq loginAccountReq
+            , HttpServletRequest request
     ) {
+        log.info("api : {}, data : {}" , request.getRequestURI(), loginAccountReq);
         AccountsDto accountsDto = accountsService.logIn(loginAccountReq);
         return ResponseEntity.ok(accountsDto);
     }
@@ -35,8 +43,10 @@ public class AccountsCUController {
     @PostMapping("/{eventId}/events")
     public ResponseEntity<Void> accountLikesEvent(
             @PathVariable Long eventId
-            , AccountsDto accountsDto
+            , @RequestBody AccountsDto accountsDto
+            , HttpServletRequest request
     ) {
+        log.info("api : {}, data : {}, eventId: {}" , request.getRequestURI(), accountsDto, eventId);
         accountsService.accountLikesEvent(eventId, accountsDto);
         return ResponseEntity.ok().build();
     }
@@ -44,8 +54,14 @@ public class AccountsCUController {
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountsDto> updateAccount(
             @PathVariable Long accountId
-            , EditAccountsReq editAccountsReq
+            , @RequestBody EditAccountsReq editAccountsReq
+            , HttpServletRequest request
     ) {
+        log.info("api : {}, data : {}, accountId : {}"
+                , request.getRequestURI()
+                , editAccountsReq
+                , accountId
+        );
         AccountsDto accountsDto = accountsService.updateAccount(accountId, editAccountsReq);
         return ResponseEntity.ok(accountsDto);
     }
@@ -55,7 +71,14 @@ public class AccountsCUController {
             @PathVariable Long accountId
             , @PathVariable Long eventId
             , @RequestParam("response") Boolean response
+            , HttpServletRequest request
     ) {
+        log.info("api : {}, accountId : {}, eventId : {}, response ; {} "
+                , request.getRequestURI()
+                , accountId
+                , eventId
+                , response
+        );
         accountsService.responseInvite(
                 accountId
                 , eventId
