@@ -4,9 +4,11 @@ import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
+import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +27,7 @@ public class AccountsServiceImpl implements AccountsService {
 
     private final AccountsRepository accountsRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ValidationFactory validationFactory;
 
 
     @Override
@@ -65,7 +68,17 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     @Transactional
     public AccountsDto signUp(CreateAccountReq createAccountReq) {
-        return null;
+        // email 중복체크
+        validationFactory
+                .createValidation(ValidateType.SIGNUP)
+                .validate(createAccountReq);
+
+        // accounts 저장
+        return AccountsDto.from(
+                accountsRepository.save(
+                    Accounts.from(createAccountReq)
+                )
+        );
     }
 
     @Override
@@ -73,6 +86,8 @@ public class AccountsServiceImpl implements AccountsService {
     public AccountsDto logIn(LoginAccountReq loginAccountReq) {
         return null;
     }
+
+
 
     @Override
     @Transactional
