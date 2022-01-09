@@ -1,5 +1,7 @@
 package com.lim.assemble.todayassemble.accounts.entity;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
+import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
@@ -55,6 +57,17 @@ public class Accounts extends BaseEntity {
 
     @OneToOne(mappedBy = "accounts", fetch = FetchType.LAZY)
     private AccountsImages accountsImages;
+
+    public static Accounts from(CreateAccountReq createAccountReq) {
+        return Accounts.builder()
+                .name(createAccountReq.getName())
+                .email(createAccountReq.getEmail())
+                .password(createAccountReq.getPassword())
+                .gender(createAccountReq.getGender())
+                .birth(createAccountReq.getBirth())
+                .age(createAccountReq.getAge())
+                .build();
+    }
 
     @PrePersist
     public void prePersist() {

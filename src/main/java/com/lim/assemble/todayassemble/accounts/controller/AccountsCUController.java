@@ -26,6 +26,7 @@ public class AccountsCUController {
             @RequestBody @Valid CreateAccountReq createAccountReq
             , HttpServletRequest request
     ) {
+        accountsService.passwordEncode(createAccountReq);
         log.info("api : {}, data : {}" , request.getRequestURI(), createAccountReq);
         AccountsDto accountsDto = accountsService.signUp(createAccountReq);
         return ResponseEntity.ok(accountsDto);
@@ -36,6 +37,7 @@ public class AccountsCUController {
             @RequestBody @Valid LoginAccountReq loginAccountReq
             , HttpServletRequest request
     ) {
+        accountsService.passwordEncode(loginAccountReq);
         log.info("api : {}, data : {}" , request.getRequestURI(), loginAccountReq);
         AccountsDto accountsDto = accountsService.logIn(loginAccountReq);
         return ResponseEntity.ok(accountsDto);
