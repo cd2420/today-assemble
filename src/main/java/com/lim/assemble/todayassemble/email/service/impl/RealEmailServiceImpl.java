@@ -75,7 +75,7 @@ public class RealEmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariable(
                 "link"
-                , "/email/check-email-token?token=" + accounts.getEmailCheckToken()
+                , "/api/v1/email/check-email-token?token=" + accounts.getEmailCheckToken()
                         + "&email=" + accounts.getEmail()
         );
         context.setVariable("nickname", accounts.getName());

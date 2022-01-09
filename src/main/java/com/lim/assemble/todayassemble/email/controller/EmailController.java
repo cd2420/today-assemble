@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/email")
+@RequestMapping("/api/v1/email")
 public class EmailController {
 
     private final EmailService emailService;

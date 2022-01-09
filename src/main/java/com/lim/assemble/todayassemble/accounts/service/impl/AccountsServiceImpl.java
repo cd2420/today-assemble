@@ -70,7 +70,7 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     @Transactional
     public AccountsDto signUp(CreateAccountReq createAccountReq) {
-        // email 중복체크
+        // accounts validation check: {이메일 중복체크}
         validationFactory
                 .createValidation(ValidateType.SIGNUP)
                 .validate(createAccountReq);

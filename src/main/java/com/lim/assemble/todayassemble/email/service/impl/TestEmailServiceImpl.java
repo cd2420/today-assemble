@@ -18,6 +18,6 @@ public class TestEmailServiceImpl implements EmailService {
 
     @Override
     public void verify(String email, String token) {
-
+        log.info("verify true email : {}, token: {}", email, token);
     }
 }
