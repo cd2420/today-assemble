@@ -1,5 +1,7 @@
 package com.lim.assemble.todayassemble.accounts.interceptor;
 
+import com.lim.assemble.todayassemble.exception.ErrorCode;
+import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +27,17 @@ public class AccountsInterceptor implements HandlerInterceptor {
             HttpServletRequest request
             , HttpServletResponse response
             , Object handler
-    ) throws Exception {
+    ) {
 
         // request Body 값 추출
-        String body = getRequestBodyWhenRelatedAccounts(request).toString();
-        log.info("$$$$$$$$$$$ requestBody: {}  $$$$$$$$$$$$$$$$$", body);
-        return false;
+        try {
+            String body = getRequestBodyWhenRelatedAccounts(request).toString();
+            log.info("$$$$$$$$$$$ requestBody: {}  $$$$$$$$$$$$$$$$$", body);
+            return true;
+        } catch (Exception e) {
+            throw new TodayAssembleException(ErrorCode.NO_REQUEST_BODY);
+        }
+
     }
 
     private StringBuilder getRequestBodyWhenRelatedAccounts(HttpServletRequest request) throws IOException {
