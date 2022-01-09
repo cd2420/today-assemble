@@ -8,10 +8,7 @@ import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.AccountsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -43,6 +40,7 @@ public class Accounts extends BaseEntity {
 
     private Integer age;
 
+    @Setter
     private Boolean emailVerified;
 
     private String emailCheckToken;

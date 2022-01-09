@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.email.service.impl;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TestEmailServiceImpl implements EmailService {
     @Override
-    public void sendEmail(AccountsDto accountsDto, EmailsType emailsType) {
-        log.info("sent email: {}, type: {}" , accountsDto, emailsType);
+    public void sendEmail(Accounts accounts, EmailsType emailsType) {
+        log.info("sent emailData: {}, type: {}" , accounts, emailsType);
+    }
+
+    @Override
+    public void verify(String email, String token) {
+
     }
 }

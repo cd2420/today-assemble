@@ -76,16 +76,17 @@ public class AccountsServiceImpl implements AccountsService {
                 .validate(createAccountReq);
 
         // accounts 저장
-        AccountsDto accountsDto
-                = AccountsDto.from(
-                        accountsRepository.save(
-                            Accounts.from(createAccountReq)
-                                .generateEmailCheckToken()
-                        )
-                    );
+        Accounts accounts = accountsRepository.save(
+                Accounts.from(createAccountReq)
+                        .generateEmailCheckToken()
+        );
 
         // email 발송
-        emailService.sendEmail(accountsDto, EmailsType.SIGNUP);
+        emailService.sendEmail(accounts, EmailsType.SIGNUP);
+
+        AccountsDto accountsDto
+                = AccountsDto.from(accounts);
+
         return accountsDto;
     }
 
