@@ -1,9 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.service;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
-import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
-import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
-import com.lim.assemble.todayassemble.accounts.dto.LoginAccountReq;
+import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import org.springframework.http.ResponseEntity;
 
@@ -25,4 +22,6 @@ public interface AccountsService {
     AccountsDto updateAccount(Long accountId, EditAccountsReq editAccountsReq);
 
     void responseInvite(Long accountId, Long eventId, Boolean response);
+
+    void passwordEncode(AccountReq accountReq);
 }

@@ -55,4 +55,10 @@ public class Accounts extends BaseEntity {
 
     @OneToOne(mappedBy = "accounts", fetch = FetchType.LAZY)
     private AccountsImages accountsImages;
+
+    @PrePersist
+    public void prePersist() {
+        this.accountType = this.accountType == null ? AccountsType.CLIENT : this.accountType;
+        this.emailVerified = this.emailVerified == null ? false : this.emailVerified;
+    }
 }
