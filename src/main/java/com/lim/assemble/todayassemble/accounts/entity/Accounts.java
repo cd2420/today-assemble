@@ -17,6 +17,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
@@ -46,6 +47,8 @@ public class Accounts extends BaseEntity {
 
     private String emailCheckToken;
 
+    private LocalDateTime emailCheckTokenGeneratedAt;
+
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Events> eventsSet = new HashSet<>();
 
@@ -72,6 +75,12 @@ public class Accounts extends BaseEntity {
     @PrePersist
     public void prePersist() {
         this.accountType = this.accountType == null ? AccountsType.CLIENT : this.accountType;
-        this.emailVerified = this.emailVerified == null ? false : this.emailVerified;
+    }
+
+    public Accounts generateEmailCheckToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckTokenGeneratedAt = LocalDateTime.now();
+        this.emailVerified = false;
+        return this;
     }
 }

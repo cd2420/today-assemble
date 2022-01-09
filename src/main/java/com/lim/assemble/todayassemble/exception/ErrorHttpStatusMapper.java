@@ -11,7 +11,7 @@ public class ErrorHttpStatusMapper {
             case BAD_REQUEST:
                 return HttpStatus.BAD_REQUEST;
             default:
-                return null;
+                return HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
     }

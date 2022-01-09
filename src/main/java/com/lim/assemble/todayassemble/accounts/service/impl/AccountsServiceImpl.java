@@ -4,7 +4,9 @@ import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
+import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
+import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
@@ -28,7 +30,7 @@ public class AccountsServiceImpl implements AccountsService {
     private final AccountsRepository accountsRepository;
     private final PasswordEncoder passwordEncoder;
     private final ValidationFactory validationFactory;
-
+    private final EmailService emailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -74,11 +76,17 @@ public class AccountsServiceImpl implements AccountsService {
                 .validate(createAccountReq);
 
         // accounts 저장
-        return AccountsDto.from(
-                accountsRepository.save(
-                    Accounts.from(createAccountReq)
-                )
-        );
+        AccountsDto accountsDto
+                = AccountsDto.from(
+                        accountsRepository.save(
+                            Accounts.from(createAccountReq)
+                                .generateEmailCheckToken()
+                        )
+                    );
+
+        // email 발송
+        emailService.sendEmail(accountsDto, EmailsType.SIGNUP);
+        return accountsDto;
     }
 
     @Override

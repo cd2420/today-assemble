@@ -33,6 +33,10 @@ public class AccountsDto {
 
     private AccountsImages accountsImages;
 
+    private Boolean emailVerified;
+
+    private String emailCheckToken;
+
     public static AccountsDto from(Accounts accounts) {
         return AccountsDto.builder()
                 .name(accounts.getName())
@@ -43,6 +47,8 @@ public class AccountsDto {
                 .emailSet(accounts.getEmailSet() != null ? accounts.getEmailSet() : new HashSet<Email>())
                 .likesSet(accounts.getLikesSet() != null ? accounts.getLikesSet() : new HashSet<Likes>())
                 .accountsImages(accounts.getAccountsImages())
+                .emailVerified(accounts.getEmailVerified())
+                .emailCheckToken(accounts.getEmailCheckToken())
                 .build();
     }
 }
