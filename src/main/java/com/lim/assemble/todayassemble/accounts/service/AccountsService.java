@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface AccountsService extends UserDetailsService {
+public interface AccountsService {
     List<AccountsDto> getAccountList();
 
     AccountsDto getAccount(Long accountId);

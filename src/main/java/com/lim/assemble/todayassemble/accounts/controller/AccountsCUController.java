@@ -32,17 +32,6 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsDto);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AccountsDto> logIn(
-            @RequestBody @Valid LoginAccountReq loginAccountReq
-            , HttpServletRequest request
-    ) {
-        accountsService.passwordEncode(loginAccountReq);
-        log.info("api : {}, data : {}" , request.getRequestURI(), loginAccountReq);
-        AccountsDto accountsDto = accountsService.logIn(loginAccountReq);
-        return ResponseEntity.ok(accountsDto);
-    }
-
     @PostMapping("/{eventId}/events")
     public ResponseEntity<Void> accountLikesEvent(
             @PathVariable Long eventId
