@@ -19,13 +19,12 @@ public class SignUpValidation implements Validation {
 
 
     @Override
-    public <T> T validate(T target) {
+    public void validate(Object target) {
         CreateAccountReq createAccountReq = (CreateAccountReq) target;
         accountsRepository.findByEmail(createAccountReq.getEmail())
                 .ifPresent(check -> {
                     throw new TodayAssembleException(ErrorCode.ALREADY_EXISTS_USER);
                 });
-        return (T) createAccountReq;
     }
 
     @Override

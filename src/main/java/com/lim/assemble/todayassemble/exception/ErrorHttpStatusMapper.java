@@ -9,6 +9,12 @@ public class ErrorHttpStatusMapper {
 
         switch (errorCode) {
             case BAD_REQUEST:
+            case NO_ACCOUNT:
+            case NO_REQUEST_BODY:
+            case ALREADY_EXISTS_USER:
+            case WRONG_EMAIL_TOKEN:
+            case NOT_MATCH_PASSWORD:
+            case NOT_GET_EMAIL_VERIFIED:
                 return HttpStatus.BAD_REQUEST;
             default:
                 return HttpStatus.INTERNAL_SERVER_ERROR;

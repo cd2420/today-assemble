@@ -4,6 +4,6 @@ import com.lim.assemble.todayassemble.common.type.ValidateType;
 
 public interface Validation {
 
-    <T> T validate(T target);
+    void validate(Object target);
     ValidateType getValidateType();
 }

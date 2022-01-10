@@ -13,6 +13,8 @@ import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +72,7 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     @Transactional
     public AccountsDto signUp(CreateAccountReq createAccountReq) {
-        // accounts validation check: {이메일 중복체크}
+        // createAccountReq validation check: {이메일 중복체크}
         validationFactory
                 .createValidation(ValidateType.SIGNUP)
                 .validate(createAccountReq);
@@ -93,6 +95,10 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     @Transactional
     public AccountsDto logIn(LoginAccountReq loginAccountReq) {
+        // loginAccountReq validation check: {이메일 존재체크, 패스워드 일치체}
+        validationFactory
+                .createValidation(ValidateType.LOGIN)
+                .validate(loginAccountReq);
         return null;
     }
 
@@ -122,5 +128,10 @@ public class AccountsServiceImpl implements AccountsService {
                 passwordEncoder.encode(accountReq.getPassword())
         );
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
     }
 }

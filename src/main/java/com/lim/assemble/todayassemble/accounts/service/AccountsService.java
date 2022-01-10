@@ -3,10 +3,11 @@ package com.lim.assemble.todayassemble.accounts.service;
 import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface AccountsService {
+public interface AccountsService extends UserDetailsService {
     List<AccountsDto> getAccountList();
 
     AccountsDto getAccount(Long accountId);
