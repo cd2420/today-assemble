@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.common.entity.Images;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.Builder;
@@ -14,6 +15,7 @@ public class EventsImages extends Images {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "events_id")
+    @JsonManagedReference
     private Events events;
 
     @Builder

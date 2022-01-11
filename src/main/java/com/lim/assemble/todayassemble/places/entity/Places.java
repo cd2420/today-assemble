@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.places.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import lombok.AllArgsConstructor;
@@ -28,9 +29,11 @@ public class Places extends BaseEntity {
     private String longtitude;
 
     @OneToMany(mappedBy = "places", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Events> eventsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "places", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<PlacesImages> placesImagesSet = new HashSet<>();
 
 }

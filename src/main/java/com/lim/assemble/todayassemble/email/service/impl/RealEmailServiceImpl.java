@@ -21,6 +21,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.internet.MimeMessage;
+import java.util.HashSet;
 
 @Service
 @Slf4j
@@ -39,8 +40,9 @@ public class RealEmailServiceImpl implements EmailService {
     public void sendEmail(Accounts accounts, EmailsType emailsType) {
         switch (emailsType) {
             case SIGNUP:
-                Email email = sendSignUpEmail(accounts);
-                emailRepository.save(email);
+                Email email = emailRepository.save(sendSignUpEmail(accounts));
+                accounts.setEmailSet(new HashSet<>());
+                accounts.getEmailSet().add(email);
                 break;
             default:
                 break;

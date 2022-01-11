@@ -92,18 +92,6 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public AccountsDto logIn(LoginAccountReq loginAccountReq) {
-        // loginAccountReq validation check: {이메일 존재체크, 패스워드 일치체}
-        validationFactory
-                .createValidation(ValidateType.LOGIN)
-                .validate(loginAccountReq);
-        return null;
-    }
-
-
-
-    @Override
-    @Transactional
     public void accountLikesEvent(Long eventId, AccountsDto accountsDto) {
 
     }
