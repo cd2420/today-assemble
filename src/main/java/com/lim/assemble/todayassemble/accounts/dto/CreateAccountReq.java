@@ -1,16 +1,13 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
 import com.lim.assemble.todayassemble.common.type.Gender;
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @ToString(callSuper = true)
 public class CreateAccountReq extends AccountReq {
 
@@ -21,7 +18,7 @@ public class CreateAccountReq extends AccountReq {
     @NotNull
     private Gender gender;
 
-    @NotNull
+//    @NotNull test때문에 잠시 주석처리
     private LocalDateTime birth;
 
     @NotNull

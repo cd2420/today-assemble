@@ -34,6 +34,10 @@ class AccountsControllerTest {
     @MockBean
     AccountsLoginServiceImpl accountsLoginService;
 
+    /**
+     * 임의 데이터 생성으로 테스트
+     */
+
     @Test
     @DisplayName("[GET] account List")
     void givenTwoAccountsDtoNoEventNoEmailNoLikesNoImage_whenGetAccountListAPI_thenCheckAccountsDto()
@@ -65,6 +69,11 @@ class AccountsControllerTest {
         ;
 
     }
+
+    /**
+     *
+     * todo: 실제 생성된 데이터 가지고 테스트 코드 작성
+     */
 
 
 
