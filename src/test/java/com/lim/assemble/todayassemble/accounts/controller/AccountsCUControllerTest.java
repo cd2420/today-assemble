@@ -60,7 +60,30 @@ class AccountsCUControllerTest {
                 .with(csrf()))
                 .andExpect(status().isOk())
                 ;
+    }
 
+    @Test
+    @DisplayName("[POST] create accounts - 입력값 에러 > 이메일 ")
+    void givenWrongEmailCreateReq_whenSaveAccounts_thenException () throws Exception {
+        // given
+        CreateAccountReq createAccountReq = new CreateAccountReq();
+        createAccountReq.setEmail("check1!gmail.com");
+        createAccountReq.setName("check1");
+        createAccountReq.setPassword("asdfasdf");
+        createAccountReq.setGender(Gender.MALE);
+        createAccountReq.setAge(30);
+//        createAccountReq.setBirth(LocalDateTime.now());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(createAccountReq);
+
+        // when
+        mockMvc.perform(post("/api/v1/accounts/sign-up")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .with(csrf()))
+                .andExpect(status().is4xxClientError())
+        ;
     }
 
 
