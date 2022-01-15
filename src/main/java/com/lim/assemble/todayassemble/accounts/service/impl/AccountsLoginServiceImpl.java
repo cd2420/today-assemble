@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.service.impl;
 
+import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
@@ -26,11 +27,7 @@ public class AccountsLoginServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Accounts accounts = accountsRepository.findByEmail(email)
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
-        return new User(
-                accounts.getEmail()
-                , accounts.getPassword()
-                , Arrays.asList(new SimpleGrantedAuthority(accounts.getAccountType().getType()))
-        );
+        return new UserAccount(accounts);
     }
 
 }
