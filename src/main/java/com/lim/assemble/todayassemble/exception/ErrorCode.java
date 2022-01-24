@@ -15,6 +15,7 @@ public enum ErrorCode {
     , NOT_GET_EMAIL_VERIFIED("이메일 인증을 수락하지 않았습니다.")
 
     , FAIL_TO_SEND_EMAIL("이메일 전송에 실패했습니다.")
+    , FAILED_AUTHENTICATION("인증에 실패했습니다.")
     ;
 
     private final String message;

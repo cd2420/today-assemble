@@ -1,6 +1,15 @@
 package com.lim.assemble.todayassemble.common.type;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Gender {
 
-    MALE, FEMALE;
+    MALE("MALE"),
+    FEMALE("FEMALE")
+    ;
+
+    private final String gender;
 }

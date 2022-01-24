@@ -1,11 +1,8 @@
 package com.lim.assemble.todayassemble.config;
 
-import com.lim.assemble.todayassemble.accounts.filter.AuthenticationFilter;
-import com.lim.assemble.todayassemble.accounts.filter.LoginFilter;
-import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.accounts.service.impl.AccountsLoginServiceImpl;
-import com.lim.assemble.todayassemble.accounts.service.impl.AccountsServiceImpl;
-import com.lim.assemble.todayassemble.common.property.AppProperties;
+import com.lim.assemble.todayassemble.common.filter.AuthenticationFilter;
+import com.lim.assemble.todayassemble.common.filter.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +28,7 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AccountsLoginServiceImpl accountsLoginService;
+    private final AuthenticationService authenticationService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -58,10 +56,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "*").permitAll()
 //                .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new LoginFilter("/login", authenticationManagerBean()),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new AuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        new LoginFilter("/login", authenticationManagerBean())
+                        , UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterBefore(
+                        new AuthenticationFilter(authenticationService)
+                        , UsernamePasswordAuthenticationFilter.class
+                )
+        ;
     }
 
     @Bean

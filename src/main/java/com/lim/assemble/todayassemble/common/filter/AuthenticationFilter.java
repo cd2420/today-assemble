@@ -1,4 +1,4 @@
-package com.lim.assemble.todayassemble.accounts.filter;
+package com.lim.assemble.todayassemble.common.filter;
 
 import com.lim.assemble.todayassemble.config.AuthenticationService;
 import org.springframework.security.core.Authentication;
@@ -13,13 +13,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class AuthenticationFilter extends GenericFilterBean {
+
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationFilter(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
     @Override
     public void doFilter(
             ServletRequest servletRequest
             , ServletResponse servletResponse
             , FilterChain filterChain
     ) throws IOException, ServletException {
-        Authentication authentication = AuthenticationService.getAuthentication((HttpServletRequest) servletRequest);
+        Authentication authentication = authenticationService.getAuthentication((HttpServletRequest) servletRequest);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(servletRequest, servletResponse);
 

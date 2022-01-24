@@ -1,9 +1,8 @@
-package com.lim.assemble.todayassemble.accounts.filter;
+package com.lim.assemble.todayassemble.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsCredentials;
 import com.lim.assemble.todayassemble.config.AuthenticationService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
