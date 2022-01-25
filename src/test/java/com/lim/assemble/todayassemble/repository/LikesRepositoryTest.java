@@ -5,11 +5,9 @@ import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.likes.repository.LikesRepository;
-import com.lim.assemble.todayassemble.places.entity.Places;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
-import com.lim.assemble.todayassemble.places.repository.PlacesRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +33,6 @@ class LikesRepositoryTest {
     private AccountsRepository accountsRepository;
 
     @Autowired
-    private PlacesRepository placesRepository;
-
-    @Autowired
     private EntityManager entityManager;
 
 
@@ -49,11 +44,10 @@ class LikesRepositoryTest {
         Likes likes = (Likes) EntityFactory.createEntity(Entity_Type.LIKES);
         Accounts accounts = likes.getAccounts();
         Events events = likes.getEvents();
-        Places places = events.getPlaces();
+
 
         // when
         accountsRepository.save(accounts);
-        placesRepository.save(places);
         eventsRepository.save(events);
         likesRepository.save(likes);
 

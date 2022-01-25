@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
-import com.lim.assemble.todayassemble.places.entity.Places;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 import com.lim.assemble.todayassemble.common.type.EventsType;
@@ -37,11 +36,6 @@ public class Events extends BaseEntity {
     @JoinColumn(name = "accounts_id", nullable = false)
     @JsonManagedReference
     private Accounts accounts;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "places_id", nullable = true)
-    @JsonManagedReference
-    private Places places;
 
     private Integer maxMembers;
 

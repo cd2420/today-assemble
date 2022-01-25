@@ -4,12 +4,10 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.entity.EventsImages;
-import com.lim.assemble.todayassemble.places.entity.Places;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
 import com.lim.assemble.todayassemble.events.repository.EventsImagesRepository;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
-import com.lim.assemble.todayassemble.places.repository.PlacesRepository;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -39,9 +37,6 @@ class EventsImagesRepositoryTest {
     private AccountsRepository accountsRepository;
 
     @Autowired
-    private PlacesRepository placesRepository;
-
-    @Autowired
     private EntityManager entityManager;
 
     @Test
@@ -52,7 +47,6 @@ class EventsImagesRepositoryTest {
         EventsImages eventsImages = (EventsImages) EntityFactory.createEntity(Entity_Type.EVENTS_IMAGES);
         Events events = eventsImages.getEvents();
         Accounts accounts = events.getAccounts();
-        Places places = events.getPlaces();
 
         List<EventsImages> givenEventsImagesList = new ArrayList<>();
         givenEventsImagesList.add(eventsImages);
@@ -66,7 +60,6 @@ class EventsImagesRepositoryTest {
 
         // when
         accountsRepository.save(accounts);
-        placesRepository.save(places);
         eventsRepository.save(events);
         eventsImagesRepository.saveAll(givenEventsImagesList);
 

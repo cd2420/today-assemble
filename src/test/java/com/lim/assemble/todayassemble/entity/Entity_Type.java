@@ -7,8 +7,6 @@ public enum Entity_Type {
     EVENTS,
     EVENTS_IMAGES,
     LIKES,
-    PLACES,
-    PLACES_IMAGES,
     TAGS,
     ZOOMS;
 }

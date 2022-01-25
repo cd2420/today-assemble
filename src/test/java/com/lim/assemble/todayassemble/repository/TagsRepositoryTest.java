@@ -6,8 +6,6 @@ import com.lim.assemble.todayassemble.entity.EntityFactory;
 import com.lim.assemble.todayassemble.entity.Entity_Type;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
-import com.lim.assemble.todayassemble.places.entity.Places;
-import com.lim.assemble.todayassemble.places.repository.PlacesRepository;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.tags.repository.TagsRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -35,9 +33,6 @@ class TagsRepositoryTest {
     private AccountsRepository accountsRepository;
 
     @Autowired
-    private PlacesRepository placesRepository;
-
-    @Autowired
     private EntityManager entityManager;
 
     @Test
@@ -49,11 +44,9 @@ class TagsRepositoryTest {
         Tags tags = (Tags) EntityFactory.createEntity(Entity_Type.TAGS);
         Events events = tags.getEvents();
         Accounts accounts = events.getAccounts();
-        Places places = events.getPlaces();
 
         // when
         accountsRepository.save(accounts);
-        placesRepository.save(places);
         eventsRepository.save(events);
         tagsRepository.save(tags);
 

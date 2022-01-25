@@ -7,8 +7,6 @@ import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.entity.EventsImages;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
-import com.lim.assemble.todayassemble.places.entity.Places;
-import com.lim.assemble.todayassemble.places.entity.PlacesImages;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 
@@ -23,31 +21,26 @@ public class EntityFactory {
         } else if(entity_type == Entity_Type.ACCOUNTS_IMAGES) {
             return createAccountsImages(createAccounts());
         } else if(entity_type == Entity_Type.EVENTS) {
-            return createEvents(createAccounts(), createPlaces());
-        } else if(entity_type == Entity_Type.PLACES) {
-            return createPlaces();
+            return createEvents(createAccounts());
         } else if(entity_type == Entity_Type.EVENTS_IMAGES) {
             return createEventsImages(
                     createEvents(
                             createAccounts()
-                            , createPlaces()
                     )
             );
-        } else if(entity_type == Entity_Type.PLACES_IMAGES) {
-            return createPlacesImages(createPlaces());
-        } else if(entity_type == Entity_Type.EMAIL) {
+        }  else if(entity_type == Entity_Type.EMAIL) {
             return createEmail(createAccounts());
         } else if(entity_type == Entity_Type.LIKES) {
             return createLikes(
-                    createEvents(createAccounts(), createPlaces())
+                    createEvents(createAccounts())
             );
         } else if(entity_type == Entity_Type.TAGS) {
             return createTags(
-                    createEvents(createAccounts(), createPlaces())
+                    createEvents(createAccounts())
             );
         } else {
             return createZooms(
-                    createEvents(createAccounts(), null)
+                    createEvents(createAccounts())
             );
         }
     }
@@ -81,13 +74,6 @@ public class EntityFactory {
                 .build();
     }
 
-    private static PlacesImages createPlacesImages(Places places) {
-        return PlacesImages.builder()
-                .imagesType(ImagesType.MAIN)
-                .image("places image path ~~~~~~")
-                .places(places)
-                .build();
-    }
 
     private static EventsImages createEventsImages(Events events) {
         return EventsImages.builder()
@@ -97,25 +83,15 @@ public class EntityFactory {
                 .build();
     }
 
-    private static Places createPlaces() {
-        return Places.builder()
-                .name("홍대CGV")
-                .address("서울 ~~ ~~ ~~")
-                .latitude("12312932")
-                .longtitude("112031123")
-                .build();
-    }
-
-    private static Events createEvents(Accounts accounts, Places places) {
+    private static Events createEvents(Accounts accounts) {
         return Events.builder()
                 .name("스파이더맨 보러갈 모임")
                 .host_email(accounts.getEmail())
                 .description("영화 모임~~~~~~~~~~")
                 .accounts(accounts)
-                .places(places)
                 .maxMembers(4)
                 .likes(0)
-                .eventsType(places != null ? EventsType.OFFLINE : EventsType.ONLINE)
+                .eventsType(EventsType.OFFLINE)
                 .build();
     }
 
