@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
+import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
@@ -59,5 +60,30 @@ public class Events extends BaseEntity {
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
     private Set<Zooms> zoomsSet = new HashSet<>();
+
+    public static Events from(CreateEventsReq createEventsReq, Accounts accounts) {
+        return Events.builder()
+                .name(createEventsReq.getName())
+                .host_email(accounts.getEmail())
+                .description(createEventsReq.getDescription())
+                .accounts(accounts)
+                .maxMembers(createEventsReq.getMaxMembers())
+                .likes(0)
+                .eventsType(createEventsReq.getEventsType())
+//                .eventsImagesSet(
+//                        createEventsReq.getEventsImagesSet() == null
+//                                ? new HashSet<>() : createEventsReq.getEventsImagesSet()
+//                )
+//                .tagsSet(
+//                        createEventsReq.getTagsSet() == null
+//                            ? new HashSet<>() : createEventsReq.getTagsSet()
+//                )
+//                .zoomsSet(
+//                        createEventsReq.getZoomsSet() == null
+//                            ? new HashSet<>() : createEventsReq.getZoomsSet()
+//                )
+                .build();
+
+    }
 
 }

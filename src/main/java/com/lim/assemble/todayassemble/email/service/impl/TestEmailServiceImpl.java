@@ -13,11 +13,15 @@ import org.springframework.stereotype.Service;
 public class TestEmailServiceImpl implements EmailService {
     @Override
     public void sendEmail(Accounts accounts, EmailsType emailsType) {
+        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
         log.info("sent emailData: {}, type: {}" , accounts, emailsType);
+        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
     }
 
     @Override
     public void verify(String email, String token) {
+        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
         log.info("verify true email : {}, token: {}", email, token);
+        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
     }
 }
