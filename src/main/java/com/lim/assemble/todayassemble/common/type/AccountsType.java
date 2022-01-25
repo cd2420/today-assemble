@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AccountsType {
 
-    CLIENT("ROLE_CLIENT")
-    , ADMIN("ROLE_ADMIN")
+    CLIENT("CLIENT")
+    , ADMIN("ADMIN")
     ;
 
     private final String type;

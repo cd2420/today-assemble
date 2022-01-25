@@ -3,6 +3,7 @@ package com.lim.assemble.todayassemble.config;
 import com.lim.assemble.todayassemble.accounts.service.impl.AccountsLoginServiceImpl;
 import com.lim.assemble.todayassemble.common.filter.AuthenticationFilter;
 import com.lim.assemble.todayassemble.common.filter.LoginFilter;
+import com.lim.assemble.todayassemble.common.type.AccountsType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST
                         , "/login"
                         , "/api/v1/accounts/sign-up").permitAll()
-                .antMatchers(HttpMethod.GET, "*").permitAll()
+                .antMatchers(HttpMethod.GET
+                        , "*"
+                        , "/api/v1/events").permitAll()
+                .antMatchers(HttpMethod.POST
+                        , "/api/v1/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
 //                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(

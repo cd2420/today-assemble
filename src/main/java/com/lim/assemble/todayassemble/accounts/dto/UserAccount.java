@@ -13,7 +13,16 @@ public class UserAccount extends User {
     private Accounts accounts;
 
     public UserAccount(Accounts accounts) {
-        super(accounts.getEmail(), accounts.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
+
+        super(
+                accounts.getEmail()
+                , accounts.getPassword()
+                , List.of(
+                        new SimpleGrantedAuthority(
+                        "ROLE_" + (accounts.getEmailVerified() ? accounts.getAccountType().getType() : "NOT")
+                        )
+                    )
+                );
         this.accounts = accounts;
     }
 }
