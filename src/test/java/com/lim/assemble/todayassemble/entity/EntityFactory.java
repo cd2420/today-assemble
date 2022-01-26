@@ -86,7 +86,7 @@ public class EntityFactory {
     private static Events createEvents(Accounts accounts) {
         return Events.builder()
                 .name("스파이더맨 보러갈 모임")
-                .host_email(accounts.getEmail())
+                .hostName(accounts.getName())
                 .description("영화 모임~~~~~~~~~~")
                 .accounts(accounts)
                 .maxMembers(4)

@@ -1,7 +1,7 @@
 package com.lim.assemble.todayassemble.events.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.EventsType;
@@ -29,14 +29,14 @@ public class Events extends BaseEntity {
 
     private String name;
 
-    private String host_email;
+    private String hostName;
 
     @Lob
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounts_id", nullable = false)
-    @JsonManagedReference
+    @JsonIgnore
     private Accounts accounts;
 
     private Integer maxMembers;
@@ -78,7 +78,7 @@ public class Events extends BaseEntity {
 
         Events events = Events.builder()
                 .name(createEventsReq.getName())
-                .host_email(accounts.getEmail())
+                .hostName(accounts.getName())
                 .description(createEventsReq.getDescription())
                 .accounts(accounts)
                 .maxMembers(createEventsReq.getMaxMembers())
