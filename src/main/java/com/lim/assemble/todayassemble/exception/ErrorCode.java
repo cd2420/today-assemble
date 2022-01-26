@@ -16,6 +16,8 @@ public enum ErrorCode {
 
     , FAIL_TO_SEND_EMAIL("이메일 전송에 실패했습니다.")
     , FAILED_AUTHENTICATION("인증에 실패했습니다.")
+
+    , DATE_DUPLICATE("날짜가 겹칩니다")
     ;
 
     private final String message;

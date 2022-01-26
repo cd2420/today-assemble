@@ -25,8 +25,10 @@ public class ValidationFactory {
     public Validation createValidation(ValidateType validateType) {
         if (validateType == ValidateType.SIGNUP) {
             return validationMap.get(ValidateType.SIGNUP);
-        } else {
+        } else if (validateType == ValidateType.LOGIN){
             return validationMap.get(ValidateType.LOGIN);
+        } else {
+            return validationMap.get(ValidateType.EVENT);
         }
 
     }

@@ -4,17 +4,18 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
+import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
-import com.lim.assemble.todayassemble.common.type.EventsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +46,16 @@ public class Events extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EventsType eventsType;
 
+    private LocalDateTime eventsTime;
+
+    private Long takeTime;
+
+    private String address;
+
+    private String longitude;
+
+    private String latitude;
+
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
     private Set<EventsImages> eventsImagesSet = new HashSet<>();
@@ -73,6 +84,11 @@ public class Events extends BaseEntity {
                 .maxMembers(createEventsReq.getMaxMembers())
                 .likes(0)
                 .eventsType(createEventsReq.getEventsType())
+                .eventsTime(createEventsReq.getEventsTime())
+                .takeTime(createEventsReq.getTakeTime())
+                .address(createEventsReq.getAddress())
+                .longitude(createEventsReq.getLongitude())
+                .latitude(createEventsReq.getLatitude())
                 .eventsImagesSet(EventsImages.returnImagesSetFrom(createEventsReq))
                 .tagsSet(Tags.returnTagsSetFrom(createEventsReq))
                 .zoomsSet(Zooms.returnZoomsSetFrom(createEventsReq))
