@@ -6,6 +6,7 @@ import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
+import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,16 +78,15 @@ public class AccountsServiceImpl implements AccountsService {
                 .validate(createAccountReq);
 
         // accounts 저장
-        Accounts accounts = accountsRepository.save(
-                Accounts.from(createAccountReq)
-                        .generateEmailCheckToken()
-        );
+        Accounts accounts = Accounts.from(createAccountReq).generateEmailCheckToken();
 
         // email 발송
-        emailService.sendEmail(accounts, EmailsType.SIGNUP);
+        Email email = (Email) emailService.sendEmail(accounts, EmailsType.SIGNUP);
+        accounts.setEmailSet(new HashSet<>());
+        accounts.getEmailSet().add(email);
 
         AccountsDto accountsDto
-                = AccountsDto.from(accounts);
+                = AccountsDto.from(accountsRepository.save(accounts));
 
         return accountsDto;
     }
