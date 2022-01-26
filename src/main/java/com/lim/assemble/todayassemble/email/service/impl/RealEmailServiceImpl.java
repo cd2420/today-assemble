@@ -1,6 +1,5 @@
 package com.lim.assemble.todayassemble.email.service.impl;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.common.property.AppProperties;
@@ -21,7 +20,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.internet.MimeMessage;
-import java.util.HashSet;
 
 @Service
 @Slf4j
@@ -36,16 +34,12 @@ public class RealEmailServiceImpl implements EmailService {
     private final AccountsRepository accountsRepository;
 
     @Override
-    @Transactional
-    public void sendEmail(Accounts accounts, EmailsType emailsType) {
+    public Object sendEmail(Accounts accounts, EmailsType emailsType) {
         switch (emailsType) {
             case SIGNUP:
-                Email email = emailRepository.save(sendSignUpEmail(accounts));
-                accounts.setEmailSet(new HashSet<>());
-                accounts.getEmailSet().add(email);
-                break;
+                return sendSignUpEmail(accounts);
             default:
-                break;
+                return null;
         }
     }
 

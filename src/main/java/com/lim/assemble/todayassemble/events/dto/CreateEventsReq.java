@@ -31,4 +31,6 @@ public class CreateEventsReq {
 
     private Set<ZoomsDto> zoomsSet = new HashSet<>();
 
+    // TODO 장소 데이터
+
 }

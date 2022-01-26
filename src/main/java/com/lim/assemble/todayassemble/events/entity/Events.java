@@ -61,8 +61,11 @@ public class Events extends BaseEntity {
     @JsonBackReference
     private Set<Zooms> zoomsSet = new HashSet<>();
 
+    // TODO 장소 데이터
+
     public static Events from(CreateEventsReq createEventsReq, Accounts accounts) {
-        return Events.builder()
+
+        Events events = Events.builder()
                 .name(createEventsReq.getName())
                 .host_email(accounts.getEmail())
                 .description(createEventsReq.getDescription())
@@ -70,20 +73,21 @@ public class Events extends BaseEntity {
                 .maxMembers(createEventsReq.getMaxMembers())
                 .likes(0)
                 .eventsType(createEventsReq.getEventsType())
-//                .eventsImagesSet(
-//                        createEventsReq.getEventsImagesSet() == null
-//                                ? new HashSet<>() : createEventsReq.getEventsImagesSet()
-//                )
-//                .tagsSet(
-//                        createEventsReq.getTagsSet() == null
-//                            ? new HashSet<>() : createEventsReq.getTagsSet()
-//                )
-//                .zoomsSet(
-//                        createEventsReq.getZoomsSet() == null
-//                            ? new HashSet<>() : createEventsReq.getZoomsSet()
-//                )
+                .eventsImagesSet(EventsImages.returnImagesSetFrom(createEventsReq))
+                .tagsSet(Tags.returnTagsSetFrom(createEventsReq))
+                .zoomsSet(Zooms.returnZoomsSetFrom(createEventsReq))
                 .build();
 
+        events.getEventsImagesSet().stream()
+                .forEach(eventsImages -> eventsImages.setEvents(events));
+
+        events.getTagsSet().stream()
+                .forEach(tags -> tags.setEvents(events));
+
+        events.getZoomsSet().stream()
+                .forEach(zooms -> zooms.setEvents(events));
+
+        return events;
     }
 
 }

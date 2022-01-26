@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TestEmailServiceImpl implements EmailService {
     @Override
-    public void sendEmail(Accounts accounts, EmailsType emailsType) {
+    public Object sendEmail(Accounts accounts, EmailsType emailsType) {
         log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
         log.info("sent emailData: {}, type: {}" , accounts, emailsType);
         log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
+        return null;
     }
 
     @Override

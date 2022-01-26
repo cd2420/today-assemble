@@ -22,6 +22,9 @@ public class EventsServiceImpl implements EventsService {
     @Transactional
     public EventsDto createEvents(CreateEventsReq createEventsReq, Accounts accounts) {
 
+        // TODO createEventsReq validation check : { 호스트가 생성할려는 모임과 시간이 겹치는지 체크 }
+
+        // events 생성
         return EventsDto.from(
                 eventsRepository.save(Events.from(createEventsReq, accounts))
         );
