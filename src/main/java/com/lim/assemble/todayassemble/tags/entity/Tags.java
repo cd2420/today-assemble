@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.tags.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
@@ -23,7 +24,7 @@ public class Tags extends BaseEntity {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY , optional = false)
     @JoinColumn(name = "events_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Events events;
 
     private String name;

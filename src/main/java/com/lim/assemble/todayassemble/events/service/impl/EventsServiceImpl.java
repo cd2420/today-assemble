@@ -7,9 +7,12 @@ import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.events.service.EventsService;
+import com.lim.assemble.todayassemble.exception.ErrorCode;
+import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,22 @@ public class EventsServiceImpl implements EventsService {
     private final ValidationFactory validationFactory;
     private final EventsRepository eventsRepository;
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventsDto> getEventsList(Pageable pageable) {
+        return eventsRepository.findAll(pageable).stream()
+                .map(EventsDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EventsDto getEvents(Long eventId) {
+        return EventsDto.from(
+                eventsRepository.findById(eventId)
+                        .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENT_ID))
+        );
+    }
 
     @Override
     @Transactional
@@ -37,12 +56,5 @@ public class EventsServiceImpl implements EventsService {
         return EventsDto.from(
                 eventsRepository.save(events)
         );
-    }
-
-    @Override
-    public List<EventsDto> getEvents() {
-        return eventsRepository.findAll().stream()
-                .map(EventsDto::from)
-                .collect(Collectors.toList());
     }
 }
