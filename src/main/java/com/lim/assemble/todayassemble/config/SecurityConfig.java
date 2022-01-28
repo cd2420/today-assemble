@@ -51,13 +51,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().and().authorizeRequests()
-                .antMatchers(HttpMethod.POST
-                        , "/login"
-                        , "/api/v1/accounts/sign-up").permitAll()
                 .antMatchers(HttpMethod.GET
                         , "*"
                         , "/api/v1/events").permitAll()
                 .antMatchers(HttpMethod.POST
+                        , "/login"
+                        , "/api/v1/accounts/sign-up").permitAll()
+                .antMatchers(HttpMethod.POST
+                        , "/api/v1/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
+                .antMatchers(HttpMethod.PUT
                         , "/api/v1/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
 //                .anyRequest().authenticated()
                 .and()

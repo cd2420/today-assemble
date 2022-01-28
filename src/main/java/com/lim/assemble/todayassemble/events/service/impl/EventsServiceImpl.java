@@ -4,6 +4,7 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.events.service.EventsService;
@@ -56,5 +57,16 @@ public class EventsServiceImpl implements EventsService {
         return EventsDto.from(
                 eventsRepository.save(events)
         );
+    }
+
+    @Override
+    public EventsDto updateEvents(UpdateEventsReq updateEventsReq, Accounts accounts) {
+        // updateEventsReq validation check : { 호스트가 수정할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크, 호스트가 맞는지 체크}
+        UpdateEventsDto updateEventsDto = new UpdateEventsDto(updateEventsReq, accounts);
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsDto);
+
+        // events 수정
+
+        return null;
     }
 }
