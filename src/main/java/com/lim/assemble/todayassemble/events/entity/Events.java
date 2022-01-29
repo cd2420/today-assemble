@@ -6,13 +6,11 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,7 +19,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "events")
-@Getter
+@Getter @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -106,4 +104,14 @@ public class Events extends BaseEntity {
         return events;
     }
 
+    public void update(UpdateEventsReq updateEventsReq) {
+        this.name = updateEventsReq.getName();
+        this.description = updateEventsReq.getDescription();
+        this.maxMembers = updateEventsReq.getMaxMembers();
+        this.eventsTime = updateEventsReq.getEventsTime();
+        this.takeTime = updateEventsReq.getTakeTime();
+        this.address = updateEventsReq.getAddress();
+        this.longitude = updateEventsReq.getLongitude();
+        this.latitude = updateEventsReq.getLatitude();
+    }
 }

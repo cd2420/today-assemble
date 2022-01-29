@@ -1,7 +1,6 @@
-package com.lim.assemble.todayassemble.events.service.impl;
+package com.lim.assemble.todayassemble.events.dto;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
 import lombok.Data;
 
 @Data

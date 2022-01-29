@@ -19,7 +19,7 @@ public enum ErrorCode {
     , FAILED_AUTHENTICATION("인증에 실패했습니다.")
 
     , DATE_DUPLICATE("날짜가 겹칩니다")
-    , NO_EVENT_ID("잘못된 event 입니다.")
+    , NO_EVENTS_ID("잘못된 event id입니다.")
     ;
 
     private final String message;

@@ -2,10 +2,10 @@ package com.lim.assemble.todayassemble.validation.factory;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsDto;
 import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
-import com.lim.assemble.todayassemble.events.service.impl.UpdateEventsDto;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +42,9 @@ public class EventsValidation implements Validation {
     private void updateValidate(UpdateEventsDto target) {
         UpdateEventsReq updateEventsReq = target.getUpdateEventsReq();
 
+        // events가 존재하는지 체크.
+        checkExistEvents(updateEventsReq);
+
         Events events = Events.from(updateEventsReq, target.getAccounts());
         events.setId(updateEventsReq.getId());
 
@@ -50,6 +53,13 @@ public class EventsValidation implements Validation {
 
         // 해당 event 주인이 본인이 맞는지 체크.
         validateEventsHost(target);
+    }
+
+    private void checkExistEvents(UpdateEventsReq updateEventsReq) {
+        eventsRepository.findById(updateEventsReq.getId())
+                .orElseThrow(() -> {
+                    throw new TodayAssembleException(ErrorCode.NO_EVENTS_ID);
+                });
     }
 
     private void validateEventsHost(UpdateEventsDto target) {
