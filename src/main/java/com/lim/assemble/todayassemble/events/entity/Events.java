@@ -104,6 +104,24 @@ public class Events extends BaseEntity {
         return events;
     }
 
+    public static Events from(UpdateEventsReq updateEventsReq, Accounts accounts) {
+
+        Events events = Events.builder()
+                .name(updateEventsReq.getName())
+                .hostName(accounts.getName())
+                .description(updateEventsReq.getDescription())
+                .accounts(accounts)
+                .maxMembers(updateEventsReq.getMaxMembers())
+                .eventsTime(updateEventsReq.getEventsTime())
+                .takeTime(updateEventsReq.getTakeTime())
+                .address(updateEventsReq.getAddress())
+                .longitude(updateEventsReq.getLongitude())
+                .latitude(updateEventsReq.getLatitude())
+                .build();
+
+        return events;
+    }
+
     public void update(UpdateEventsReq updateEventsReq) {
         this.name = updateEventsReq.getName();
         this.description = updateEventsReq.getDescription();

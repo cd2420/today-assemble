@@ -36,13 +36,10 @@ public class CreateEventsReq {
     @Max(value = 24 , message = "다시 시간을 체크하세요")
     private Long takeTime;
 
-    @NotNull
     private String address;
 
-    @NotNull
     private String longitude;
 
-    @NotNull
     private String latitude;
 
     private Set<EventsImagesDto> eventsImagesSet = new HashSet<>();

@@ -4,6 +4,8 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.UpdateEventsDto;
 import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsTagsDto;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsTagsReq;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
@@ -33,17 +35,29 @@ public class EventsValidation implements Validation {
         if (Events.class.equals(target.getClass())) {
             // 생성 validate
             createValidate((Events) target);
-        } else {
+        } else if (UpdateEventsDto.class.equals(target.getClass())) {
             // 수정 validate
             updateValidate((UpdateEventsDto) target);
+        } else {
+            updateTagsValidate((UpdateEventsTagsDto) target);
         }
     }
 
-    private void updateValidate(UpdateEventsDto target) {
-        UpdateEventsReq updateEventsReq = target.getUpdateEventsReq();
+    private void updateTagsValidate(UpdateEventsTagsDto target) {
+        UpdateEventsTagsReq updateEventsTagsReq = target.getUpdateEventsTagsReq();
 
         // events가 존재하는지 체크.
-        checkExistEvents(updateEventsReq);
+        checkExistEvents(updateEventsTagsReq.getId());
+
+        // 해당 event 주인이 본인이 맞는지 체크.
+        validateEventsHost(target.getAccounts().getId(), target.getUpdateEventsTagsReq().getAccountsId());
+    }
+
+    private void updateValidate(UpdateEventsDto target) {
+        UpdateEventsReq updateEventsReq = (UpdateEventsReq) target.getUpdateEventsReq();
+
+        // events가 존재하는지 체크.
+        checkExistEvents(updateEventsReq.getId());
 
         Events events = Events.from(updateEventsReq, target.getAccounts());
         events.setId(updateEventsReq.getId());
@@ -52,20 +66,18 @@ public class EventsValidation implements Validation {
         validateEventsTime(events);
 
         // 해당 event 주인이 본인이 맞는지 체크.
-        validateEventsHost(target);
+        validateEventsHost(target.getAccounts().getId(), target.getUpdateEventsReq().getAccountsId());
     }
 
-    private void checkExistEvents(UpdateEventsReq updateEventsReq) {
-        eventsRepository.findById(updateEventsReq.getId())
+    private void checkExistEvents(Long eventsId) {
+        eventsRepository.findById(eventsId)
                 .orElseThrow(() -> {
                     throw new TodayAssembleException(ErrorCode.NO_EVENTS_ID);
                 });
     }
 
-    private void validateEventsHost(UpdateEventsDto target) {
+    private void validateEventsHost(Long accountsId, Long eventsAccountsId) {
 
-        Long accountsId = target.getAccounts().getId();
-        Long eventsAccountsId = target.getUpdateEventsReq().getAccountsId();
         if (!accountsId.equals(eventsAccountsId)) {
             throw new TodayAssembleException(ErrorCode.NOT_EQUAL_ACCOUNT);
         }
