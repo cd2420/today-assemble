@@ -54,7 +54,7 @@ public class Events extends BaseEntity {
 
     private String latitude;
 
-    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonBackReference
     private Set<EventsImages> eventsImagesSet = new HashSet<>();
 
