@@ -2,10 +2,7 @@ package com.lim.assemble.todayassemble.validation.factory;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsDto;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsTagsDto;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsTagsReq;
+import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
@@ -39,18 +36,17 @@ public class EventsValidation implements Validation {
             // 수정 validate
             updateValidate((UpdateEventsDto) target);
         } else {
-            updateTagsValidate((UpdateEventsTagsDto) target);
+            updateTagsOrImagesValidate((UpdateEventsReqBase) target);
         }
     }
 
-    private void updateTagsValidate(UpdateEventsTagsDto target) {
-        UpdateEventsTagsReq updateEventsTagsReq = target.getUpdateEventsTagsReq();
+    private void updateTagsOrImagesValidate(UpdateEventsReqBase target) {
 
         // events가 존재하는지 체크.
-        checkExistEvents(updateEventsTagsReq.getId());
+        Events events = checkExistEvents(target.getId());
 
         // 해당 event 주인이 본인이 맞는지 체크.
-        validateEventsHost(target.getAccounts().getId(), target.getUpdateEventsTagsReq().getAccountsId());
+        validateEventsHost(target.getAccountsId(), events.getAccounts().getId());
     }
 
     private void updateValidate(UpdateEventsDto target) {
@@ -69,8 +65,8 @@ public class EventsValidation implements Validation {
         validateEventsHost(target.getAccounts().getId(), target.getUpdateEventsReq().getAccountsId());
     }
 
-    private void checkExistEvents(Long eventsId) {
-        eventsRepository.findById(eventsId)
+    private Events checkExistEvents(Long eventsId) {
+        return eventsRepository.findById(eventsId)
                 .orElseThrow(() -> {
                     throw new TodayAssembleException(ErrorCode.NO_EVENTS_ID);
                 });

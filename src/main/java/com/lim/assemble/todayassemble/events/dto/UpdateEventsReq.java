@@ -9,13 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-public class UpdateEventsReq {
-
-    @NotNull
-    private Long id;
-
-    @NotNull
-    private Long accountsId;
+public class UpdateEventsReq extends UpdateEventsReqBase {
 
     @NotNull
     private String name;

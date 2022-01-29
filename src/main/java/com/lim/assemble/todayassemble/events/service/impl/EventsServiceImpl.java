@@ -4,6 +4,7 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.entity.Events;
+import com.lim.assemble.todayassemble.events.entity.EventsImages;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
@@ -78,8 +79,7 @@ public class EventsServiceImpl implements EventsService {
     public EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsTagsReq, Accounts accounts) {
 
         // updateEventsReq validation check : {호스트가 맞는지 체크}
-        UpdateEventsTagsDto updateEventsTagsDto = new UpdateEventsTagsDto(updateEventsTagsReq, accounts);
-        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsTagsDto);
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsTagsReq);
 
         // evets tag 수정
         Events events = eventsRepository.getById(updateEventsTagsReq.getId());
@@ -91,6 +91,30 @@ public class EventsServiceImpl implements EventsService {
         events.getTagsSet().addAll(
                 updateEventsTagsReq.getTags().stream()
                     .map(tags -> Tags.of(tags, events))
+                    .collect(Collectors.toSet())
+        );
+
+        return EventsDto.from(events);
+    }
+
+    @Override
+    @Transactional
+    public EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq, Accounts accounts) {
+        // updateEventsReq validation check : {호스트가 맞는지 체크}
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsImagesReq);
+
+        // events Images 수정
+        Events events = eventsRepository.getById(updateEventsImagesReq.getId());
+
+        if (events.getEventsImagesSet() != null) {
+            events.getEventsImagesSet().clear();
+        } else {
+            events.setEventsImagesSet(new HashSet<>());
+        }
+
+        events.getEventsImagesSet().addAll(
+                updateEventsImagesReq.getEventsImagesSet().stream()
+                    .map(images -> EventsImages.of(images, events))
                     .collect(Collectors.toSet())
         );
 

@@ -2,10 +2,7 @@ package com.lim.assemble.todayassemble.events.controller;
 
 import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
-import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
-import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsTagsReq;
+import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,5 +63,20 @@ public class EventsCUController {
         );
 
         return ResponseEntity.ok(eventsService.updateEventsTags(updateEventsTagsReq, accounts));
+    }
+
+    @PutMapping("/images")
+    public ResponseEntity<EventsDto> updateEventsImages(
+            @RequestBody @Valid UpdateEventsImagesReq updateEventsImagesReq
+            , @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+    ) {
+
+        log.info("url : {}, data : {}"
+                , request.getRequestURI()
+                , updateEventsImagesReq
+        );
+
+        return ResponseEntity.ok(eventsService.updateEventsImages(updateEventsImagesReq, accounts));
     }
 }
