@@ -2,15 +2,13 @@ package com.lim.assemble.todayassemble.events.service.impl;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
-import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
-import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsDto;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
+import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +69,30 @@ public class EventsServiceImpl implements EventsService {
         // events 수정
         Events events = eventsRepository.getById(updateEventsReq.getId());
         events.update(updateEventsReq);
+
+        return EventsDto.from(events);
+    }
+
+    @Override
+    @Transactional
+    public EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsTagsReq, Accounts accounts) {
+
+        // updateEventsReq validation check : {호스트가 맞는지 체크}
+        UpdateEventsTagsDto updateEventsTagsDto = new UpdateEventsTagsDto(updateEventsTagsReq, accounts);
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsTagsDto);
+
+        // evets tag 수정
+        Events events = eventsRepository.getById(updateEventsTagsReq.getId());
+        if (events.getTagsSet() != null) {
+            events.getTagsSet().clear();
+        } else {
+            events.setTagsSet(new HashSet<>());
+        }
+        events.getTagsSet().addAll(
+                updateEventsTagsReq.getTags().stream()
+                    .map(tags -> Tags.of(tags, events))
+                    .collect(Collectors.toSet())
+        );
 
         return EventsDto.from(events);
     }

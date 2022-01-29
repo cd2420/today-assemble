@@ -35,6 +35,13 @@ public class Tags extends BaseEntity {
                 .build();
     }
 
+    public static Tags of(String tags, Events events) {
+        return Tags.builder()
+                .name(tags)
+                .events(events)
+                .build();
+    }
+
     public static Set<Tags> returnTagsSetFrom(CreateEventsReq createEventsReq) {
         Set<TagsDto> tagsSet = createEventsReq.getTagsSet();
 
