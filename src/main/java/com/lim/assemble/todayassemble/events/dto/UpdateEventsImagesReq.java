@@ -7,5 +7,5 @@ import java.util.Set;
 @Data
 public class UpdateEventsImagesReq extends UpdateEventsReqBase {
 
-    private Set<EventsImagesDto> eventsImagesSet;
+    private Set<EventsImagesDto> images;
 }

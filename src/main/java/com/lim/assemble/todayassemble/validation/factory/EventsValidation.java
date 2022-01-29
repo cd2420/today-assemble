@@ -32,37 +32,33 @@ public class EventsValidation implements Validation {
         if (Events.class.equals(target.getClass())) {
             // 생성 validate
             createValidate((Events) target);
-        } else if (UpdateEventsDto.class.equals(target.getClass())) {
+        } else if (UpdateEventsReq.class.equals(target.getClass())) {
             // 수정 validate
-            updateValidate((UpdateEventsDto) target);
+            updateValidate((UpdateEventsReq) target);
         } else {
-            updateTagsOrImagesValidate((UpdateEventsReqBase) target);
+            // 이미지, 태그, 이벤트 타입 수정시 validate
+            updateTagsOrImagesOrTypeValidate((UpdateEventsReqBase) target);
         }
     }
 
-    private void updateTagsOrImagesValidate(UpdateEventsReqBase target) {
+    private void updateTagsOrImagesOrTypeValidate(UpdateEventsReqBase target) {
 
         // events가 존재하는지 체크.
-        Events events = checkExistEvents(target.getId());
-
         // 해당 event 주인이 본인이 맞는지 체크.
-        validateEventsHost(target.getAccountsId(), events.getAccounts().getId());
+        validateEventsHost(target.getAccountsId(), checkExistEvents(target.getId()).getAccounts().getId());
     }
 
-    private void updateValidate(UpdateEventsDto target) {
-        UpdateEventsReq updateEventsReq = (UpdateEventsReq) target.getUpdateEventsReq();
+    private void updateValidate(UpdateEventsReq updateEventsReq) {
 
-        // events가 존재하는지 체크.
-        checkExistEvents(updateEventsReq.getId());
-
-        Events events = Events.from(updateEventsReq, target.getAccounts());
+        Events events = Events.from(updateEventsReq);
         events.setId(updateEventsReq.getId());
 
         // 기존에 있는 event 시간이랑 겹치는 체크.
         validateEventsTime(events);
 
+        // events가 존재하는지 체크.
         // 해당 event 주인이 본인이 맞는지 체크.
-        validateEventsHost(target.getAccounts().getId(), target.getUpdateEventsReq().getAccountsId());
+        validateEventsHost(updateEventsReq.getAccountsId(), checkExistEvents(updateEventsReq.getId()).getAccounts().getId());
     }
 
     private Events checkExistEvents(Long eventsId) {
