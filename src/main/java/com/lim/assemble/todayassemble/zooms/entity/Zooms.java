@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.zooms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
@@ -23,7 +24,7 @@ public class Zooms extends BaseEntity {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY , optional = false)
     @JoinColumn(name = "events_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Events events;
 
     private String url;
@@ -34,6 +35,14 @@ public class Zooms extends BaseEntity {
         return Zooms.builder()
                 .url(zoomsDto.getUrl())
                 .status(zoomsDto.getStatus())
+                .build();
+    }
+
+    public static Zooms of(ZoomsDto zoomsDto, Events events) {
+        return Zooms.builder()
+                .url(zoomsDto.getUrl())
+                .status(zoomsDto.getStatus())
+                .events(events)
                 .build();
     }
 

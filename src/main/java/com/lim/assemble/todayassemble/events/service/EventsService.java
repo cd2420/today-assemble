@@ -14,9 +14,11 @@ public interface EventsService {
 
     EventsDto createEvents(CreateEventsReq createEventsReq, Accounts accounts);
 
-    EventsDto updateEvents(UpdateEventsReq updateEventsReq, Accounts accounts);
+    EventsDto updateEvents(UpdateEventsReq updateEventsReq);
 
-    EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsReq, Accounts accounts);
+    EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsReq);
 
-    EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq, Accounts accounts);
+    EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq);
+
+    EventsDto updateEventsType(UpdateEventsTypeReq updateEventsTypeReq);
 }

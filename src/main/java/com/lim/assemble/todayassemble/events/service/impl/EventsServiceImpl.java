@@ -1,6 +1,7 @@
 package com.lim.assemble.todayassemble.events.service.impl;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.entity.Events;
@@ -11,6 +12,7 @@ import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
+import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -62,10 +64,9 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional
-    public EventsDto updateEvents(UpdateEventsReq updateEventsReq, Accounts accounts) {
+    public EventsDto updateEvents(UpdateEventsReq updateEventsReq) {
         // updateEventsReq validation check : { 호스트가 수정할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크, 호스트가 맞는지 체크}
-        UpdateEventsDto updateEventsDto = new UpdateEventsDto(updateEventsReq, accounts);
-        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsDto);
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsReq);
 
         // events 수정
         Events events = eventsRepository.getById(updateEventsReq.getId());
@@ -76,9 +77,9 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional
-    public EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsTagsReq, Accounts accounts) {
+    public EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsTagsReq) {
 
-        // updateEventsReq validation check : {호스트가 맞는지 체크}
+        // updateEventsTagsReq validation check : {호스트가 맞는지 체크}
         validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsTagsReq);
 
         // evets tag 수정
@@ -99,8 +100,8 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional
-    public EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq, Accounts accounts) {
-        // updateEventsReq validation check : {호스트가 맞는지 체크}
+    public EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq) {
+        // updateEventsImagesReq validation check : {호스트가 맞는지 체크}
         validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsImagesReq);
 
         // events Images 수정
@@ -113,11 +114,42 @@ public class EventsServiceImpl implements EventsService {
         }
 
         events.getEventsImagesSet().addAll(
-                updateEventsImagesReq.getEventsImagesSet().stream()
+                updateEventsImagesReq.getImages().stream()
                     .map(images -> EventsImages.of(images, events))
                     .collect(Collectors.toSet())
         );
 
         return EventsDto.from(events);
+    }
+
+    @Override
+    @Transactional
+    public EventsDto updateEventsType(UpdateEventsTypeReq updateEventsTypeReq) {
+        // updateEventsTypeReq validation check : {호스트가 맞는지 체크, Type별 주소 값 또는 줌 값 필수 체크}
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsTypeReq);
+
+        // 1.Type 별 코드 수정
+        Events events = eventsRepository.getById(updateEventsTypeReq.getId());
+        events.getZoomsSet().clear();
+        events.setAddress("");
+        events.setLongitude("");
+        events.setLatitude("");
+        events.setEventsType(updateEventsTypeReq.getEventsType());
+        // 1-1. Type이 Offline -> Online 되는 경우
+        if (EventsType.ONLINE.equals(updateEventsTypeReq.getEventsType())) {
+            events.getZoomsSet().addAll(
+                    updateEventsTypeReq.getZooms().stream()
+                        .map(zoomsDto -> Zooms.of(zoomsDto, events))
+                        .collect(Collectors.toSet())
+            );
+        } else {
+            // 1-2. Type이 Online -> Offline 되는 경우
+            events.setAddress(updateEventsTypeReq.getAddress());
+            events.setLongitude(updateEventsTypeReq.getLongitude());
+            events.setLatitude(updateEventsTypeReq.getLatitude());
+        }
+
+        return EventsDto.from(events);
+
     }
 }

@@ -38,7 +38,6 @@ public class EventsCUController {
     @PutMapping("")
     public ResponseEntity<EventsDto> updateEvents(
             @RequestBody @Valid UpdateEventsReq updateEventsReq
-            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -47,13 +46,12 @@ public class EventsCUController {
                 , updateEventsReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEvents(updateEventsReq, accounts));
+        return ResponseEntity.ok(eventsService.updateEvents(updateEventsReq));
     }
 
     @PutMapping("/tags")
     public ResponseEntity<EventsDto> updateEventsTags(
             @RequestBody @Valid UpdateEventsTagsReq updateEventsTagsReq
-            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -62,13 +60,12 @@ public class EventsCUController {
                 , updateEventsTagsReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEventsTags(updateEventsTagsReq, accounts));
+        return ResponseEntity.ok(eventsService.updateEventsTags(updateEventsTagsReq));
     }
 
     @PutMapping("/images")
     public ResponseEntity<EventsDto> updateEventsImages(
             @RequestBody @Valid UpdateEventsImagesReq updateEventsImagesReq
-            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -77,6 +74,20 @@ public class EventsCUController {
                 , updateEventsImagesReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEventsImages(updateEventsImagesReq, accounts));
+        return ResponseEntity.ok(eventsService.updateEventsImages(updateEventsImagesReq));
+    }
+
+    @PutMapping("/eventsType")
+    public ResponseEntity<EventsDto> updateEventsType(
+            @RequestBody @Valid UpdateEventsTypeReq updateEventsTypeReq
+            , HttpServletRequest request
+    ) {
+
+        log.info("url : {}, data : {}"
+                , request.getRequestURI()
+                , updateEventsTypeReq
+        );
+
+        return ResponseEntity.ok(eventsService.updateEventsType(updateEventsTypeReq));
     }
 }

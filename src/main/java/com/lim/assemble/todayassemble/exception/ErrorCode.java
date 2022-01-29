@@ -20,6 +20,8 @@ public enum ErrorCode {
 
     , DATE_DUPLICATE("날짜가 겹칩니다")
     , NO_EVENTS_ID("잘못된 event id입니다.")
+
+    , BAD_REQUEST_ZOOMS("요청된 Zoom 데이터가 잘못 되었습니다.")
     ;
 
     private final String message;
