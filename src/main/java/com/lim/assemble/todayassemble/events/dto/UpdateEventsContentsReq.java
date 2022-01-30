@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-public class UpdateEventsReq extends UpdateEventsReqBase {
+public class UpdateEventsContentsReq extends UpdateEventsReqBase {
 
     @NotNull
     private String name;

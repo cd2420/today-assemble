@@ -64,19 +64,34 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional
-    public EventsDto updateEvents(UpdateEventsReq updateEventsReq) {
+    public EventsDto updateEvents(UpdateEventsReqBase updateEventsReqBase, Accounts accounts) {
+        EventsDto eventsDto = EventsDto.builder().build();
+        updateEventsReqBase.setAccountsId(accounts.getId());
+        // updateEventsReqBase 를 구체화한 객체에 따라 분기
+        if (UpdateEventsContentsReq.class.equals(updateEventsReqBase.getClass())) {
+            eventsDto = updateEventsContents((UpdateEventsContentsReq) updateEventsReqBase);
+        } else if (UpdateEventsTagsReq.class.equals(updateEventsReqBase.getClass())) {
+            eventsDto = updateEventsTags((UpdateEventsTagsReq) updateEventsReqBase);
+        } else if (UpdateEventsImagesReq.class.equals(updateEventsReqBase.getClass())) {
+            eventsDto = updateEventsImages((UpdateEventsImagesReq) updateEventsReqBase);
+        } else if (UpdateEventsTypeReq.class.equals(updateEventsReqBase.getClass())) {
+            eventsDto = updateEventsType((UpdateEventsTypeReq) updateEventsReqBase);
+        }
+
+        return eventsDto;
+    }
+
+    public EventsDto updateEventsContents(UpdateEventsContentsReq updateEventsContentsReq) {
         // updateEventsReq validation check : { 호스트가 수정할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크, 호스트가 맞는지 체크}
-        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsReq);
+        validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsContentsReq);
 
         // events 수정
-        Events events = eventsRepository.getById(updateEventsReq.getId());
-        events.update(updateEventsReq);
+        Events events = eventsRepository.getById(updateEventsContentsReq.getId());
+        events.update(updateEventsContentsReq);
 
         return EventsDto.from(events);
     }
 
-    @Override
-    @Transactional
     public EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsTagsReq) {
 
         // updateEventsTagsReq validation check : {호스트가 맞는지 체크}
@@ -98,8 +113,6 @@ public class EventsServiceImpl implements EventsService {
         return EventsDto.from(events);
     }
 
-    @Override
-    @Transactional
     public EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq) {
         // updateEventsImagesReq validation check : {호스트가 맞는지 체크}
         validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsImagesReq);
@@ -122,8 +135,6 @@ public class EventsServiceImpl implements EventsService {
         return EventsDto.from(events);
     }
 
-    @Override
-    @Transactional
     public EventsDto updateEventsType(UpdateEventsTypeReq updateEventsTypeReq) {
         // updateEventsTypeReq validation check : {호스트가 맞는지 체크, Type별 주소 값 또는 줌 값 필수 체크}
         validationFactory.createValidation(ValidateType.EVENT).validate(updateEventsTypeReq);

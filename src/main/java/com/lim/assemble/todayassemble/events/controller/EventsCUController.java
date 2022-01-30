@@ -37,21 +37,23 @@ public class EventsCUController {
 
     @PutMapping("")
     public ResponseEntity<EventsDto> updateEvents(
-            @RequestBody @Valid UpdateEventsReq updateEventsReq
+            @RequestBody @Valid UpdateEventsContentsReq updateEventsContentsReq
+            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
         log.info("url : {}, data : {}"
                 , request.getRequestURI()
-                , updateEventsReq
+                , updateEventsContentsReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEvents(updateEventsReq));
+        return ResponseEntity.ok(eventsService.updateEvents(updateEventsContentsReq, accounts));
     }
 
     @PutMapping("/tags")
     public ResponseEntity<EventsDto> updateEventsTags(
             @RequestBody @Valid UpdateEventsTagsReq updateEventsTagsReq
+            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -60,12 +62,13 @@ public class EventsCUController {
                 , updateEventsTagsReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEventsTags(updateEventsTagsReq));
+        return ResponseEntity.ok(eventsService.updateEvents(updateEventsTagsReq, accounts));
     }
 
     @PutMapping("/images")
     public ResponseEntity<EventsDto> updateEventsImages(
             @RequestBody @Valid UpdateEventsImagesReq updateEventsImagesReq
+            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -74,12 +77,13 @@ public class EventsCUController {
                 , updateEventsImagesReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEventsImages(updateEventsImagesReq));
+        return ResponseEntity.ok(eventsService.updateEvents(updateEventsImagesReq, accounts));
     }
 
     @PutMapping("/eventsType")
     public ResponseEntity<EventsDto> updateEventsType(
             @RequestBody @Valid UpdateEventsTypeReq updateEventsTypeReq
+            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -88,6 +92,8 @@ public class EventsCUController {
                 , updateEventsTypeReq
         );
 
-        return ResponseEntity.ok(eventsService.updateEventsType(updateEventsTypeReq));
+        return ResponseEntity.ok(eventsService.updateEvents(updateEventsTypeReq, accounts));
     }
+
+//    @DeleteMapping("")
 }

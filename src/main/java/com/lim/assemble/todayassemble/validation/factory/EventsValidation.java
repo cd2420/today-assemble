@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,14 +36,13 @@ public class EventsValidation implements Validation {
         if (Events.class.equals(target.getClass())) {
             // 생성 validate
             createValidate((Events) target);
-        } else if (UpdateEventsReq.class.equals(target.getClass())) {
+        } else if (UpdateEventsContentsReq.class.equals(target.getClass())) {
             // 수정 validate
-            updateValidate((UpdateEventsReq) target);
+            updateValidate((UpdateEventsContentsReq) target);
         } else if (UpdateEventsTypeReq.class.equals(target.getClass())) {
             // 이벤트 타입 수정시 validate
             updateTypeValidate((UpdateEventsTypeReq) target);
-        }
-        else {
+        } else {
             // 이미지, 태그 타입 수정시 validate
             updateTagsOrImagesValidate((UpdateEventsReqBase) target);
         }
@@ -101,17 +99,21 @@ public class EventsValidation implements Validation {
         validateEventsHost(target.getAccountsId(), checkExistEvents(target.getId()).getAccounts().getId());
     }
 
-    private void updateValidate(UpdateEventsReq updateEventsReq) {
+    private void updateValidate(UpdateEventsContentsReq updateEventsContentsReq) {
 
-        Events events = Events.from(updateEventsReq);
-        events.setId(updateEventsReq.getId());
-
-        // 기존에 있는 event 시간이랑 겹치는 체크.
-        validateEventsTime(events);
+        Events events = Events.from(updateEventsContentsReq);
+        events.setId(updateEventsContentsReq.getId());
 
         // events가 존재하는지 체크.
         // 해당 event 주인이 본인이 맞는지 체크.
-        validateEventsHost(updateEventsReq.getAccountsId(), checkExistEvents(updateEventsReq.getId()).getAccounts().getId());
+        Events existEvents = checkExistEvents(updateEventsContentsReq.getId());
+        Accounts eventsAccounts = existEvents.getAccounts();
+
+        validateEventsHost(updateEventsContentsReq.getAccountsId(), eventsAccounts.getId());
+
+        // 기존에 있는 event 시간이랑 겹치는 체크.
+        events.setAccounts(eventsAccounts);
+        validateEventsTime(events);
     }
 
     private Events checkExistEvents(Long eventsId) {

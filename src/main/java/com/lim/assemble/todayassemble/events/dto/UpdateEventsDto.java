@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 public class UpdateEventsDto {
 
-    private UpdateEventsReq updateEventsReq;
+    private UpdateEventsContentsReq updateEventsContentsReq;
 
     private Accounts accounts;
 
-    public UpdateEventsDto(UpdateEventsReq updateEventsReq, Accounts accounts) {
-        this.updateEventsReq = updateEventsReq;
+    public UpdateEventsDto(UpdateEventsContentsReq updateEventsContentsReq, Accounts accounts) {
+        this.updateEventsContentsReq = updateEventsContentsReq;
         this.accounts = accounts;
     }
 }

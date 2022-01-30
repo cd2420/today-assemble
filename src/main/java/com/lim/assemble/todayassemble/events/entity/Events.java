@@ -6,7 +6,7 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
-import com.lim.assemble.todayassemble.events.dto.UpdateEventsReq;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsContentsReq;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.zooms.entity.Zooms;
@@ -104,24 +104,24 @@ public class Events extends BaseEntity {
         return events;
     }
 
-    public static Events from(UpdateEventsReq updateEventsReq) {
+    public static Events from(UpdateEventsContentsReq updateEventsContentsReq) {
 
         Events events = Events.builder()
-                .eventsTime(updateEventsReq.getEventsTime())
-                .takeTime(updateEventsReq.getTakeTime())
+                .eventsTime(updateEventsContentsReq.getEventsTime())
+                .takeTime(updateEventsContentsReq.getTakeTime())
                 .build();
 
         return events;
     }
 
-    public void update(UpdateEventsReq updateEventsReq) {
-        this.name = updateEventsReq.getName();
-        this.description = updateEventsReq.getDescription();
-        this.maxMembers = updateEventsReq.getMaxMembers();
-        this.eventsTime = updateEventsReq.getEventsTime();
-        this.takeTime = updateEventsReq.getTakeTime();
-        this.address = updateEventsReq.getAddress();
-        this.longitude = updateEventsReq.getLongitude();
-        this.latitude = updateEventsReq.getLatitude();
+    public void update(UpdateEventsContentsReq updateEventsContentsReq) {
+        this.name = updateEventsContentsReq.getName();
+        this.description = updateEventsContentsReq.getDescription();
+        this.maxMembers = updateEventsContentsReq.getMaxMembers();
+        this.eventsTime = updateEventsContentsReq.getEventsTime();
+        this.takeTime = updateEventsContentsReq.getTakeTime();
+        this.address = updateEventsContentsReq.getAddress();
+        this.longitude = updateEventsContentsReq.getLongitude();
+        this.latitude = updateEventsContentsReq.getLatitude();
     }
 }

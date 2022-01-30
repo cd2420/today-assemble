@@ -10,6 +10,6 @@ public class UpdateEventsReqBase {
     @NotNull
     private Long id;
 
-    @NotNull
     private Long accountsId;
+
 }
