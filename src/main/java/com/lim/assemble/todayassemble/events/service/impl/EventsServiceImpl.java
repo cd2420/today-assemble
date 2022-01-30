@@ -163,4 +163,18 @@ public class EventsServiceImpl implements EventsService {
         return EventsDto.from(events);
 
     }
+
+
+    @Override
+    @Transactional
+    public void deleteEvents(Long eventsId, Accounts accounts) {
+        // deleteEventsDto validation check : {호스트가 맞는지 체크}
+        DeleteEventsDto deleteEventsDto = new DeleteEventsDto();
+        deleteEventsDto.setId(eventsId);
+        deleteEventsDto.setAccountsId(accounts.getId());
+        validationFactory.createValidation(ValidateType.EVENT).validate(deleteEventsDto);
+
+        // event 삭제
+        eventsRepository.deleteById(eventsId);
+    }
 }

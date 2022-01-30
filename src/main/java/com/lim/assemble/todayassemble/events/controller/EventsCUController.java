@@ -95,5 +95,17 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsTypeReq, accounts));
     }
 
-//    @DeleteMapping("")
+    @DeleteMapping("{eventsId}")
+    public ResponseEntity<Void> deleteEvents(
+            @PathVariable Long eventsId
+            , @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+    ) {
+        log.info("url : {}"
+                , request.getRequestURI()
+        );
+        eventsService.deleteEvents(eventsId, accounts);
+        return ResponseEntity.ok().build();
+
+    }
 }

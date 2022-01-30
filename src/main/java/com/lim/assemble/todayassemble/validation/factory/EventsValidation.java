@@ -43,7 +43,7 @@ public class EventsValidation implements Validation {
             // 이벤트 타입 수정시 validate
             updateTypeValidate((UpdateEventsTypeReq) target);
         } else {
-            // 이미지, 태그 타입 수정시 validate
+            // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
             updateTagsOrImagesValidate((UpdateEventsReqBase) target);
         }
     }

@@ -61,7 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         , "/api/v1/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.PUT
                         , "/api/v1/events/**").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
-//                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.DELETE
+                        , "/api/v1/events/**").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .and()
                 .addFilterBefore(
                         new LoginFilter("/login", authenticationManagerBean())

@@ -16,4 +16,5 @@ public interface EventsService {
 
     EventsDto updateEvents(UpdateEventsReqBase updateEventsReqBase, Accounts accounts);
 
+    void deleteEvents(Long eventsId, Accounts accounts);
 }
