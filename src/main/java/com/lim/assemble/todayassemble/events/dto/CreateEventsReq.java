@@ -3,6 +3,7 @@ package com.lim.assemble.todayassemble.events.dto;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
 import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Lob;
@@ -10,10 +11,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
 public class CreateEventsReq {
 
     @NotNull
@@ -42,12 +43,10 @@ public class CreateEventsReq {
 
     private String latitude;
 
-    private Set<EventsImagesDto> eventsImagesSet = new HashSet<>();
+    private Set<EventsImagesDto> eventsImagesSet;
 
-    private Set<TagsDto> tagsSet = new HashSet<>();
+    private Set<TagsDto> tagsSet;
 
-    private Set<ZoomsDto> zoomsSet = new HashSet<>();
-
-    // TODO 장소 데이터
+    private Set<ZoomsDto> zoomsSet;
 
 }
