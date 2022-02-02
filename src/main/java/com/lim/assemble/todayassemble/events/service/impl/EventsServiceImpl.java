@@ -52,7 +52,10 @@ public class EventsServiceImpl implements EventsService {
     @Transactional
     public EventsDto createEvents(CreateEventsReq createEventsReq, Accounts accounts) {
 
-        // createEventsReq validation check : { 호스트가 생성할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크 }
+        // createEventsReq validation check : {
+        // 호스트가 생성할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크
+        // , eventsType 별 필수 값 체크
+        // }
         Events events = Events.from(createEventsReq, accounts);
         validationFactory.createValidation(ValidateType.EVENT).validate(events);
 

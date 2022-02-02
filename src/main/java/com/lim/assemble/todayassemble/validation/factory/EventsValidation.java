@@ -70,12 +70,12 @@ public class EventsValidation implements Validation {
                     || longitude == null
                     || longitude.isEmpty()
             ) {
-                throw new TodayAssembleException(ErrorCode.BAD_REQUEST);
+                throw new TodayAssembleException("OFFLINE > 주소 값 누락", ErrorCode.BAD_REQUEST);
             }
         } else {
             Set<ZoomsDto> zooms = target.getZooms();
             if (zooms == null || zooms.isEmpty()) {
-                throw new TodayAssembleException(ErrorCode.BAD_REQUEST);
+                throw new TodayAssembleException("ONLINE > ZOOM 값 누락", ErrorCode.BAD_REQUEST);
             } else {
                 chekZoomsValidate(zooms);
             }
@@ -156,7 +156,7 @@ public class EventsValidation implements Validation {
             eventsList.forEach(
                 item -> {
                     if (!checkEventTime(item, target) && !item.getId().equals(target.getId())) {
-                        throw new TodayAssembleException(ErrorCode.DATE_DUPLICATE);
+                        throw new TodayAssembleException(ErrorCode.DATE_OVERLAP);
                     }
                 });
         }

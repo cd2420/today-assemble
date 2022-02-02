@@ -164,6 +164,108 @@ class EventsCUControllerTest {
     }
 
     @Test
+    @DisplayName("[POST] EXCEPTION - make events > overlap time")
+    @WithAccount("임대근")
+    @Transactional
+    void givenCreateEventsReqOverlapTime_whenCreateEventsApi_thenReturnException() throws Exception {
+        // given
+        String jwtToken = getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CreateEventsReq createEventsReq = getCreateEventsReq(
+                EventsType.OFFLINE
+                , null
+                , null
+        );
+        eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        String json = asJsonString(createEventsReq);
+
+        // when
+        // then
+        mockMvc.perform(post("/api/v1/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().is4xxClientError())
+                .andExpect(
+                        result -> assertEquals(
+                                ErrorCode.DATE_OVERLAP.getMessage()
+                                , result.getResolvedException().getMessage()
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("[POST] EXCEPTION - make events > EventsType: OFFLINE > Not exist necessary value")
+    @WithAccount("임대근")
+    @Transactional
+    void givenCreateEventsReqNotHaveAddressValue_whenCreateEventsApi_thenReturnException() throws Exception {
+        // given
+        String jwtToken = getJwtToken();
+        CreateEventsReq createEventsReq = getCreateEventsReq(
+                EventsType.OFFLINE
+                , null
+                , null
+        );
+        createEventsReq.setAddress("");
+        createEventsReq.setLongitude("");
+        createEventsReq.setAddress("");
+        String json = asJsonString(createEventsReq);
+
+        // when
+        // then
+        mockMvc.perform(post("/api/v1/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().is4xxClientError())
+                .andExpect(
+                        result -> assertEquals(
+                                "OFFLINE > 주소 값 누락"
+                                , result.getResolvedException().getMessage()
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("[POST] EXCEPTION - make events > EventsType: ONLINE > Not exist necessary value")
+    @WithAccount("임대근")
+    @Transactional
+    void givenCreateEventsReqNotHaveZoomValue_whenCreateEventsApi_thenReturnException() throws Exception {
+        // given
+        String jwtToken = getJwtToken();
+        CreateEventsReq createEventsReq = getCreateEventsReq(
+                EventsType.ONLINE
+                , null
+                , null
+        );
+        createEventsReq.setZoomsSet(new HashSet<>());
+        String json = asJsonString(createEventsReq);
+
+        // when
+        // then
+        mockMvc.perform(post("/api/v1/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().is4xxClientError())
+                .andExpect(
+                        result -> assertEquals(
+                                "ONLINE > ZOOM 값 누락"
+                                , result.getResolvedException().getMessage()
+                        )
+                );
+    }
+
+    @Test
     @DisplayName("[PUT] update events")
     @WithAccount("임대근")
     @Transactional
@@ -385,10 +487,10 @@ class EventsCUControllerTest {
     }
 
     @Test
-    @DisplayName("[PUT] Exception: 수정할려는 파일과 수정하는 계정이 다를경우 에외 발생")
+    @DisplayName("[PUT] EXCEPTION: update events > not equals host accounts")
     @WithAccount("임대근")
     @Transactional
-    void givenUpdateEventsContentsReq_whenWrongHostAccounts_thenReturnException() throws Exception {
+    void givenUpdateEventsContentsReqNotEqualsHostAccounts_whenWrongHostAccounts_thenReturnException() throws Exception {
         // given
         String jwtToken = getJwtToken();
 
@@ -444,6 +546,32 @@ class EventsCUControllerTest {
                 .with(csrf())
         )
                 .andExpect(status().isOk())
+        ;
+
+    }
+
+    @Test
+    @DisplayName("[DELETE] EXCEPTION: delete events > not equals host accounts")
+    @WithAccount("임대근")
+    @Transactional
+    void givenDeleteEventsIdNotEqualsHostAccounts_whenDeleteEventsAPI_thenReturnStatusOk() throws Exception {
+        // given
+        String jwtToken = getJwtToken();
+
+        Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
+        EventsDto eventsDto = eventsService.getEventsList(pageable).get(0);
+        // when
+        // then
+        mockMvc.perform(delete("/api/v1/events/" + eventsDto.getId())
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().is4xxClientError())
+                .andExpect(result -> assertEquals(
+                        ErrorCode.NOT_EQUAL_ACCOUNT.getMessage()
+                        , result.getResolvedException().getMessage()
+                        )
+                )
         ;
 
     }

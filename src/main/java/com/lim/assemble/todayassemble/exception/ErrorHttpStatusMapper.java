@@ -16,7 +16,7 @@ public class ErrorHttpStatusMapper {
             case WRONG_EMAIL_TOKEN:
             case NOT_MATCH_PASSWORD:
             case NOT_GET_EMAIL_VERIFIED:
-            case DATE_DUPLICATE:
+            case DATE_OVERLAP:
             case NO_EVENTS_ID:
             case BAD_REQUEST_ZOOMS:
                 return HttpStatus.BAD_REQUEST;
