@@ -7,9 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Lob;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -26,7 +24,7 @@ public class CreateEventsReq {
     @NotBlank
     private Integer maxMembers;
 
-    @NotBlank
+    @NotNull
     private EventsType eventsType;
 
     @NotBlank
