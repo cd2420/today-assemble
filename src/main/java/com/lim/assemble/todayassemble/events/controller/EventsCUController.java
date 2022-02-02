@@ -80,7 +80,7 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsImagesReq, accounts));
     }
 
-    @PutMapping("/eventsType")
+    @PutMapping("/type")
     public ResponseEntity<EventsDto> updateEventsType(
             @RequestBody @Valid UpdateEventsTypeReq updateEventsTypeReq
             , @CurrentAccount Accounts accounts

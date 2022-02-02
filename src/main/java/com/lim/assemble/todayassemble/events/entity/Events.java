@@ -120,8 +120,6 @@ public class Events extends BaseEntity {
         this.maxMembers = updateEventsContentsReq.getMaxMembers();
         this.eventsTime = updateEventsContentsReq.getEventsTime();
         this.takeTime = updateEventsContentsReq.getTakeTime();
-        this.address = updateEventsContentsReq.getAddress();
-        this.longitude = updateEventsContentsReq.getLongitude();
-        this.latitude = updateEventsContentsReq.getLatitude();
+
     }
 }

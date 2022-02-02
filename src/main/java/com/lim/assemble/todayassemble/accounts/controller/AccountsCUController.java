@@ -3,7 +3,6 @@ package com.lim.assemble.todayassemble.accounts.controller;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
-import com.lim.assemble.todayassemble.accounts.dto.LoginAccountReq;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

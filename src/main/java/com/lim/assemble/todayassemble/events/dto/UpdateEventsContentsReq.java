@@ -28,11 +28,4 @@ public class UpdateEventsContentsReq extends UpdateEventsReqBase {
     @Max(value = 24 , message = "다시 시간을 체크하세요")
     private Long takeTime;
 
-    private String address;
-
-    private String longitude;
-
-    private String latitude;
-
-
 }

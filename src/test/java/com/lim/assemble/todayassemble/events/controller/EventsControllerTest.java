@@ -34,7 +34,7 @@ class EventsControllerTest {
 
     @Test
     @DisplayName("[GET] Events List")
-    @Transactional
+    @Transactional(readOnly = true)
     void givenPaging_whenGetEventsListApi_thenPrintEventsList() throws Exception {
         // given
 
@@ -54,7 +54,7 @@ class EventsControllerTest {
 
     @Test
     @DisplayName("[GET] Events Detail")
-    @Transactional
+    @Transactional(readOnly = true)
     void givenEventsId_whenGetEventsDetailApi_thenPrintEvents() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
@@ -72,7 +72,7 @@ class EventsControllerTest {
 
     @Test
     @DisplayName("[GET] No Events Exception")
-    @Transactional
+    @Transactional(readOnly = true)
     void givenNoEventsId_whenGetEventsDetailApi_thenException() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
