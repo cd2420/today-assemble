@@ -9,7 +9,7 @@ import lombok.Data;
 import javax.persistence.Lob;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -17,22 +17,22 @@ import java.util.Set;
 @Builder
 public class CreateEventsReq {
 
-    @NotNull
+    @NotBlank
     private String name;
 
     @Lob
     private String description;
 
-    @NotNull
+    @NotBlank
     private Integer maxMembers;
 
-    @NotNull
+    @NotBlank
     private EventsType eventsType;
 
-    @NotNull
+    @NotBlank
     private LocalDateTime eventsTime;
 
-    @NotNull
+    @NotBlank
     @Min(value = 1 , message = "다시 시간을 체크하세요")
     @Max(value = 24 , message = "다시 시간을 체크하세요")
     private Long takeTime;

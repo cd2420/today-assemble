@@ -5,14 +5,14 @@ import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Data
 @Builder
 public class UpdateEventsTypeReq extends UpdateEventsReqBase {
 
-    @NotNull
+    @NotBlank
     private EventsType eventsType;
 
     private String address;

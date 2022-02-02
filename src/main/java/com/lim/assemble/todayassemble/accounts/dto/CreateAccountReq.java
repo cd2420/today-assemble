@@ -1,9 +1,10 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
 import com.lim.assemble.todayassemble.common.type.Gender;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -11,17 +12,17 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 public class CreateAccountReq extends AccountReq {
 
-    @NotNull
+    @NotBlank
     @Size(min = 3, max = 10, message = "이름길이 초과")
     private String name;
 
-    @NotNull
+    @NotBlank
     private Gender gender;
 
-//    @NotNull test때문에 잠시 주석처리
+    @NotBlank
     private LocalDateTime birth;
 
-    @NotNull
+    @NotBlank
     private Integer age;
 
 }
