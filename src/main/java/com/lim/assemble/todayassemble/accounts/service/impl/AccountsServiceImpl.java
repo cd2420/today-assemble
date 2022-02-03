@@ -12,10 +12,8 @@ import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
-import com.lim.assemble.todayassemble.likes.repository.LikesRepository;
 import com.lim.assemble.todayassemble.likes.service.LikesService;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
@@ -61,13 +59,9 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventsDto> getAccountLikesEventList(Long accountId) {
-        Accounts accounts = getAccountsFromRepositoryByAccountId(accountId);
-
-        return accounts.getLikesSet()
-                .stream()
-                .map(like -> EventsDto.from(like.getEvents()))
-                .collect(Collectors.toList());
+    public List<EventsDto> getAccountLikesEventList(Accounts accounts) {
+        accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
+        return likesService.getAccountLikesEventList(accounts);
     }
 
     private Accounts getAccountsFromRepositoryByAccountId(Long accountId) {

@@ -1,6 +1,8 @@
 package com.lim.assemble.todayassemble.accounts.controller;
 
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
+import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import lombok.RequiredArgsConstructor;
@@ -41,13 +43,13 @@ public class AccountsController {
         return ResponseEntity.ok(accountsDto);
     }
 
-    @GetMapping("/{accountId}/likes/events")
+    @GetMapping("/likes/events")
     public ResponseEntity<List<EventsDto>> getAccountLikesEventList(
-            @PathVariable Long accountId
+            @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
-        log.info("api : {}, data : {}" , request.getRequestURI(), accountId);
-        List<EventsDto> eventsDtoList = accountsService.getAccountLikesEventList(accountId);
+        log.info("api : {}" , request.getRequestURI());
+        List<EventsDto> eventsDtoList = accountsService.getAccountLikesEventList(accounts);
         return ResponseEntity.ok(eventsDtoList);
     }
 

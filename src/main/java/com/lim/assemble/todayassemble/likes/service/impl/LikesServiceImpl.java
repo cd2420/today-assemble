@@ -1,6 +1,7 @@
 package com.lim.assemble.todayassemble.likes.service.impl;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
@@ -11,9 +12,8 @@ import com.lim.assemble.todayassemble.likes.service.LikesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +64,18 @@ public class LikesServiceImpl implements LikesService {
             likesSet = new HashSet<>();
         }
         likesSet.add(likes);
+    }
+
+    @Override
+    public List<EventsDto> getAccountLikesEventList(Accounts accounts) {
+        Set<Likes> likesSet = accounts.getLikesSet();
+        if (likesSet == null) {
+            return new ArrayList<>();
+        } else {
+            return likesSet.stream()
+                    .map(like -> EventsDto.from(like.getEvents()))
+                    .collect(Collectors.toList());
+        }
     }
 
 }

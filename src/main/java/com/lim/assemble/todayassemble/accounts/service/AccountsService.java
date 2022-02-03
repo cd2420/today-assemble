@@ -11,7 +11,7 @@ public interface AccountsService {
 
     AccountsDto getAccount(Long accountId);
 
-    List<EventsDto> getAccountLikesEventList(Long accountId);
+    List<EventsDto> getAccountLikesEventList(Accounts accounts);
 
     AccountsDto signUp(CreateAccountReq createAccountReq);
 
