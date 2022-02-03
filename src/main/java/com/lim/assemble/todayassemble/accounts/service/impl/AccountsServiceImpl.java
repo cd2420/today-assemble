@@ -1,6 +1,9 @@
 package com.lim.assemble.todayassemble.accounts.service.impl;
 
-import com.lim.assemble.todayassemble.accounts.dto.*;
+import com.lim.assemble.todayassemble.accounts.dto.AccountReq;
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
+import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
+import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
@@ -9,8 +12,11 @@ import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import com.lim.assemble.todayassemble.likes.repository.LikesRepository;
+import com.lim.assemble.todayassemble.likes.service.LikesService;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +36,11 @@ import java.util.stream.Collectors;
 public class AccountsServiceImpl implements AccountsService {
 
     private final AccountsRepository accountsRepository;
-    private final PasswordEncoder passwordEncoder;
+
     private final ValidationFactory validationFactory;
+    private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final LikesService likesService;
 
     @Override
     @Transactional(readOnly = true)
@@ -93,7 +101,12 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public void accountLikesEvent(Long eventId, AccountsDto accountsDto) {
+    public void manageAccountLikesEvent(Long eventId, Accounts accounts) {
+
+        // 영속성 관리에 등록하기 위해 accounts를 이렇게 한번더 호출.
+        accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
+
+        likesService.manageLikes(eventId, accounts);
 
     }
 

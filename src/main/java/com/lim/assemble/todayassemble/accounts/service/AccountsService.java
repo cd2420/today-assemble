@@ -1,9 +1,8 @@
 package com.lim.assemble.todayassemble.accounts.service;
 
 import com.lim.assemble.todayassemble.accounts.dto.*;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface AccountsService {
 
     AccountsDto signUp(CreateAccountReq createAccountReq);
 
-    void accountLikesEvent(Long eventId, AccountsDto accountsDto);
+    void manageAccountLikesEvent(Long eventId, Accounts accounts);
 
     AccountsDto updateAccount(Long accountId, EditAccountsReq editAccountsReq);
 

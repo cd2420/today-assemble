@@ -90,7 +90,6 @@ public class EntityFactory {
                 .description("영화 모임~~~~~~~~~~")
                 .accounts(accounts)
                 .maxMembers(4)
-                .likes(0)
                 .eventsType(EventsType.OFFLINE)
                 .build();
     }

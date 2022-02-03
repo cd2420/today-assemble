@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         , "/login"
                         , "/api/v1/accounts/sign-up").permitAll()
                 .antMatchers(HttpMethod.POST
-                        , "/api/v1/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
+                        , "/api/v1/events"
+                        , "/api/v1/accounts/*/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.PUT
                         , "/api/v1/events/**").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.DELETE

@@ -2,7 +2,9 @@ package com.lim.assemble.todayassemble.accounts.controller;
 
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
+import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +36,11 @@ public class AccountsCUController {
     @PostMapping("/{eventId}/events")
     public ResponseEntity<Void> accountLikesEvent(
             @PathVariable Long eventId
-            , @RequestBody @Valid AccountsDto accountsDto
+            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
-        log.info("api : {}, data : {}, eventId: {}" , request.getRequestURI(), accountsDto, eventId);
-        accountsService.accountLikesEvent(eventId, accountsDto);
+        log.info("api : {}, eventId: {}" , request.getRequestURI(), eventId);
+        accountsService.manageAccountLikesEvent(eventId, accounts);
         return ResponseEntity.ok().build();
     }
 

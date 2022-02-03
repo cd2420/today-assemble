@@ -39,8 +39,6 @@ public class Events extends BaseEntity {
 
     private Integer maxMembers;
 
-    private Integer likes;
-
     @Enumerated(EnumType.STRING)
     private EventsType eventsType;
 
@@ -80,7 +78,6 @@ public class Events extends BaseEntity {
                 .description(createEventsReq.getDescription())
                 .accounts(accounts)
                 .maxMembers(createEventsReq.getMaxMembers())
-                .likes(0)
                 .eventsType(createEventsReq.getEventsType())
                 .eventsTime(createEventsReq.getEventsTime())
                 .takeTime(createEventsReq.getTakeTime())

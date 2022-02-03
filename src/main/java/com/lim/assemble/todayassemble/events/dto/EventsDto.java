@@ -54,7 +54,7 @@ public class EventsDto {
                 .hostName(events.getHostName())
                 .description(events.getDescription())
                 .maxMembers(events.getMaxMembers())
-                .likes(events.getLikes())
+                .likes(events.getLikesSet() == null ? 0 : events.getLikesSet().size())
                 .eventsType(events.getEventsType())
                 .eventsTime(events.getEventsTime())
                 .takeTime(events.getTakeTime())
