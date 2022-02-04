@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
-@Getter
+@Getter @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,7 +41,6 @@ public class Accounts extends BaseEntity {
 
     private Integer age;
 
-    @Setter
     private Boolean emailVerified;
 
     private String emailCheckToken;

@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 
 @RequiredArgsConstructor
 public class WithAccountSecurityContextFacotry implements WithSecurityContextFactory<WithAccount> {
@@ -45,6 +46,7 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
         Accounts accounts = accountsRepository.findByEmail(createAccountReq.getEmail())
                 .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
         accounts.setEmailVerified(true);
+        accounts.setLikesSet(new HashSet<>());
         accountsRepository.flush();
 
         UserDetails principal = accountsLoginService.loadUserByUsername(createAccountReq.getEmail());

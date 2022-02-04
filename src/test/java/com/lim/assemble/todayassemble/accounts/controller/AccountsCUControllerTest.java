@@ -134,7 +134,7 @@ class AccountsCUControllerTest {
     @DisplayName("[POST] manageAccountLikesEvent - create Likes")
     @WithAccount("임대근")
     @Transactional
-    void givenEventsId_whenManageAccountsLikeEventApi_thenOK() throws Exception {
+    void givenEventsId_whenManageAccountsCreateLikeEventApi_thenOK() throws Exception {
         String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
@@ -143,6 +143,33 @@ class AccountsCUControllerTest {
                 , null
         );
         EventsDto events = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+
+        MvcResult result = mockMvc.perform(post("/api/v1/accounts/likes/events/" + events.getId())
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        log.info("$$$$$$$$ result: {}", result.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    @DisplayName("[POST] manageAccountLikesEvent - delete Likes")
+    @WithAccount("임대근")
+    @Transactional
+    void givenEventsId_whenManageAccountsDeleteLikeEventApi_thenOK() throws Exception {
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
+                EventsType.OFFLINE
+                , null
+                , null
+        );
+        EventsDto events = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        events = accountsService.manageAccountLikesEvent(events.getId(), userAccount.getAccounts());
+        log.info("$$$$$$$$ original events_likes: {}", events.getLikes());
 
         MvcResult result = mockMvc.perform(post("/api/v1/accounts/likes/events/" + events.getId())
                 .header("Authorization", "Bearer" + " " + jwtToken)
