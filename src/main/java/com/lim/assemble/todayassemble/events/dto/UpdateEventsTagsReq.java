@@ -3,12 +3,13 @@ package com.lim.assemble.todayassemble.events.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
 public class UpdateEventsTagsReq extends UpdateEventsReqBase {
 
-    @NotBlank
+    @NotNull
     private Set<String> tags;
 
 }

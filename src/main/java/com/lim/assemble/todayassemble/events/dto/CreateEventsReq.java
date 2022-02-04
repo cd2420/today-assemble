@@ -21,16 +21,18 @@ public class CreateEventsReq {
     @Lob
     private String description;
 
-    @NotBlank
+    @NotNull
+    @Min(value = 1, message = "최소 인원은 1명입니다.")
+    @Max(value = 30, message = "최대 인원은 30명입니다.")
     private Integer maxMembers;
 
     @NotNull
     private EventsType eventsType;
 
-    @NotBlank
+    @NotNull
     private LocalDateTime eventsTime;
 
-    @NotBlank
+    @NotNull
     @Min(value = 1 , message = "다시 시간을 체크하세요")
     @Max(value = 24 , message = "다시 시간을 체크하세요")
     private Long takeTime;

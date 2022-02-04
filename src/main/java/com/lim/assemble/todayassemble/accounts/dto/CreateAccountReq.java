@@ -20,10 +20,10 @@ public class CreateAccountReq extends AccountReq {
     @NotNull
     private Gender gender;
 
-    @NotBlank
+    @NotNull
     private LocalDateTime birth;
 
-    @NotBlank
+    @NotNull
     private Integer age;
 
 }
