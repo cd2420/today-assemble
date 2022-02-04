@@ -84,6 +84,7 @@ public class Events extends BaseEntity {
                 .address(createEventsReq.getAddress())
                 .longitude(createEventsReq.getLongitude())
                 .latitude(createEventsReq.getLatitude())
+                .likesSet(new HashSet<>())
                 .eventsImagesSet(EventsImages.returnImagesSetFrom(createEventsReq))
                 .tagsSet(Tags.returnTagsSetFrom(createEventsReq))
                 .zoomsSet(Zooms.returnZoomsSetFrom(createEventsReq))

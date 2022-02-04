@@ -95,13 +95,12 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public void manageAccountLikesEvent(Long eventId, Accounts accounts) {
+    public EventsDto manageAccountLikesEvent(Long eventId, Accounts accounts) {
 
         // 영속성 관리에 등록하기 위해 accounts를 이렇게 한번더 호출.
         accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
 
-        likesService.manageLikes(eventId, accounts);
-
+        return likesService.manageLikes(eventId, accounts);
     }
 
     @Override

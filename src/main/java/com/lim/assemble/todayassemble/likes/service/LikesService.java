@@ -6,7 +6,7 @@ import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import java.util.List;
 
 public interface LikesService {
-    void manageLikes(Long eventsId, Accounts accounts);
+    EventsDto manageLikes(Long eventsId, Accounts accounts);
 
     List<EventsDto> getAccountLikesEventList(Accounts accounts);
 }

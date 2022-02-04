@@ -15,7 +15,7 @@ public interface AccountsService {
 
     AccountsDto signUp(CreateAccountReq createAccountReq);
 
-    void manageAccountLikesEvent(Long eventId, Accounts accounts);
+    EventsDto manageAccountLikesEvent(Long eventId, Accounts accounts);
 
     AccountsDto updateAccount(Long accountId, EditAccountsReq editAccountsReq);
 

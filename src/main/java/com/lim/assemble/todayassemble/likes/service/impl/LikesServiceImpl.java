@@ -23,7 +23,7 @@ public class LikesServiceImpl implements LikesService {
     private final EventsRepository eventsRepository;
 
     @Override
-    public void manageLikes(Long eventsId, Accounts accounts) {
+    public EventsDto manageLikes(Long eventsId, Accounts accounts) {
 
         Optional<Likes> likesOptional = likesRepository.findByAccountsIdAndEventsId(accounts.getId(), eventsId);
         Events events = eventsRepository.findById(eventsId)
@@ -47,6 +47,7 @@ public class LikesServiceImpl implements LikesService {
 
         }
 
+        return EventsDto.from(events);
     }
 
     public void removeLikes(Likes likes, Set<Likes> likesSet) {

@@ -6,6 +6,7 @@ import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
+import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,15 +34,14 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsDto);
     }
 
-    @PostMapping("/{eventId}/events")
-    public ResponseEntity<Void> accountLikesEvent(
+    @PostMapping("/likes/events/{eventId}")
+    public ResponseEntity<EventsDto> manageAccountLikesEvent(
             @PathVariable Long eventId
             , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
         log.info("api : {}, eventId: {}" , request.getRequestURI(), eventId);
-        accountsService.manageAccountLikesEvent(eventId, accounts);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(accountsService.manageAccountLikesEvent(eventId, accounts));
     }
 
     @PutMapping("/{accountId}")

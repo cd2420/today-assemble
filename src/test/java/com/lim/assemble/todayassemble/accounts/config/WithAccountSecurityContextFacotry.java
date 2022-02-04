@@ -1,6 +1,7 @@
 package com.lim.assemble.todayassemble.accounts.config;
 
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
+import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
@@ -8,6 +9,8 @@ import com.lim.assemble.todayassemble.accounts.service.impl.AccountsLoginService
 import com.lim.assemble.todayassemble.common.type.Gender;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,9 +18,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @RequiredArgsConstructor
 public class WithAccountSecurityContextFacotry implements WithSecurityContextFactory<WithAccount> {
@@ -49,5 +52,16 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         return context;
+    }
+
+    public static String getJwtToken() {
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final long EXPIRATION_TIME = 864_000_00;
+        final String SIGNING_KEY = "signingKey";
+
+        return Jwts.builder().setSubject(userAccount.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SIGNING_KEY)
+                .compact();
     }
 }

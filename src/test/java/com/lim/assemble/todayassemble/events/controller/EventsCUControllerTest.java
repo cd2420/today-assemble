@@ -2,7 +2,9 @@ package com.lim.assemble.todayassemble.events.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
+import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
 import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
@@ -12,8 +14,6 @@ import com.lim.assemble.todayassemble.events.service.EventsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
 import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,15 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,8 +60,8 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReq_whenCreateEventsApi_thenReturnEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -92,7 +90,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqWithImagesAndTags_whenCreateEventsApi_thenReturnEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         EventsImagesDto eventsImagesDto = new EventsImagesDto();
         eventsImagesDto.setImagesType(ImagesType.MAIN);
@@ -106,7 +104,7 @@ class EventsCUControllerTest {
         tagsDtos.add(tagsDto);
 
 
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , eventsImagesDtos
                 , tagsDtos
@@ -136,10 +134,10 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqWithZooms_whenCreateEventsApi_thenReturnEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
 
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.ONLINE
                 , null
                 , null
@@ -169,9 +167,9 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqOverlapTime_whenCreateEventsApi_thenReturnException() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -203,8 +201,8 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqNotHaveAddressValue_whenCreateEventsApi_thenReturnException() throws Exception {
         // given
-        String jwtToken = getJwtToken();
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -238,8 +236,8 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqNotHaveZoomValue_whenCreateEventsApi_thenReturnException() throws Exception {
         // given
-        String jwtToken = getJwtToken();
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.ONLINE
                 , null
                 , null
@@ -271,10 +269,10 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsContentsReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -313,11 +311,11 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsImagesReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -364,11 +362,11 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsTagsReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -406,11 +404,11 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsTypeOnlineReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.ONLINE
                 , null
                 , null
@@ -448,11 +446,11 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsTypeOfflineReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -492,7 +490,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsContentsReqNotEqualsHostAccounts_whenWrongHostAccounts_thenReturnException() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
@@ -530,10 +528,10 @@ class EventsCUControllerTest {
     @Transactional
     void givenDeleteEventsId_whenDeleteEventsAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CreateEventsReq createEventsReq = getCreateEventsReq(
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
@@ -556,7 +554,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenDeleteEventsIdNotEqualsHostAccounts_whenDeleteEventsAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = getJwtToken();
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
         EventsDto eventsDto = eventsService.getEventsList(pageable).get(0);
@@ -576,17 +574,6 @@ class EventsCUControllerTest {
 
     }
 
-    private String getJwtToken() {
-        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final long EXPIRATION_TIME = 864_000_00;
-        final String SIGNING_KEY = "signingKey";
-
-        return Jwts.builder().setSubject(userAccount.getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SIGNING_KEY)
-                .compact();
-    }
-
     public static String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -597,49 +584,6 @@ class EventsCUControllerTest {
         }
     }
 
-    private CreateEventsReq getCreateEventsReq(
-            EventsType eventsType
-            , Set<EventsImagesDto> eventsImagesDtos
-            , Set<TagsDto> tagsDtos
-    ) {
-        CreateEventsReq createEventsReq = null;
-        if (EventsType.OFFLINE.equals(eventsType)) {
-            createEventsReq = CreateEventsReq.builder()
-                    .name("영화모임")
-                    .description("스파이더맨 영화")
-                    .maxMembers(10)
-                    .eventsType(eventsType)
-                    .eventsTime(LocalDateTime.now())
-                    .takeTime(2L)
-                    .eventsImagesSet(eventsImagesDtos)
-                    .tagsSet(tagsDtos)
-                    .address("서울특별시 강남구 강남대로 438 스타플렉스")
-                    .longitude("37.501646450019")
-                    .latitude("127.0262170654")
-                    .build();
-        } else {
 
-            ZoomsDto zoomsDto = ZoomsDto.builder()
-                    .status(true)
-                    .url("www.~~~~~~")
-                    .build();
-            Set<ZoomsDto> zoomsDtos = new HashSet<>();
-            zoomsDtos.add(zoomsDto);
-
-            createEventsReq = CreateEventsReq.builder()
-                    .name("영화모임")
-                    .description("스파이더맨 영화")
-                    .maxMembers(10)
-                    .eventsType(eventsType)
-                    .eventsTime(LocalDateTime.now())
-                    .takeTime(2L)
-                    .eventsImagesSet(eventsImagesDtos)
-                    .tagsSet(tagsDtos)
-                    .zoomsSet(zoomsDtos)
-                    .build();
-        }
-
-        return createEventsReq;
-    }
 
 }
