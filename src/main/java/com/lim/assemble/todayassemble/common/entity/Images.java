@@ -4,11 +4,12 @@ package com.lim.assemble.todayassemble.common.entity;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @MappedSuperclass
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public abstract class Images extends BaseEntity {
     @Enumerated(EnumType.STRING)

@@ -63,7 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         , "/api/v1/events"
                         , "/api/v1/accounts/*/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.PUT
-                        , "/api/v1/events/**").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
+                        , "/api/v1/events/**"
+                        , "/api/v1/accounts/**").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.DELETE
                         , "/api/v1/events/**").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .and()

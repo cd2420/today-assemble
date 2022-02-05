@@ -60,7 +60,7 @@ public class Accounts extends BaseEntity {
     @JsonBackReference
     private Set<Likes> likesSet = new HashSet<>();
 
-    @OneToOne(mappedBy = "accounts", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "accounts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private AccountsImages accountsImages;
 

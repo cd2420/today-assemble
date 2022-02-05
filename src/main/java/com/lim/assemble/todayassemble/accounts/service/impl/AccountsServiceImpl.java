@@ -2,9 +2,11 @@ package com.lim.assemble.todayassemble.accounts.service.impl;
 
 import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
+import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
@@ -109,13 +111,42 @@ public class AccountsServiceImpl implements AccountsService {
                 .validate(new UpdateAccountsDto(accountId, accounts.getId()));
 
         accounts = getAccountsFromRepositoryByAccountId(accountId);
+
+        if (UpdateAccountsReq.class.equals(updateAccountsReq.getClass())) {
+            updateAccountBasic(accounts, updateAccountsReq);
+        } else {
+            updateAccountImage(accounts, (UpdateAccountsImageReq) updateAccountsReq);
+        }
+
+        return AccountsDto.from(accounts);
+    }
+
+    public void updateAccountBasic(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
         String updatePassword = updateAccountsReq.getPassword();
+
         if (!passwordEncoder.matches(updatePassword, accounts.getPassword())) {
             updateAccountsReq.setPassword(passwordEncoder.encode(updatePassword));
         }
         accounts.update(updateAccountsReq);
 
-        return AccountsDto.from(accounts);
+    }
+
+    public void updateAccountImage(Accounts accounts, UpdateAccountsImageReq updateAccountsImageReq) {
+
+        AccountsImages accountsImages = accounts.getAccountsImages();
+        AccountsImagesDto accountsImagesDto = updateAccountsImageReq.getAccountsImagesDto();
+
+        if (accountsImages != null) {
+            accountsImages.setImage(accountsImagesDto.getImage());
+        } else {
+
+            accounts.setAccountsImages(AccountsImages.builder()
+                    .accounts(accounts)
+                    .imagesType(ImagesType.MAIN)
+                    .image(accountsImagesDto.getImage())
+                    .build()
+            );
+        }
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.controller;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
-import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
-import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
-import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsReq;
+import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
@@ -56,6 +53,21 @@ public class AccountsCUController {
         );
 
         return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsReq));
+    }
+
+    @PutMapping("/{accountId}/image")
+    public ResponseEntity<AccountsDto> updateAccountImage(
+            @PathVariable Long accountId
+            , @RequestBody @Valid UpdateAccountsImageReq updateAccountsImageReq
+            , @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+    ) {
+        log.info("api : {}, accountId : {}"
+                , request.getRequestURI()
+                , accountId
+        );
+
+        return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsImageReq));
     }
 
     @PutMapping("/{accountId}/events/{eventId}")
