@@ -1,8 +1,7 @@
 package com.lim.assemble.todayassemble.events.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
+import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
 import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
 import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
@@ -574,16 +573,8 @@ class EventsCUControllerTest {
 
     }
 
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-            final String jsonContent = mapper.writeValueAsString(obj);
-            return jsonContent;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public String asJsonString(final Object obj) {
+        return JsonToString.asJsonString(obj);
     }
-
-
 
 }

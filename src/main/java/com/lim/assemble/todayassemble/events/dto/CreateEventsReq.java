@@ -6,7 +6,6 @@ import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Lob;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,7 +17,6 @@ public class CreateEventsReq {
     @NotBlank
     private String name;
 
-    @Lob
     private String description;
 
     @NotNull

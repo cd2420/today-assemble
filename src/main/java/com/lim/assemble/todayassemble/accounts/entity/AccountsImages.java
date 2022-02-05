@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lim.assemble.todayassemble.common.entity.Images;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.Builder;
@@ -15,7 +15,7 @@ public class AccountsImages extends Images {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accounts_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Accounts accounts;
 
     @Builder

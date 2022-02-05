@@ -2,11 +2,10 @@ package com.lim.assemble.todayassemble.accounts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
+import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
 import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
-import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
-import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
+import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
@@ -29,8 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -78,7 +81,7 @@ class AccountsCUControllerTest {
     }
 
     @Test
-    @DisplayName("[POST] create accounts - 입력값 에러 > 이메일 ")
+    @DisplayName("[POST] Exception: create accounts - 입력값 에러 > 이메일 ")
     void givenWrongEmailCreateReq_whenSaveAccounts_thenException () throws Exception {
         // given
         CreateAccountReq createAccountReq = new CreateAccountReq();
@@ -100,35 +103,6 @@ class AccountsCUControllerTest {
                 .andExpect(status().is4xxClientError())
         ;
     }
-
-    @Test
-    @DisplayName("[POST] login accounts - 정상적 로그인 ")
-    @Transactional
-    void givenDBAccounts_whenLogin_thenGetJWT() throws Exception {
-        // given
-        CreateAccountReq createAccountReq = new CreateAccountReq();
-        createAccountReq.setEmail("check1@gmail.com");
-        createAccountReq.setName("check1");
-        createAccountReq.setPassword("asdfasdf");
-        createAccountReq.setGender(Gender.MALE);
-        createAccountReq.setAge(30);
-        createAccountReq.setBirth(LocalDateTime.now());
-
-
-        CreateAccountReq createAccountReq2 = new CreateAccountReq();
-        createAccountReq.setEmail("check1@gmail.com");
-        createAccountReq.setPassword("asdfasdf");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(createAccountReq2);
-
-        AccountsDto accountsDto = accountsService.signUp(createAccountReq);
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .with(csrf()));
-//                .andExpect(status().isOk());
-    }
-
 
     @Test
     @DisplayName("[POST] manageAccountLikesEvent - create Likes")
@@ -180,6 +154,57 @@ class AccountsCUControllerTest {
 
         log.info("$$$$$$$$ result: {}", result.getResponse().getContentAsString());
 
+    }
+
+    @Test
+    @DisplayName("[PUT] update Accounts - update name")
+    @Transactional
+    @WithAccount("임대근")
+    void givenUpdateAccountsName_whenUpdateAccountsApi_thenAccountsDto() throws Exception {
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
+        updateAccountsReq.setName("김김대근");
+        updateAccountsReq.setPassword(userAccount.getUsername());
+        String json = JsonToString.asJsonString(updateAccountsReq);
+
+        mockMvc.perform(put("/api/v1/accounts/" + userAccount.getAccounts().getId())
+                        .header("Authorization", "Bearer" + " " + jwtToken)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isOk())
+            .andExpect(jsonPath("$").isMap())
+            .andExpect(jsonPath("$.name").value(updateAccountsReq.getName()))
+        ;
+    }
+
+    @Test
+    @DisplayName("[PUT] update Accounts - update password")
+    @Transactional
+    @WithAccount("임대근")
+    void givenUpdateAccountsPassword_whenUpdateAccountsApi_thenAccountsDto() throws Exception {
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
+        updateAccountsReq.setName(userAccount.getUsername());
+        updateAccountsReq.setPassword("newPassword");
+        String json = JsonToString.asJsonString(updateAccountsReq);
+
+        MvcResult result = mockMvc.perform(put("/api/v1/accounts/" + userAccount.getAccounts().getId())
+                                            .header("Authorization", "Bearer" + " " + jwtToken)
+                                            .with(csrf())
+                                            .contentType(MediaType.APPLICATION_JSON)
+                                            .content(json)
+                                            .accept(MediaType.APPLICATION_JSON)
+                                    ).andExpect(status().isOk())
+                                            .andExpect(jsonPath("$").isMap())
+                                            .andReturn()
+                ;
+        log.info("$$$$$$$$$$$ result: {}", result.getResponse().getContentAsString());
     }
 
 }

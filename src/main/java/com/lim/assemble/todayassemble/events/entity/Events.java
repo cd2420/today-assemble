@@ -29,7 +29,7 @@ public class Events extends BaseEntity {
 
     private String hostName;
 
-    @Lob
+    @Lob @Basic(fetch = FetchType.EAGER)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -52,7 +52,7 @@ public class Events extends BaseEntity {
 
     private String latitude;
 
-    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
     private Set<EventsImages> eventsImagesSet = new HashSet<>();
 

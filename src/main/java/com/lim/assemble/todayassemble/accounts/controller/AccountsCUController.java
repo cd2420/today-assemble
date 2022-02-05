@@ -3,7 +3,7 @@ package com.lim.assemble.todayassemble.accounts.controller;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
-import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
+import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsReq;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
@@ -30,8 +30,7 @@ public class AccountsCUController {
     ) {
         accountsService.passwordEncode(createAccountReq);
         log.info("api : {}, data : {}" , request.getRequestURI(), createAccountReq);
-        AccountsDto accountsDto = accountsService.signUp(createAccountReq);
-        return ResponseEntity.ok(accountsDto);
+        return ResponseEntity.ok(accountsService.signUp(createAccountReq));
     }
 
     @PostMapping("/likes/events/{eventId}")
@@ -47,16 +46,16 @@ public class AccountsCUController {
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountsDto> updateAccount(
             @PathVariable Long accountId
-            , @RequestBody @Valid EditAccountsReq editAccountsReq
+            , @RequestBody @Valid UpdateAccountsReq updateAccountsReq
+            , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
-        log.info("api : {}, data : {}, accountId : {}"
+        log.info("api : {}, accountId : {}"
                 , request.getRequestURI()
-                , editAccountsReq
                 , accountId
         );
-        AccountsDto accountsDto = accountsService.updateAccount(accountId, editAccountsReq);
-        return ResponseEntity.ok(accountsDto);
+
+        return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsReq));
     }
 
     @PutMapping("/{accountId}/events/{eventId}")

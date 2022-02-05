@@ -2,15 +2,15 @@ package com.lim.assemble.todayassemble.events.dto;
 
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.entity.Events;
-import com.lim.assemble.todayassemble.events.entity.EventsImages;
-import com.lim.assemble.todayassemble.tags.entity.Tags;
-import com.lim.assemble.todayassemble.zooms.entity.Zooms;
+import com.lim.assemble.todayassemble.tags.dto.TagsDto;
+import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -40,11 +40,11 @@ public class EventsDto {
 
     private String latitude;
 
-    private Set<EventsImages> eventsImagesSet;
+    private Set<EventsImagesDto> eventsImagesDtos;
 
-    private Set<Tags> tagsSet;
+    private Set<TagsDto> tagsDtos;
 
-    private Set<Zooms> zoomsSet;
+    private Set<ZoomsDto> zoomsDtos;
 
 
     public static EventsDto from(Events events) {
@@ -61,9 +61,19 @@ public class EventsDto {
                 .address(events.getAddress())
                 .longitude(events.getLongitude())
                 .latitude(events.getLatitude())
-                .eventsImagesSet(events.getEventsImagesSet() == null ? new HashSet<>() : events.getEventsImagesSet())
-                .tagsSet(events.getTagsSet() == null ? new HashSet<>() : events.getTagsSet())
-                .zoomsSet(events.getZoomsSet() == null ? new HashSet<>() : events.getZoomsSet())
+                .eventsImagesDtos(EventsImagesDto.returnEventsImagesDtoSet(events.getEventsImagesSet()))
+                .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
+                .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))
                 .build();
+    }
+
+    public static Set<EventsDto> returnEventsDtoSet(Set<Events> eventsSet) {
+        if (eventsSet == null) {
+            return new HashSet<>();
+        }
+        return eventsSet.stream()
+                        .map(EventsDto::from)
+                        .collect(Collectors.toSet());
+
     }
 }

@@ -14,8 +14,7 @@ public abstract class Images extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ImagesType imagesType;
 
-    @Lob
-    @Basic(fetch = FetchType.EAGER)
+    @Lob @Basic(fetch = FetchType.EAGER)
     private String image;
 
     public Images(ImagesType imagesType, String image) {

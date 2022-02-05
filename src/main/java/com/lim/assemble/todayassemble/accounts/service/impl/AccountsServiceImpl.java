@@ -1,9 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.service.impl;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountReq;
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
-import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
-import com.lim.assemble.todayassemble.accounts.dto.EditAccountsReq;
+import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
@@ -76,7 +73,7 @@ public class AccountsServiceImpl implements AccountsService {
     public AccountsDto signUp(CreateAccountReq createAccountReq) {
         // createAccountReq validation check: {이메일 중복체크}
         validationFactory
-                .createValidation(ValidateType.SIGNUP)
+                .createValidation(ValidateType.ACCOUNT)
                 .validate(createAccountReq);
 
         // accounts 저장
@@ -105,8 +102,20 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public AccountsDto updateAccount(Long accountId, EditAccountsReq editAccountsReq) {
-        return null;
+    public AccountsDto updateAccount(Long accountId, Accounts accounts, UpdateAccountsReq updateAccountsReq) {
+        // update 시킬려는 대상이 본인이 맞는지 확인.
+        validationFactory
+                .createValidation(ValidateType.ACCOUNT)
+                .validate(new UpdateAccountsDto(accountId, accounts.getId()));
+
+        accounts = getAccountsFromRepositoryByAccountId(accountId);
+        String updatePassword = updateAccountsReq.getPassword();
+        if (!passwordEncoder.matches(updatePassword, accounts.getPassword())) {
+            updateAccountsReq.setPassword(passwordEncoder.encode(updatePassword));
+        }
+        accounts.update(updateAccountsReq);
+
+        return AccountsDto.from(accounts);
     }
 
     @Override

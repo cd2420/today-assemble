@@ -1,14 +1,14 @@
 package com.lim.assemble.todayassemble.accounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
-import com.lim.assemble.todayassemble.email.entity.Email;
-import com.lim.assemble.todayassemble.events.entity.Events;
-import com.lim.assemble.todayassemble.likes.entity.Likes;
+import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsReq;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.AccountsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
+import com.lim.assemble.todayassemble.email.entity.Email;
+import com.lim.assemble.todayassemble.events.entity.Events;
+import com.lim.assemble.todayassemble.likes.entity.Likes;
 import lombok.*;
 
 import javax.persistence.*;
@@ -85,5 +85,11 @@ public class Accounts extends BaseEntity {
         this.emailCheckTokenGeneratedAt = LocalDateTime.now();
         this.emailVerified = false;
         return this;
+    }
+
+    public void update(UpdateAccountsReq updateAccountsReq) {
+        this.name = updateAccountsReq.getName();
+        this.password = updateAccountsReq.getPassword();
+
     }
 }
