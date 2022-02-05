@@ -70,6 +70,20 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsImageReq));
     }
 
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity<Void> deleteAccount(
+            @PathVariable Long accountId
+            , @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+    ) {
+        log.info("api : {}, accountId : {}"
+                , request.getRequestURI()
+                , accountId
+        );
+        accountsService.deleteAccount(accountId, accounts);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{accountId}/events/{eventId}")
     public ResponseEntity<Void> responseInvite(
             @PathVariable Long accountId

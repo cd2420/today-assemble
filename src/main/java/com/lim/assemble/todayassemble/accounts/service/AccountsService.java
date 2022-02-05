@@ -22,4 +22,6 @@ public interface AccountsService {
     void responseInvite(Long accountId, Long eventId, Boolean response);
 
     void passwordEncode(AccountReq accountReq);
+
+    void deleteAccount(Long accountId, Accounts accounts);
 }

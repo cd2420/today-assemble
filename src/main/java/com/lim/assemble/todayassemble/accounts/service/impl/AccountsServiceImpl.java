@@ -163,4 +163,16 @@ public class AccountsServiceImpl implements AccountsService {
 
     }
 
+    @Override
+    @Transactional
+    public void deleteAccount(Long accountId, Accounts accounts) {
+        // delete 시킬려는 대상이 본인이 맞는지 확인.
+        validationFactory
+                .createValidation(ValidateType.ACCOUNT)
+                .validate(new UpdateAccountsDto(accountId, accounts.getId()));
+
+        accountsRepository.delete(accounts);
+
+    }
+
 }
