@@ -2,7 +2,6 @@ package com.lim.assemble.todayassemble.events.dto;
 
 import lombok.Data;
 
-import javax.persistence.Lob;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -15,7 +14,6 @@ public class UpdateEventsContentsReq extends UpdateEventsReqBase {
     @NotBlank
     private String name;
 
-    @Lob
     private String description;
 
     @NotNull

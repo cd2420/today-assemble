@@ -1,10 +1,7 @@
 package com.lim.assemble.todayassemble.validation;
 
 import com.lim.assemble.todayassemble.common.type.ValidateType;
-import com.lim.assemble.todayassemble.validation.factory.LoginValidation;
-import com.lim.assemble.todayassemble.validation.factory.SignUpValidation;
 import com.lim.assemble.todayassemble.validation.factory.Validation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -23,10 +20,8 @@ public class ValidationFactory {
     }
 
     public Validation createValidation(ValidateType validateType) {
-        if (validateType == ValidateType.SIGNUP) {
-            return validationMap.get(ValidateType.SIGNUP);
-        } else if (validateType == ValidateType.LOGIN){
-            return validationMap.get(ValidateType.LOGIN);
+        if (validateType == ValidateType.ACCOUNT) {
+            return validationMap.get(ValidateType.ACCOUNT);
         } else {
             return validationMap.get(ValidateType.EVENT);
         }
