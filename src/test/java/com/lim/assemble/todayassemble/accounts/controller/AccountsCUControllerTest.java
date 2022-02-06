@@ -14,6 +14,7 @@ import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.service.EventsService;
+import com.lim.assemble.todayassemble.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,12 +88,15 @@ class AccountsCUControllerTest {
     }
 
     @Test
-    @DisplayName("[POST] EXCEPTION - create accounts > 입력값 에러 > 이메일 ")
+    @DisplayName("[POST] EXCEPTION - create accounts > 이메일 중복 ")
+    @WithAccount("임대근")
     @Transactional
     void givenWrongEmailCreateReq_whenSaveAccounts_thenException() throws Exception {
         // given
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         CreateAccountReq createAccountReq = new CreateAccountReq();
-        createAccountReq.setEmail("check1!gmail.com");
+        createAccountReq.setEmail(userAccount.getUsername());
         createAccountReq.setName("check1");
         createAccountReq.setPassword("asdfasdf");
         createAccountReq.setGender(Gender.MALE);
@@ -108,7 +112,11 @@ class AccountsCUControllerTest {
                 .with(csrf()))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$").isMap())
-                .andExpect(jsonPath("$.msg").value(ValidationMessage.WRONG_EMAIL_FORM))
+                .andExpect(
+                        result -> assertEquals(
+                                ErrorCode.ALREADY_EXISTS_USER.getMessage(), result.getResolvedException().getMessage()
+                        )
+                )
         ;
     }
 
