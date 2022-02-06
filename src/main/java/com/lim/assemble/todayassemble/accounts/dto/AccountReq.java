@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
+import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -10,10 +11,10 @@ import javax.validation.constraints.Size;
 public class AccountReq {
 
     @NotBlank
-    @Email(message = "이메일 형식 불일치")
+    @Email(message = ValidationMessage.WRONG_EMAIL_FORM)
     private String email;
 
     @NotBlank
-    @Size(min = 6, message = "6자리 이상 입력해 주세요.")
+    @Size(min = 6, max = 20, message = ValidationMessage.WRONG_PASSWORD_FORM)
     private String password;
 }

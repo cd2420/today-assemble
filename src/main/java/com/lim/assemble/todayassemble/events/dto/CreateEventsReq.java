@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.dto;
 
+import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
 import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
@@ -15,13 +16,13 @@ import java.util.Set;
 public class CreateEventsReq {
 
     @NotBlank
+    @Size(min = 1, max = 50, message = ValidationMessage.WRONG_EVENTS_NAME_FORM)
     private String name;
 
     private String description;
 
     @NotNull
-    @Min(value = 1, message = "최소 인원은 1명입니다.")
-    @Max(value = 30, message = "최대 인원은 30명입니다.")
+    @Size(min = 1, max = 30, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
     private Integer maxMembers;
 
     @NotNull
@@ -31,8 +32,7 @@ public class CreateEventsReq {
     private LocalDateTime eventsTime;
 
     @NotNull
-    @Min(value = 1 , message = "다시 시간을 체크하세요")
-    @Max(value = 24 , message = "다시 시간을 체크하세요")
+    @Size(min = 1, max = 24, message = ValidationMessage.CHECK_TAKE_TIME)
     private Long takeTime;
 
     private String address;

@@ -1,30 +1,29 @@
 package com.lim.assemble.todayassemble.events.dto;
 
+import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import lombok.Data;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
 public class UpdateEventsContentsReq extends UpdateEventsReqBase {
 
     @NotBlank
+    @Size(min = 1, max = 50, message = ValidationMessage.WRONG_EVENTS_NAME_FORM)
     private String name;
 
     private String description;
 
     @NotNull
+    @Size(min = 1, max = 30, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
     private Integer maxMembers;
 
     @NotNull
     private LocalDateTime eventsTime;
 
     @NotNull
-    @Min(value = 1 , message = "다시 시간을 체크하세요")
-    @Max(value = 24 , message = "다시 시간을 체크하세요")
+    @Size(min = 1, max = 24, message = ValidationMessage.CHECK_TAKE_TIME)
     private Long takeTime;
 
 }

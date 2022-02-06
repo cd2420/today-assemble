@@ -18,7 +18,7 @@ public class GlobalErrorExceptionHandler {
             TodayAssembleException ex
             , HttpServletRequest request
     ) {
-        log.info("errorCode: {}, url: {}, message: {}"
+        log.info("$$$$$$$$$ errorCode: {}, url: {}, message: {}"
                 , ex.getErrorCode()
                 , request.getRequestURI()
                 , ex.getMessage());
@@ -42,7 +42,7 @@ public class GlobalErrorExceptionHandler {
                 ex.getBindingResult().getFieldErrors().stream()
                         .map(x -> x.getDefaultMessage())
                         .collect(Collectors.toList()).get(0);
-        log.info("url: {}, message: {}"
+        log.info("$$$$$$$$$ url: {}, message: {}"
                 , request.getRequestURI()
                 , message);
 

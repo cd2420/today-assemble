@@ -22,6 +22,8 @@ public class AccountsDto {
 
     private Gender gender;
 
+    private Integer age;
+
     private Set<EventsDto> eventsDtos;
 
     private Set<LikesDto> likesDtos;
@@ -38,6 +40,7 @@ public class AccountsDto {
                 .email(accounts.getEmail())
                 .accountType(accounts.getAccountType())
                 .gender(accounts.getGender())
+                .age(accounts.getAge())
                 .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getEventsSet()))
                 .likesDtos(LikesDto.returnLikesDtoSet(accounts.getLikesSet()))
                 .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))

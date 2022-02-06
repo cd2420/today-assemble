@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
+import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import lombok.Data;
 import lombok.ToString;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class CreateAccountReq extends AccountReq {
 
     @NotBlank
-    @Size(min = 3, max = 10, message = "이름길이 초과")
+    @Size(min = 3, max = 10, message = ValidationMessage.WRONG_ACCOUNTS_NAME_FORM)
     private String name;
 
     @NotNull
