@@ -1,12 +1,13 @@
 package com.lim.assemble.todayassemble.accounts.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
 import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
 import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
 import com.lim.assemble.todayassemble.accounts.dto.*;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
+import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import com.lim.assemble.todayassemble.email.service.EmailService;
@@ -57,7 +58,8 @@ class AccountsCUControllerTest {
      * 임의 데이터 생성으로 테스트
      */
     @Test
-    @DisplayName("[POST] create accounts - 입력값 정상")
+    @DisplayName("[POST] create accounts")
+    @Transactional
     void givenCreateReq_whenSaveAccounts_thenCheckDB () throws Exception {
         // given
         CreateAccountReq createAccountReq = new CreateAccountReq();
@@ -66,10 +68,9 @@ class AccountsCUControllerTest {
         createAccountReq.setPassword("asdfasdf");
         createAccountReq.setGender(Gender.MALE);
         createAccountReq.setAge(30);
-//        createAccountReq.setBirth(LocalDateTime.now());
+        createAccountReq.setBirth(LocalDateTime.now());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(createAccountReq);
+        String json = JsonToString.asJsonString(createAccountReq);
 
         // when
         mockMvc.perform(post("/api/v1/accounts/sign-up")
@@ -77,12 +78,18 @@ class AccountsCUControllerTest {
                 .content(json)
                 .with(csrf()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isMap())
+                .andExpect(jsonPath("$.name").value(createAccountReq.getName()))
+                .andExpect(jsonPath("$.email").value(createAccountReq.getEmail()))
+                .andExpect(jsonPath("$.age").value(createAccountReq.getAge()))
+                .andExpect(jsonPath("$.gender").value(createAccountReq.getGender().getGender()))
                 ;
     }
 
     @Test
-    @DisplayName("[POST] Exception: create accounts - 입력값 에러 > 이메일 ")
-    void givenWrongEmailCreateReq_whenSaveAccounts_thenException () throws Exception {
+    @DisplayName("[POST] EXCEPTION - create accounts > 입력값 에러 > 이메일 ")
+    @Transactional
+    void givenWrongEmailCreateReq_whenSaveAccounts_thenException() throws Exception {
         // given
         CreateAccountReq createAccountReq = new CreateAccountReq();
         createAccountReq.setEmail("check1!gmail.com");
@@ -90,10 +97,9 @@ class AccountsCUControllerTest {
         createAccountReq.setPassword("asdfasdf");
         createAccountReq.setGender(Gender.MALE);
         createAccountReq.setAge(30);
-//        createAccountReq.setBirth(LocalDateTime.now());
+        createAccountReq.setBirth(LocalDateTime.now());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(createAccountReq);
+        String json = JsonToString.asJsonString(createAccountReq);
 
         // when
         mockMvc.perform(post("/api/v1/accounts/sign-up")
@@ -101,6 +107,8 @@ class AccountsCUControllerTest {
                 .content(json)
                 .with(csrf()))
                 .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$").isMap())
+                .andExpect(jsonPath("$.msg").value(ValidationMessage.WRONG_EMAIL_FORM))
         ;
     }
 
@@ -165,11 +173,13 @@ class AccountsCUControllerTest {
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
+        Accounts accounts = userAccount.getAccounts();
+
         updateAccountsReq.setName("김김대근");
-        updateAccountsReq.setPassword(userAccount.getUsername());
+        updateAccountsReq.setPassword("asdfasdf");
         String json = JsonToString.asJsonString(updateAccountsReq);
 
-        mockMvc.perform(put("/api/v1/accounts/" + userAccount.getAccounts().getId())
+        mockMvc.perform(put("/api/v1/accounts/" + accounts.getId())
                         .header("Authorization", "Bearer" + " " + jwtToken)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -190,11 +200,13 @@ class AccountsCUControllerTest {
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
-        updateAccountsReq.setName(userAccount.getUsername());
+        Accounts accounts = userAccount.getAccounts();
+
+        updateAccountsReq.setName(accounts.getName());
         updateAccountsReq.setPassword("newPassword");
         String json = JsonToString.asJsonString(updateAccountsReq);
 
-        MvcResult result = mockMvc.perform(put("/api/v1/accounts/" + userAccount.getAccounts().getId())
+        MvcResult result = mockMvc.perform(put("/api/v1/accounts/" + accounts.getId())
                                             .header("Authorization", "Bearer" + " " + jwtToken)
                                             .with(csrf())
                                             .contentType(MediaType.APPLICATION_JSON)
