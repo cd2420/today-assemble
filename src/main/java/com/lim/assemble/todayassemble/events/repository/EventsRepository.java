@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface EventsRepository extends JpaRepository<Events, Long> {
+public interface EventsRepository extends JpaRepository<Events, Long>, EventsCustomRepository {
 
     List<Events> findByAccountsId(Long accountsId);
 }

@@ -34,9 +34,10 @@ public class EventsServiceImpl implements EventsService {
     @Override
     @Transactional(readOnly = true)
     public List<EventsDto> getEventsList(Pageable pageable) {
-        return eventsRepository.findAll(pageable).stream()
+        return eventsRepository.getEventsList(pageable).stream()
                 .map(EventsDto::from)
                 .collect(Collectors.toList());
+
     }
 
     @Override
