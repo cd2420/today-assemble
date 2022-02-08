@@ -22,7 +22,8 @@ public class CreateEventsReq {
     private String description;
 
     @NotNull
-    @Size(min = 1, max = 30, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
+    @Min(value = 1, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
+    @Max(value = 50, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
     private Integer maxMembers;
 
     @NotNull
@@ -32,7 +33,8 @@ public class CreateEventsReq {
     private LocalDateTime eventsTime;
 
     @NotNull
-    @Size(min = 1, max = 24, message = ValidationMessage.CHECK_TAKE_TIME)
+    @Min(value = 1, message = ValidationMessage.CHECK_TAKE_TIME)
+    @Max(value = 24, message = ValidationMessage.CHECK_TAKE_TIME)
     private Long takeTime;
 
     private String address;
