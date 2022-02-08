@@ -27,7 +27,7 @@ public class Events extends BaseEntity {
 
     private String name;
 
-    private String hostName;
+    private Long hostAccountsId;
 
     @Lob @Basic(fetch = FetchType.EAGER)
     private String description;
@@ -74,7 +74,7 @@ public class Events extends BaseEntity {
 
         Events events = Events.builder()
                 .name(createEventsReq.getName())
-                .hostName(accounts.getName())
+                .hostAccountsId(accounts.getId())
                 .description(createEventsReq.getDescription())
                 .accounts(accounts)
                 .maxMembers(createEventsReq.getMaxMembers())

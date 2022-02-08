@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.dto;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
@@ -20,7 +21,7 @@ public class EventsDto {
 
     private String name;
 
-    private String hostName;
+    private Long hostAccountsId;
 
     private String description;
 
@@ -51,7 +52,7 @@ public class EventsDto {
         return EventsDto.builder()
                 .id(events.getId())
                 .name(events.getName())
-                .hostName(events.getHostName())
+                .hostAccountsId(events.getHostAccountsId())
                 .description(events.getDescription())
                 .maxMembers(events.getMaxMembers())
                 .likes(events.getLikesSet() == null ? 0 : events.getLikesSet().size())
