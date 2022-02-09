@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.events.dto;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
@@ -47,7 +47,6 @@ public class EventsDto {
 
     private Set<ZoomsDto> zoomsDtos;
 
-
     public static EventsDto from(Events events) {
         return EventsDto.builder()
                 .id(events.getId())
@@ -68,11 +67,31 @@ public class EventsDto {
                 .build();
     }
 
-    public static Set<EventsDto> returnEventsDtoSet(Set<Events> eventsSet) {
-        if (eventsSet == null) {
+    public static EventsDto from(AccountsMapperEvents accountsMapperEvents) {
+        Events events = accountsMapperEvents.getEvents();
+        return EventsDto.builder()
+                .name(events.getName())
+                .hostAccountsId(events.getHostAccountsId())
+                .description(events.getDescription())
+                .maxMembers(events.getMaxMembers())
+                .likes(events.getLikesSet() == null ? 0 : events.getLikesSet().size())
+                .eventsType(events.getEventsType())
+                .eventsTime(events.getEventsTime())
+                .takeTime(events.getTakeTime())
+                .address(events.getAddress())
+                .longitude(events.getLongitude())
+                .latitude(events.getLatitude())
+                .eventsImagesDtos(EventsImagesDto.returnEventsImagesDtoSet(events.getEventsImagesSet()))
+                .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
+                .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))
+                .build();
+    }
+
+    public static Set<EventsDto> returnEventsDtoSet(Set<AccountsMapperEvents> accountsMapperEvents) {
+        if (accountsMapperEvents == null) {
             return new HashSet<>();
         }
-        return eventsSet.stream()
+        return accountsMapperEvents.stream()
                         .map(EventsDto::from)
                         .collect(Collectors.toSet());
 

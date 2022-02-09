@@ -41,7 +41,7 @@ public class AccountsDto {
                 .accountType(accounts.getAccountType())
                 .gender(accounts.getGender())
                 .age(accounts.getAge())
-                .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getEventsSet()))
+                .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getAccountsEventsSet()))
                 .likesDtos(LikesDto.returnLikesDtoSet(accounts.getLikesSet()))
                 .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))
                 .emailVerified(accounts.getEmailVerified())

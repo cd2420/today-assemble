@@ -1,6 +1,8 @@
 package com.lim.assemble.todayassemble.events.service.impl;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
@@ -30,6 +32,7 @@ public class EventsServiceImpl implements EventsService {
 
     private final ValidationFactory validationFactory;
     private final EventsRepository eventsRepository;
+    private final AccountsRepository accountsRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,6 +63,16 @@ public class EventsServiceImpl implements EventsService {
         Events events = Events.from(createEventsReq, accounts);
         validationFactory.createValidation(ValidateType.EVENT).validate(events);
 
+        accounts = accountsRepository.findById(accounts.getId()).get();
+        AccountsMapperEvents accountsMapperEvents = new AccountsMapperEvents();
+        accountsMapperEvents.setEvents(events);
+        accountsMapperEvents.setAccounts(accounts);
+
+        if (accounts.getAccountsEventsSet() == null) {
+            accounts.setAccountsEventsSet(new HashSet<>());
+        }
+        accounts.getAccountsEventsSet().add(accountsMapperEvents);
+        events.getAccountsEventsSet().add(accountsMapperEvents);
         // events 생성
         return EventsDto.from(
                 eventsRepository.save(events)

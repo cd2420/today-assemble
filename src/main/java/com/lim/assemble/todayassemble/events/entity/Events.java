@@ -3,6 +3,7 @@ package com.lim.assemble.todayassemble.events.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
@@ -62,6 +63,10 @@ public class Events extends BaseEntity {
 
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
+    private Set<AccountsMapperEvents> accountsEventsSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Tags> tagsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -85,6 +90,7 @@ public class Events extends BaseEntity {
                 .longitude(createEventsReq.getLongitude())
                 .latitude(createEventsReq.getLatitude())
                 .likesSet(new HashSet<>())
+                .accountsEventsSet(new HashSet<>())
                 .eventsImagesSet(EventsImages.returnImagesSetFrom(createEventsReq))
                 .tagsSet(Tags.returnTagsSetFrom(createEventsReq))
                 .zoomsSet(Zooms.returnZoomsSetFrom(createEventsReq))

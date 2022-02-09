@@ -49,7 +49,7 @@ public class Accounts extends BaseEntity {
 
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
-    private Set<Events> eventsSet = new HashSet<>();
+    private Set<AccountsMapperEvents> accountsEventsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
