@@ -1,6 +1,7 @@
 package com.lim.assemble.todayassemble.repository;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.entity.EntityFactory;
@@ -52,9 +53,9 @@ class EventsRepositoryTest {
         List<Accounts> accountsList = accountsRepository.findAll();
 
         // then
-        Iterator<Events> itEvents = accountsList.get(0).getEventsSet().iterator();
-        while (itEvents.hasNext()) {
-            Events e = itEvents.next();
+        Iterator<AccountsMapperEvents> it = accountsList.get(0).getAccountsEventsSet().iterator();
+        while (it.hasNext()) {
+            Events e = it.next().getEvents();
             assertEquals(eventsList.get(0).getName(), e.getName());
         }
 
@@ -93,14 +94,14 @@ class EventsRepositoryTest {
 
         assertEquals(eventsList.size(), 10);
 
-        Iterator<Events> itEvents = accountsList.get(0).getEventsSet().iterator();
-        while (itEvents.hasNext()) {
-            Events e = itEvents.next();
+        Iterator<AccountsMapperEvents> it = accountsList.get(0).getAccountsEventsSet().iterator();
+        while (it.hasNext()) {
+            Events e = it.next().getEvents();
             log.info(e.getName());
         }
 
-        while (itEvents.hasNext()) {
-            Events e = itEvents.next();
+        while (it.hasNext()) {
+            Events e = it.next().getEvents();
             log.info(e.getName());
         }
 

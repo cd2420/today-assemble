@@ -67,6 +67,18 @@ public class EventsDto {
                 .build();
     }
 
+
+
+    public static Set<EventsDto> returnEventsDtoSet(Set<AccountsMapperEvents> accountsMapperEvents) {
+        if (accountsMapperEvents == null) {
+            return new HashSet<>();
+        }
+        return accountsMapperEvents.stream()
+                        .map(EventsDto::from)
+                        .collect(Collectors.toSet());
+
+    }
+
     public static EventsDto from(AccountsMapperEvents accountsMapperEvents) {
         Events events = accountsMapperEvents.getEvents();
         return EventsDto.builder()
@@ -85,15 +97,5 @@ public class EventsDto {
                 .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
                 .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))
                 .build();
-    }
-
-    public static Set<EventsDto> returnEventsDtoSet(Set<AccountsMapperEvents> accountsMapperEvents) {
-        if (accountsMapperEvents == null) {
-            return new HashSet<>();
-        }
-        return accountsMapperEvents.stream()
-                        .map(EventsDto::from)
-                        .collect(Collectors.toSet());
-
     }
 }
