@@ -75,7 +75,7 @@ public class Events extends BaseEntity {
 
     // TODO 장소 데이터
 
-    public static Events from(CreateEventsReq createEventsReq, Accounts accounts) {
+    public static Events of(CreateEventsReq createEventsReq, Accounts accounts) {
 
         Events events = Events.builder()
                 .name(createEventsReq.getName())
@@ -108,7 +108,7 @@ public class Events extends BaseEntity {
         return events;
     }
 
-    public static Events from(UpdateEventsContentsReq updateEventsContentsReq) {
+    public static Events of(UpdateEventsContentsReq updateEventsContentsReq) {
 
         Events events = Events.builder()
                 .eventsTime(updateEventsContentsReq.getEventsTime())

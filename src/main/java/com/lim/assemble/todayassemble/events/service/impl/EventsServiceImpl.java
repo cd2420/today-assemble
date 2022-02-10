@@ -1,7 +1,9 @@
 package com.lim.assemble.todayassemble.events.service.impl;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +37,7 @@ public class EventsServiceImpl implements EventsService {
     private final ValidationFactory validationFactory;
     private final EventsRepository eventsRepository;
     private final AccountsRepository accountsRepository;
+    private final AccountsEventsRepository accountsEventsRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,10 +51,12 @@ public class EventsServiceImpl implements EventsService {
     @Override
     @Transactional(readOnly = true)
     public EventsDto getEvents(Long eventId) {
-        return EventsDto.from(
-                eventsRepository.findById(eventId)
-                        .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
-        );
+        return EventsDto.from(findEventsById(eventId));
+    }
+
+    private Events findEventsById(Long eventId) {
+        return eventsRepository.findById(eventId)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID));
     }
 
     @Override
@@ -60,23 +67,61 @@ public class EventsServiceImpl implements EventsService {
         // 호스트가 생성할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크
         // , eventsType 별 필수 값 체크
         // }
-        Events events = Events.from(createEventsReq, accounts);
+        Events events = Events.of(createEventsReq, accounts);
         validationFactory.createValidation(ValidateType.EVENT).validate(events);
 
         accounts = accountsRepository.findById(accounts.getId()).get();
-        AccountsMapperEvents accountsMapperEvents = new AccountsMapperEvents();
-        accountsMapperEvents.setEvents(events);
-        accountsMapperEvents.setAccounts(accounts);
-
-        if (accounts.getAccountsEventsSet() == null) {
-            accounts.setAccountsEventsSet(new HashSet<>());
-        }
-        accounts.getAccountsEventsSet().add(accountsMapperEvents);
-        events.getAccountsEventsSet().add(accountsMapperEvents);
+        accountsMappingEvents(accounts, events);
         // events 생성
         return EventsDto.from(
                 eventsRepository.save(events)
         );
+    }
+
+    public void accountsMappingEvents(Accounts accounts, Events events) {
+        Optional<AccountsMapperEvents> accountsMapperEventsOptional
+                = accountsEventsRepository.findByAccountsIdAndEventsId(accounts.getId(), events.getId());
+
+        // 1. 참여중인 모임일 경우 -> 떠나기
+        if (accountsMapperEventsOptional.isPresent()) {
+            leaveEvents(accountsMapperEventsOptional.get(), accounts, events);
+        } else {
+            // 2. 참여중인 모임이 아닌 경우 -> 참여
+            createAccountMapperEvents(accounts, events);
+        }
+
+    }
+
+    public void createAccountMapperEvents(Accounts accounts, Events events) {
+        AccountsMapperEvents accountsMapperEvents = AccountsMapperEvents.builder()
+                .accounts(accounts)
+                .events(events)
+                .build();
+
+        addAccountsMapperEventsToSet(accountsMapperEvents, accounts.getAccountsEventsSet());
+        addAccountsMapperEventsToSet(accountsMapperEvents, events.getAccountsEventsSet());
+    }
+
+    public void leaveEvents(AccountsMapperEvents accountsMapperEvents, Accounts accounts, Events events) {
+        deleteAccountsMapperEventsSet(accountsMapperEvents, accounts.getAccountsEventsSet());
+        deleteAccountsMapperEventsSet(accountsMapperEvents, events.getAccountsEventsSet());
+    }
+
+    public void deleteAccountsMapperEventsSet(AccountsMapperEvents accountsMapperEvents, Set<AccountsMapperEvents> accountsEventsSet) {
+        AccountsMapperEvents delete = accountsEventsSet.stream()
+                                        .filter(item -> item.getId().equals(accountsMapperEvents.getId()))
+                                        .findFirst()
+                                        .orElseThrow(
+                                                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNTS_MAPPER_EVENTS_ID)
+                                        );
+        accountsEventsSet.remove(delete);
+    }
+
+    public void addAccountsMapperEventsToSet(AccountsMapperEvents accountsMapperEvents, Set<AccountsMapperEvents> accountsMapperEventsSet) {
+        if (accountsMapperEventsSet == null) {
+            accountsMapperEventsSet = new HashSet<>();
+        }
+        accountsMapperEventsSet.add(accountsMapperEvents);
     }
 
     @Override
@@ -193,5 +238,15 @@ public class EventsServiceImpl implements EventsService {
 
         // event 삭제
         eventsRepository.deleteById(eventsId);
+    }
+
+    @Override
+    @Transactional
+    public AccountsEventsDto participateEventsManage(Long eventsId, Accounts accounts) {
+        Events events = findEventsById(eventsId);
+        accounts = accountsRepository.getById(accounts.getId());
+        accountsMappingEvents(accounts, events);
+
+        return AccountsEventsDto.from(accounts);
     }
 }

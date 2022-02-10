@@ -82,6 +82,7 @@ public class EventsDto {
     public static EventsDto from(AccountsMapperEvents accountsMapperEvents) {
         Events events = accountsMapperEvents.getEvents();
         return EventsDto.builder()
+                .id(events.getId())
                 .name(events.getName())
                 .hostAccountsId(events.getHostAccountsId())
                 .description(events.getDescription())

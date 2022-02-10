@@ -19,6 +19,7 @@ public class ErrorHttpStatusMapper {
             case DATE_OVERLAP:
             case NO_EVENTS_ID:
             case NO_LIKES_ID:
+            case NO_ACCOUNTS_MAPPER_EVENTS_ID:
             case BAD_REQUEST_ZOOMS:
                 return HttpStatus.BAD_REQUEST;
             default:

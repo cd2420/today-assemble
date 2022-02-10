@@ -101,7 +101,7 @@ public class EventsValidation implements Validation {
 
     private void updateValidate(UpdateEventsContentsReq updateEventsContentsReq) {
 
-        Events events = Events.from(updateEventsContentsReq);
+        Events events = Events.of(updateEventsContentsReq);
         events.setId(updateEventsContentsReq.getId());
 
         // events가 존재하는지 체크.

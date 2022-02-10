@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.controller;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.*;
@@ -95,7 +96,7 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsTypeReq, accounts));
     }
 
-    @DeleteMapping("{eventsId}")
+    @DeleteMapping("/{eventsId}")
     public ResponseEntity<Void> deleteEvents(
             @PathVariable Long eventsId
             , @CurrentAccount Accounts accounts
@@ -107,5 +108,19 @@ public class EventsCUController {
         eventsService.deleteEvents(eventsId, accounts);
         return ResponseEntity.ok().build();
 
+    }
+
+    @PostMapping("/{eventsId}/accounts")
+    public ResponseEntity<AccountsEventsDto> participateEvents(
+            @PathVariable Long eventsId
+            , @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+    ) {
+
+        log.info("url : {}"
+                , request.getRequestURI()
+        );
+
+        return ResponseEntity.ok(eventsService.participateEventsManage(eventsId, accounts));
     }
 }

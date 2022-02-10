@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.service;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.*;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface EventsService {
     EventsDto updateEvents(UpdateEventsReqBase updateEventsReqBase, Accounts accounts);
 
     void deleteEvents(Long eventsId, Accounts accounts);
+
+    AccountsEventsDto participateEventsManage(Long eventsId, Accounts accounts);
 }
