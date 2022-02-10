@@ -32,25 +32,22 @@ public class LikesServiceImpl implements LikesService {
                 );
         // 1. 좋아요가 있을 경우 -> 좋아요 삭제
         if (likesOptional.isPresent()) {
-            Likes likes = likesOptional.get();
-            removeLikes(likes, accounts.getLikesSet());
-            removeLikes(likes, events.getLikesSet());
-        }
-        else {
+            removeLikes(likesOptional.get(), accounts, events);
+        } else {
             // 2. 좋아요가 없을 경우 -> 좋아요 생성
-            Likes likes = new Likes();
-            likes.setAccounts(accounts);
-            likes.setEvents(events);
-
-            createLikes(likes, events.getLikesSet());
-            createLikes(likes, accounts.getLikesSet());
+            createLikes(accounts, events);
 
         }
 
         return EventsDto.from(events);
     }
 
-    public void removeLikes(Likes likes, Set<Likes> likesSet) {
+    public void removeLikes(Likes likes, Accounts accounts, Events events) {
+        deleteLikesFromSet(likes, accounts.getLikesSet());
+        deleteLikesFromSet(likes, events.getLikesSet());
+    }
+
+    public void deleteLikesFromSet(Likes likes, Set<Likes> likesSet) {
         Likes deleteAccountsLikes = likesSet.stream()
                 .filter(item -> item.getId().equals(likes.getId()))
                 .findFirst()
@@ -60,7 +57,17 @@ public class LikesServiceImpl implements LikesService {
         likesSet.remove(deleteAccountsLikes);
     }
 
-    public void createLikes(Likes likes, Set<Likes> likesSet) {
+    public void createLikes(Accounts accounts, Events events) {
+        Likes likes = Likes.builder()
+                .accounts(accounts)
+                .events(events)
+                .build();
+
+        addLikesToSet(likes, events.getLikesSet());
+        addLikesToSet(likes, accounts.getLikesSet());
+    }
+
+    public void addLikesToSet(Likes likes, Set<Likes> likesSet) {
         if (likesSet == null) {
             likesSet = new HashSet<>();
         }
