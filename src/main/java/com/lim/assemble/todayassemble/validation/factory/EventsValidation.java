@@ -1,6 +1,8 @@
 package com.lim.assemble.todayassemble.validation.factory;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,25 +29,36 @@ import java.util.stream.Collectors;
 public class EventsValidation implements Validation {
 
     private final EventsRepository eventsRepository;
+    private final AccountsEventsRepository accountsEventsRepository;
 
     private final ValidateType validateType = ValidateType.EVENT;
+
+    @Override
+    public ValidateType getValidateType() {
+        return validateType;
+    }
 
     @Override
     @Transactional(readOnly = true)
     public void validate(Object target) {
 
-        if (Events.class.equals(target.getClass())) {
+        Class<?> targetClass = target.getClass();
+
+        if (Events.class.equals(targetClass)) {
             // 생성 validate
             createValidate((Events) target);
-        } else if (UpdateEventsContentsReq.class.equals(target.getClass())) {
+        } else if (UpdateEventsContentsReq.class.equals(targetClass)) {
             // 수정 validate
             updateValidate((UpdateEventsContentsReq) target);
-        } else if (UpdateEventsTypeReq.class.equals(target.getClass())) {
+        } else if (UpdateEventsTypeReq.class.equals(targetClass)) {
             // 이벤트 타입 수정시 validate
             updateTypeValidate((UpdateEventsTypeReq) target);
-        } else {
+        } else if(UpdateEventsReqBase.class.equals(targetClass)) {
             // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
             updateTagsOrImagesValidate((UpdateEventsReqBase) target);
+        } else {
+            // 모임 참여할 때 참여가능한지 validate
+            participateValidate((Long) target);
         }
     }
 
@@ -189,8 +203,17 @@ public class EventsValidation implements Validation {
                 .toEpochMilli();
     }
 
-    @Override
-    public ValidateType getValidateType() {
-        return validateType;
+    private void participateValidate(Long eventsId) {
+        Optional<List<AccountsMapperEvents>> optional = accountsEventsRepository.findByEventsId(eventsId);
+        int participationMember = optional.orElseThrow(
+                () -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
+                .size();
+
+        Events events = eventsRepository.findById(eventsId).get();
+        int checkMaxMember = (int) events.getMaxMembers();
+        if (checkMaxMember <= participationMember) {
+            throw new TodayAssembleException(ErrorCode.OVER_MAX_MEMBER);
+        }
     }
+
 }

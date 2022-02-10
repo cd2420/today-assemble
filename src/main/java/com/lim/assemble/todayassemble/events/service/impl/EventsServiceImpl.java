@@ -86,6 +86,8 @@ public class EventsServiceImpl implements EventsService {
         if (accountsMapperEventsOptional.isPresent()) {
             leaveEvents(accountsMapperEventsOptional.get(), accounts, events);
         } else {
+            // events validation check: {maxNum 체크}
+            validationFactory.createValidation(ValidateType.EVENT).validate(events.getId());
             // 2. 참여중인 모임이 아닌 경우 -> 참여
             createAccountMapperEvents(accounts, events);
         }
@@ -243,6 +245,7 @@ public class EventsServiceImpl implements EventsService {
     @Override
     @Transactional
     public AccountsEventsDto participateEventsManage(Long eventsId, Accounts accounts) {
+
         Events events = findEventsById(eventsId);
         accounts = accountsRepository.getById(accounts.getId());
         accountsMappingEvents(accounts, events);
