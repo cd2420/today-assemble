@@ -3,7 +3,9 @@ package com.lim.assemble.todayassemble.validation.factory;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.common.type.EventsType;
+import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.entity.Events;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class EventsValidation implements Validation {
 
     private final EventsRepository eventsRepository;
+    private final AccountsRepository accountsRepository;
     private final AccountsEventsRepository accountsEventsRepository;
 
     private final ValidateType validateType = ValidateType.EVENT;
@@ -40,25 +43,32 @@ public class EventsValidation implements Validation {
 
     @Override
     @Transactional(readOnly = true)
-    public void validate(Object target) {
+    public void validate(ValidateSituationType validateSituationType, Object... target) {
 
-        Class<?> targetClass = target.getClass();
-
-        if (Events.class.equals(targetClass)) {
+        if (ValidateSituationType.CREATE.equals(validateSituationType)) {
             // 생성 validate
-            createValidate((Events) target);
-        } else if (UpdateEventsContentsReq.class.equals(targetClass)) {
+            createValidate((Events) target[0]);
+        } else if (ValidateSituationType.UPDATE.equals(validateSituationType)) {
             // 수정 validate
-            updateValidate((UpdateEventsContentsReq) target);
-        } else if (UpdateEventsTypeReq.class.equals(targetClass)) {
+            updateValidate((UpdateEventsContentsReq) target[0]);
+        } else if (ValidateSituationType.UPDATE_EVENTS_TYPE.equals(validateSituationType)) {
             // 이벤트 타입 수정시 validate
-            updateTypeValidate((UpdateEventsTypeReq) target);
-        } else if(UpdateEventsReqBase.class.equals(targetClass)) {
+            updateTypeValidate((UpdateEventsTypeReq) target[0]);
+        } else if(ValidateSituationType.UPDATE_TAGS.equals(validateSituationType)) {
             // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
-            updateTagsOrImagesValidate((UpdateEventsReqBase) target);
-        } else {
+            updateTagsOrImagesValidate((UpdateEventsReqBase) target[0]);
+        }  else if(ValidateSituationType.UPDATE_IMAGES.equals(validateSituationType)) {
+            // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
+            updateTagsOrImagesValidate((UpdateEventsReqBase) target[0]);
+        } else if(ValidateSituationType.DELETE.equals(validateSituationType)) {
+            // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
+            updateTagsOrImagesValidate((UpdateEventsReqBase) target[0]);
+        } else if(ValidateSituationType.EVENTS_PARTICIPATE.equals(validateSituationType)) {
             // 모임 참여할 때 참여가능한지 validate
-            participateValidate((Long) target);
+            participateValidate((Long) target[0]);
+        } else if (ValidateSituationType.INVITE.equals(validateSituationType)) {
+            // 모임 초대할 때 validate
+            inviteValidate((Long) target[0], (Accounts) target[1], (Long) target[2]);
         }
     }
 
@@ -204,15 +214,48 @@ public class EventsValidation implements Validation {
     }
 
     private void participateValidate(Long eventsId) {
+        checkOverMaxMembers(eventsId);
+    }
+
+    private void checkOverMaxMembers(Long eventsId) {
         Optional<List<AccountsMapperEvents>> optional = accountsEventsRepository.findByEventsId(eventsId);
         int participationMember = optional.orElseThrow(
                 () -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
+                .stream()
+                .filter(item -> item.getAccept())
+                .collect(Collectors.toList())
                 .size();
 
         Events events = eventsRepository.findById(eventsId).get();
         int checkMaxMember = (int) events.getMaxMembers();
         if (checkMaxMember <= participationMember) {
             throw new TodayAssembleException(ErrorCode.OVER_MAX_MEMBER);
+        }
+    }
+
+    private void inviteValidate(Long eventsId, Accounts accounts, Long invitesId) {
+        // 호스트가 맞는지 체크
+        validateEventsHost(accounts.getId(), checkExistEvents(eventsId).getAccounts().getId());
+
+        // 최대 인원 초과하는지 체크
+        checkOverMaxMembers(eventsId);
+
+        // 초대 할려는 계정이 존재하는지 체크
+        checkExistInviteAccounts(invitesId);
+
+        // 이미 있는 계정인지 체크
+        checkEventsExistAccounts(eventsId, invitesId);
+    }
+
+    private void checkExistInviteAccounts(Long invitesId) {
+        accountsRepository.findById(invitesId).orElseThrow(
+                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT)
+        );
+    }
+
+    private void checkEventsExistAccounts(Long eventsId, Long invitesId) {
+        if (accountsEventsRepository.findByAccountsIdAndEventsId(invitesId, eventsId).isPresent()) {
+            throw new TodayAssembleException(ErrorCode.ALREADY_INVITE_ACCOUNTS);
         }
     }
 

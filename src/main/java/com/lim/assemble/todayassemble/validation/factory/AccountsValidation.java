@@ -3,12 +3,14 @@ package com.lim.assemble.todayassemble.validation.factory;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsDto;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
+import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,11 +21,14 @@ public class AccountsValidation implements Validation {
     private ValidateType validateType = ValidateType.ACCOUNT;
 
     @Override
-    public void validate(Object target) {
-        if (CreateAccountReq.class.equals(target.getClass())) {
-            checkOverlappingAccountsEmail((CreateAccountReq) target);
+    @Transactional(readOnly = true)
+    public void validate(ValidateSituationType validateSituationType, Object... target) {
+        if (ValidateSituationType.CREATE.equals(validateSituationType)) {
+            checkOverlappingAccountsEmail((CreateAccountReq) target[0]);
+        } else if (ValidateSituationType.UPDATE.equals(validateSituationType)) {
+            checkAccountsIdEquals((UpdateAccountsDto) target[0]);
         } else {
-            checkAccountsIdEquals((UpdateAccountsDto) target);
+            checkAccountsIdEquals((UpdateAccountsDto) target[0]);
         }
 
     }

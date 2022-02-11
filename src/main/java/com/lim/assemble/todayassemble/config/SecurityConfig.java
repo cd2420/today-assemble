@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET
                         , "/api/v1/accounts/likes/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.POST
-                        , "/api/v1/events"
+                        , "/api/v1/events/**"
                         , "/api/v1/accounts/*/events").hasAnyRole(AccountsType.CLIENT.getType(), AccountsType.ADMIN.getType())
                 .antMatchers(HttpMethod.PUT
                         , "/api/v1/events/**"

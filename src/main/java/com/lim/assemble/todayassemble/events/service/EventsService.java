@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.service;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.*;
@@ -19,7 +20,8 @@ public interface EventsService {
 
     void deleteEvents(Long eventsId, Accounts accounts);
 
-    AccountsEventsDto<Accounts>  participateEventsManage(Long eventsId, Accounts accounts);
+    AccountsEventsDto<AccountsDto> participateEventsManage(Long eventsId, Accounts accounts);
 
-//    Object inviteEvents(Long eventsId, Accounts accounts, Long accountsId);
+    AccountsEventsDto<EventsDto> inviteEvents(Long eventsId, Accounts accounts, Long inviteAccountsId);
+
 }

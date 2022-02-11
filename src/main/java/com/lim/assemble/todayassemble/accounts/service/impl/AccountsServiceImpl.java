@@ -7,6 +7,7 @@ import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
+import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
@@ -76,7 +77,7 @@ public class AccountsServiceImpl implements AccountsService {
         // createAccountReq validation check: {이메일 중복체크}
         validationFactory
                 .createValidation(ValidateType.ACCOUNT)
-                .validate(createAccountReq);
+                .validate(ValidateSituationType.CREATE, createAccountReq);
 
         // accounts 저장
         Accounts accounts = Accounts.from(createAccountReq).generateEmailCheckToken();
@@ -108,7 +109,7 @@ public class AccountsServiceImpl implements AccountsService {
         // update 시킬려는 대상이 본인이 맞는지 확인.
         validationFactory
                 .createValidation(ValidateType.ACCOUNT)
-                .validate(new UpdateAccountsDto(accountId, accounts.getId()));
+                .validate(ValidateSituationType.UPDATE, new UpdateAccountsDto(accountId, accounts.getId()));
 
         accounts = getAccountsFromRepositoryByAccountId(accountId);
 
@@ -169,7 +170,7 @@ public class AccountsServiceImpl implements AccountsService {
         // delete 시킬려는 대상이 본인이 맞는지 확인.
         validationFactory
                 .createValidation(ValidateType.ACCOUNT)
-                .validate(new UpdateAccountsDto(accountId, accounts.getId()));
+                .validate(ValidateSituationType.UPDATE, new UpdateAccountsDto(accountId, accounts.getId()));
 
         accountsRepository.delete(accounts);
 

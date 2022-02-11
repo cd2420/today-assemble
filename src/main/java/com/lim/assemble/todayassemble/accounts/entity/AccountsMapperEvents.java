@@ -25,4 +25,6 @@ public class AccountsMapperEvents extends BaseEntity {
     @JoinColumn(name = "events_id", nullable = false)
     @JsonIgnore
     private Events events;
+
+    private Boolean accept;
 }

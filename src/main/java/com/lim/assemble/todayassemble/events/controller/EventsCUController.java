@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.controller;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
@@ -111,7 +112,7 @@ public class EventsCUController {
     }
 
     @PostMapping("/{eventsId}/accounts")
-    public ResponseEntity<AccountsEventsDto<Accounts>> participateEvents(
+    public ResponseEntity<AccountsEventsDto<AccountsDto>> participateEvents(
             @PathVariable Long eventsId
             , @CurrentAccount Accounts accounts
             , HttpServletRequest request
@@ -124,18 +125,18 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.participateEventsManage(eventsId, accounts));
     }
 
-//    @PostMapping("/{eventsId}/accounts/{accountsId}")
-//    public ResponseEntity<AccountsEventsDto> inviteEvents(
-//            @PathVariable Long eventsId
-//            , @PathVariable Long accountsId
-//            , @CurrentAccount Accounts accounts
-//            , HttpServletRequest request
-//    ) {
-//
-//        log.info("url : {}"
-//                , request.getRequestURI()
-//        );
-//
-//        return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
-//    }
+    @PostMapping("/{eventsId}/accounts/{accountsId}")
+    public ResponseEntity<AccountsEventsDto<EventsDto>> inviteEvents(
+            @PathVariable Long eventsId
+            , @PathVariable Long accountsId
+            , @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+    ) {
+
+        log.info("url : {}"
+                , request.getRequestURI()
+        );
+
+        return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
+    }
 }
