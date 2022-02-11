@@ -111,7 +111,7 @@ public class EventsCUController {
     }
 
     @PostMapping("/{eventsId}/accounts")
-    public ResponseEntity<AccountsEventsDto> participateEvents(
+    public ResponseEntity<AccountsEventsDto<Accounts>> participateEvents(
             @PathVariable Long eventsId
             , @CurrentAccount Accounts accounts
             , HttpServletRequest request
@@ -123,4 +123,19 @@ public class EventsCUController {
 
         return ResponseEntity.ok(eventsService.participateEventsManage(eventsId, accounts));
     }
+
+//    @PostMapping("/{eventsId}/accounts/{accountsId}")
+//    public ResponseEntity<AccountsEventsDto> inviteEvents(
+//            @PathVariable Long eventsId
+//            , @PathVariable Long accountsId
+//            , @CurrentAccount Accounts accounts
+//            , HttpServletRequest request
+//    ) {
+//
+//        log.info("url : {}"
+//                , request.getRequestURI()
+//        );
+//
+//        return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
+//    }
 }

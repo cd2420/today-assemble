@@ -19,5 +19,7 @@ public interface EventsService {
 
     void deleteEvents(Long eventsId, Accounts accounts);
 
-    AccountsEventsDto participateEventsManage(Long eventsId, Accounts accounts);
+    AccountsEventsDto<Accounts>  participateEventsManage(Long eventsId, Accounts accounts);
+
+//    Object inviteEvents(Long eventsId, Accounts accounts, Long accountsId);
 }

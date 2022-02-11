@@ -71,10 +71,13 @@ public class EventsServiceImpl implements EventsService {
         validationFactory.createValidation(ValidateType.EVENT).validate(events);
 
         accounts = accountsRepository.findById(accounts.getId()).get();
-        accountsMappingEvents(accounts, events);
+
         // events 생성
+        events = eventsRepository.save(events);
+        accountsMappingEvents(accounts, events);
+
         return EventsDto.from(
-                eventsRepository.save(events)
+                events
         );
     }
 
@@ -244,12 +247,12 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional
-    public AccountsEventsDto participateEventsManage(Long eventsId, Accounts accounts) {
+    public AccountsEventsDto<Accounts> participateEventsManage(Long eventsId, Accounts accounts) {
 
         Events events = findEventsById(eventsId);
         accounts = accountsRepository.getById(accounts.getId());
         accountsMappingEvents(accounts, events);
-
-        return AccountsEventsDto.from(accounts);
+        AccountsEventsDto<Accounts> accountsEventsDto = AccountsEventsDto.from(accounts);
+        return accountsEventsDto;
     }
 }
