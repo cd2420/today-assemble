@@ -3,7 +3,10 @@ package com.lim.assemble.todayassemble.events.service;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
-import com.lim.assemble.todayassemble.events.dto.*;
+import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
+import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import com.lim.assemble.todayassemble.events.dto.UpdateAccountsMapperEventsReq;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsReqBase;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -24,4 +27,9 @@ public interface EventsService {
 
     AccountsEventsDto<EventsDto> inviteEvents(Long eventsId, Accounts accounts, Long inviteAccountsId);
 
+    AccountsEventsDto<AccountsDto> responseEventsInvite(
+            Long eventsId
+            , Accounts accounts
+            , UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq
+    );
 }

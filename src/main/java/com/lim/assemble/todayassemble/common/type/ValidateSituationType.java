@@ -9,5 +9,6 @@ public enum ValidateSituationType {
     , UPDATE_TAGS
     , EVENTS_PARTICIPATE
     , INVITE
+    , RESPONSE_EVENTS_INVITE
     ;
 }

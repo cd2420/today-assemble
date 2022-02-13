@@ -69,6 +69,9 @@ public class EventsValidation implements Validation {
         } else if (ValidateSituationType.INVITE.equals(validateSituationType)) {
             // 모임 초대할 때 validate
             inviteValidate((Long) target[0], (Accounts) target[1], (Long) target[2]);
+        } else if (ValidateSituationType.RESPONSE_EVENTS_INVITE.equals(validateSituationType)) {
+            // 모임 초대 반응할 때 validate
+            responseEventsInviteValidate((Long) target[0], (Long) target[1]);
         }
     }
 
@@ -257,6 +260,13 @@ public class EventsValidation implements Validation {
         if (accountsEventsRepository.findByAccountsIdAndEventsId(invitesId, eventsId).isPresent()) {
             throw new TodayAssembleException(ErrorCode.ALREADY_INVITE_ACCOUNTS);
         }
+    }
+
+    private void responseEventsInviteValidate(Long eventsId, Long accountsId) {
+        accountsEventsRepository.findByAccountsIdAndEventsId(accountsId, eventsId).orElseThrow(
+                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNTS_IN_EVENTS)
+        );
+
     }
 
 }

@@ -23,6 +23,7 @@ public enum ErrorCode {
     , NO_ACCOUNTS_MAPPER_EVENTS_ID("잘못된 \"모임 참여\" id입니다.")
     , OVER_MAX_MEMBER("인원 초과")
     , ALREADY_INVITE_ACCOUNTS("이미 초대된 계정입니다.")
+    , NO_ACCOUNTS_IN_EVENTS("초대 되지 않은 계정입니다.")
 
     , BAD_REQUEST_ZOOMS("요청된 Zoom 데이터가 잘못 되었습니다.")
 

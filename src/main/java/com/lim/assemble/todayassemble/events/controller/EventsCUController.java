@@ -139,4 +139,23 @@ public class EventsCUController {
 
         return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
     }
+
+    @PutMapping("/{eventsId}/accounts")
+    public ResponseEntity<AccountsEventsDto<AccountsDto>> responseEventsInvite(
+            @PathVariable Long eventsId
+            , @CurrentAccount Accounts accounts
+            , @RequestBody @Valid UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq
+            , HttpServletRequest request
+    ) {
+        log.info("url : {}, data : {}"
+                , request.getRequestURI()
+                , updateAccountsMapperEventsReq
+        );
+
+        return ResponseEntity.ok(eventsService.responseEventsInvite(
+                eventsId
+                , accounts
+                , updateAccountsMapperEventsReq)
+        );
+    }
 }
