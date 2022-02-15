@@ -551,7 +551,7 @@ class EventsCUControllerTest {
     @DisplayName("[DELETE] EXCEPTION: delete events > not equals host accounts")
     @WithAccount("임대근")
     @Transactional
-    void givenDeleteEventsIdNotEqualsHostAccounts_whenDeleteEventsAPI_thenReturnStatusOk() throws Exception {
+    void givenDeleteEventsIdNotEqualsHostAccounts_whenDeleteEventsAPI_thenReturnErrorMSG() throws Exception {
         // given
         String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
 
@@ -572,6 +572,61 @@ class EventsCUControllerTest {
         ;
 
     }
+
+    @Test
+    @DisplayName("[POST] events participate")
+    @WithAccount("임대근")
+    @Transactional
+    void givenEventsId_whenParticipateEventsAPI_thenReturnStatusOk() throws Exception {
+        // given
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
+        EventsDto eventsDto = eventsService.getEventsList(pageable).get(0);
+        // when
+        // then
+        MvcResult result = mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts")
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    @DisplayName("[POST] events leave")
+    @WithAccount("임대근")
+    @Transactional
+    void givenEventsId_whenLeaveEventsAPI_thenReturnStatusOk() throws Exception {
+        // given
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
+        EventsDto eventsDto = eventsService.getEventsList(pageable).get(0);
+        // when
+        // then
+        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts")
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        ).andExpect(status().isOk())
+        ;
+
+        MvcResult result = mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts")
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+
+    }
+
 
     public String asJsonString(final Object obj) {
         return JsonToString.asJsonString(obj);

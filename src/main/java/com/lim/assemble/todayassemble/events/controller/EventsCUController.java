@@ -22,6 +22,9 @@ public class EventsCUController {
 
     private final EventsService eventsService;
 
+    /**
+     * Events 생성
+     */
     @PostMapping("")
     public ResponseEntity<EventsDto> createEvents(
            @RequestBody @Valid CreateEventsReq createEventsReq
@@ -37,6 +40,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.createEvents(createEventsReq, accounts));
     }
 
+    /**
+     * Events 기본내용 수정
+     */
     @PutMapping("")
     public ResponseEntity<EventsDto> updateEvents(
             @RequestBody @Valid UpdateEventsContentsReq updateEventsContentsReq
@@ -52,6 +58,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsContentsReq, accounts));
     }
 
+    /**
+     * Events tags 수정
+     */
     @PutMapping("/tags")
     public ResponseEntity<EventsDto> updateEventsTags(
             @RequestBody @Valid UpdateEventsTagsReq updateEventsTagsReq
@@ -67,6 +76,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsTagsReq, accounts));
     }
 
+    /**
+     * Events images 수정
+     */
     @PutMapping("/images")
     public ResponseEntity<EventsDto> updateEventsImages(
             @RequestBody @Valid UpdateEventsImagesReq updateEventsImagesReq
@@ -82,6 +94,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsImagesReq, accounts));
     }
 
+    /**
+     * Events type 수정
+     */
     @PutMapping("/type")
     public ResponseEntity<EventsDto> updateEventsType(
             @RequestBody @Valid UpdateEventsTypeReq updateEventsTypeReq
@@ -97,6 +112,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsTypeReq, accounts));
     }
 
+    /**
+     * Events 삭제
+     */
     @DeleteMapping("/{eventsId}")
     public ResponseEntity<Void> deleteEvents(
             @PathVariable Long eventsId
@@ -111,6 +129,9 @@ public class EventsCUController {
 
     }
 
+    /**
+     * Events 참여
+     */
     @PostMapping("/{eventsId}/accounts")
     public ResponseEntity<AccountsEventsDto<AccountsDto>> participateEvents(
             @PathVariable Long eventsId
@@ -125,6 +146,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.participateEventsManage(eventsId, accounts));
     }
 
+    /**
+     * Events 초대
+     */
     @PostMapping("/{eventsId}/accounts/{accountsId}")
     public ResponseEntity<AccountsEventsDto<EventsDto>> inviteEvents(
             @PathVariable Long eventsId
@@ -140,6 +164,9 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
     }
 
+    /**
+     * Events 초대 응답
+     */
     @PutMapping("/{eventsId}/accounts")
     public ResponseEntity<AccountsEventsDto<AccountsDto>> responseEventsInvite(
             @PathVariable Long eventsId

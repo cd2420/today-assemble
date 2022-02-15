@@ -47,6 +47,7 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
                 .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
         accounts.setEmailVerified(true);
         accounts.setLikesSet(new HashSet<>());
+        accounts.setAccountsEventsSet(new HashSet<>());
         accountsRepository.flush();
 
         UserDetails principal = accountsLoginService.loadUserByUsername(createAccountReq.getEmail());

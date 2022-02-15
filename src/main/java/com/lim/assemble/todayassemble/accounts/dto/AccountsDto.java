@@ -32,8 +32,6 @@ public class AccountsDto {
 
     private Boolean emailVerified;
 
-    private String emailCheckToken;
-
     public static AccountsDto from(Accounts accounts) {
         return AccountsDto.builder()
                 .name(accounts.getName())
@@ -45,7 +43,6 @@ public class AccountsDto {
                 .likesDtos(LikesDto.returnLikesDtoSet(accounts.getLikesSet()))
                 .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))
                 .emailVerified(accounts.getEmailVerified())
-                .emailCheckToken(accounts.getEmailCheckToken())
                 .build();
     }
 }
