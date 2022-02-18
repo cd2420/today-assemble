@@ -130,10 +130,10 @@ public class EventsCUController {
     }
 
     /**
-     * Events 참여
+     * Events 참여 관리
      */
     @PostMapping("/{eventsId}/accounts")
-    public ResponseEntity<AccountsEventsDto<AccountsDto>> participateEvents(
+    public ResponseEntity<AccountsEventsDto<AccountsDto>> participateEventsManage(
             @PathVariable Long eventsId
             , @CurrentAccount Accounts accounts
             , HttpServletRequest request

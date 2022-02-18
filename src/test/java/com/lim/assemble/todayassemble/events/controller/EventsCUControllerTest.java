@@ -4,7 +4,10 @@ import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
 import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
 import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.email.service.EmailService;
@@ -49,6 +52,9 @@ class EventsCUControllerTest {
 
     @Autowired
     EventsService eventsService;
+
+    @Autowired
+    AccountsService accountsService;
 
     @MockBean
     EmailService emailService;
@@ -622,6 +628,114 @@ class EventsCUControllerTest {
         )
                 .andExpect(status().isOk())
                 .andReturn();
+
+
+        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    @DisplayName("[POST] invite events")
+    @WithAccount("임대근")
+    @Transactional
+    void givenEventsIdAndAccountsId_whenInviteEventsAPI_thenReturnStatusOk() throws Exception {
+        // given
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
+                EventsType.OFFLINE
+                , null
+                , null
+        );
+        EventsDto eventsDto = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        AccountsDto account = accountsService.getAccount(1l);
+        // when
+        // then
+        MvcResult result = mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + account.getId())
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
+
+        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    @DisplayName("[PUT] response events > Accept")
+    @WithAccount("임대근")
+    @Transactional
+    void givenEventsId_whenResponseEventsInviteAcceptAPI_thenReturnStatusOk() throws Exception {
+        // given
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Accounts targetAccounts = userAccount.getAccounts();
+        AccountsDto hostAccounts = accountsService.getAccount(1l);
+        EventsDto eventsDto = hostAccounts.getEventsDtos().stream()
+                .filter(item -> item.getHostAccountsId().equals(hostAccounts.getId()))
+                .findFirst()
+                .get();
+
+        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + targetAccounts.getId())
+                .header("Authorization", "Bearer" + " " + WithAccountSecurityContextFacotry.getJwtToken(hostAccounts.getEmail()) )
+                .with(csrf())
+                )
+                .andExpect(status().isOk())
+        ;
+        UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq = UpdateAccountsMapperEventsReq.builder().response(true).build();
+        String json = asJsonString(updateAccountsMapperEventsReq);
+        // when
+        // then
+        MvcResult result = mockMvc.perform(put("/api/v1/events/" + eventsDto.getId() + "/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
+
+        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    @DisplayName("[PUT] response events > Reject")
+    @WithAccount("임대근")
+    @Transactional
+    void givenEventsId_whenResponseEventsInviteRejectAPI_thenReturnStatusOk() throws Exception {
+        // given
+        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Accounts targetAccounts = userAccount.getAccounts();
+        AccountsDto hostAccounts = accountsService.getAccount(1l);
+        EventsDto eventsDto = hostAccounts.getEventsDtos().stream()
+                .filter(item -> item.getHostAccountsId().equals(hostAccounts.getId()))
+                .findFirst()
+                .get();
+
+        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + targetAccounts.getId())
+                .header("Authorization", "Bearer" + " " + WithAccountSecurityContextFacotry.getJwtToken(hostAccounts.getEmail()) )
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+        ;
+        UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq = UpdateAccountsMapperEventsReq.builder().response(false).build();
+        String json = asJsonString(updateAccountsMapperEventsReq);
+        // when
+        // then
+        MvcResult result = mockMvc.perform(put("/api/v1/events/" + eventsDto.getId() + "/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .header("Authorization", "Bearer" + " " + jwtToken)
+                .with(csrf())
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
 
         log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
 

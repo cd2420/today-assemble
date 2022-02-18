@@ -30,6 +30,10 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
     private final AccountsLoginServiceImpl accountsLoginService;
     private final AccountsRepository accountsRepository;
 
+    static final long EXPIRATION_TIME = 864_000_00;
+    static final String SIGNING_KEY = "signingKey";
+
+
     @Override
     public SecurityContext createSecurityContext(WithAccount withAccount) {
         String name = withAccount.value();
@@ -59,10 +63,17 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
 
     public static String getJwtToken() {
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final long EXPIRATION_TIME = 864_000_00;
-        final String SIGNING_KEY = "signingKey";
+
 
         return Jwts.builder().setSubject(userAccount.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SIGNING_KEY)
+                .compact();
+    }
+
+    public static String getJwtToken(String email) {
+
+        return Jwts.builder().setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SIGNING_KEY)
                 .compact();

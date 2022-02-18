@@ -14,6 +14,8 @@ import java.util.Set;
 @Builder
 public class AccountsDto {
 
+    private Long id;
+
     private String name;
 
     private String email;
@@ -34,6 +36,7 @@ public class AccountsDto {
 
     public static AccountsDto from(Accounts accounts) {
         return AccountsDto.builder()
+                .id(accounts.getId())
                 .name(accounts.getName())
                 .email(accounts.getEmail())
                 .accountType(accounts.getAccountType())
