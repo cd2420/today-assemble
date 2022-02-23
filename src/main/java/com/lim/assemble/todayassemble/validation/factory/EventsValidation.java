@@ -4,11 +4,14 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
+import com.lim.assemble.todayassemble.common.entity.Images;
 import com.lim.assemble.todayassemble.common.type.EventsType;
+import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.entity.Events;
+import com.lim.assemble.todayassemble.events.entity.EventsImages;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
@@ -56,13 +59,13 @@ public class EventsValidation implements Validation {
             updateTypeValidate((UpdateEventsTypeReq) target[0]);
         } else if(ValidateSituationType.UPDATE_TAGS.equals(validateSituationType)) {
             // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
-            updateTagsOrImagesValidate((UpdateEventsReqBase) target[0]);
+            updateTagsOrDeleteEventsValidate((UpdateEventsReqBase) target[0]);
         }  else if(ValidateSituationType.UPDATE_IMAGES.equals(validateSituationType)) {
             // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
-            updateTagsOrImagesValidate((UpdateEventsReqBase) target[0]);
+            updateEventsImagesValidate((UpdateEventsImagesReq) target[0]);
         } else if(ValidateSituationType.DELETE.equals(validateSituationType)) {
             // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
-            updateTagsOrImagesValidate((UpdateEventsReqBase) target[0]);
+            updateTagsOrDeleteEventsValidate((UpdateEventsReqBase) target[0]);
         } else if(ValidateSituationType.EVENTS_PARTICIPATE.equals(validateSituationType)) {
             // 모임 참여할 때 참여가능한지 validate
             participateValidate((Long) target[0]);
@@ -72,6 +75,22 @@ public class EventsValidation implements Validation {
         } else if (ValidateSituationType.RESPONSE_EVENTS_INVITE.equals(validateSituationType)) {
             // 모임 초대 반응할 때 validate
             responseEventsInviteValidate((Long) target[0], (Long) target[1]);
+        }
+    }
+
+    private void updateEventsImagesValidate(UpdateEventsImagesReq target) {
+        // events가 존재하는지 체크.
+        // 해당 event 주인이 본인이 맞는지 체크.
+        validateEventsHost(target.getAccountsId(), checkExistEvents(target.getId()).getAccounts().getId());
+
+        // main ImageType은 하나만 가능
+        Set<EventsImagesDto> images = target.getImages();
+        if (images != null) {
+            checkOnlyOneMainImageType(
+                    images.stream()
+                        .map(EventsImagesDto::getImagesType)
+                        .collect(Collectors.toSet())
+            );
         }
     }
 
@@ -119,11 +138,12 @@ public class EventsValidation implements Validation {
         }
     }
 
-    private void updateTagsOrImagesValidate(UpdateEventsReqBase target) {
+    private void updateTagsOrDeleteEventsValidate(UpdateEventsReqBase target) {
 
         // events가 존재하는지 체크.
         // 해당 event 주인이 본인이 맞는지 체크.
         validateEventsHost(target.getAccountsId(), checkExistEvents(target.getId()).getAccounts().getId());
+
     }
 
     private void updateValidate(UpdateEventsContentsReq updateEventsContentsReq) {
@@ -173,6 +193,27 @@ public class EventsValidation implements Validation {
 
         // 기존에 있는 event 시간이랑 겹치는 체크.
         validateEventsTime(target);
+
+        // main ImageType은 하나만 가능
+        Set<EventsImages> eventsImagesSet = target.getEventsImagesSet();
+        if (eventsImagesSet != null) {
+            checkOnlyOneMainImageType(
+                    eventsImagesSet.stream()
+                            .map(Images::getImagesType)
+                            .collect(Collectors.toSet())
+            );
+        }
+    }
+
+    private void checkOnlyOneMainImageType(Set<ImagesType> imagesTypes) {
+        if (imagesTypes != null) {
+            long count = imagesTypes.stream()
+                    .filter(ImagesType.MAIN::equals)
+                    .count();
+            if (count > 1) {
+                throw new TodayAssembleException(ErrorCode.OVER_MAIN_IMAGES);
+            }
+        }
     }
 
     private void validateEventsTime(Events target) {
@@ -222,12 +263,10 @@ public class EventsValidation implements Validation {
 
     private void checkOverMaxMembers(Long eventsId) {
         Optional<List<AccountsMapperEvents>> optional = accountsEventsRepository.findByEventsId(eventsId);
-        int participationMember = optional.orElseThrow(
+        int participationMember = (int) optional.orElseThrow(
                 () -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
                 .stream()
-                .filter(item -> item.getAccept())
-                .collect(Collectors.toList())
-                .size();
+                .filter(AccountsMapperEvents::getAccept).count();
 
         Events events = eventsRepository.findById(eventsId).get();
         int checkMaxMember = (int) events.getMaxMembers();

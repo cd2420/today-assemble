@@ -23,6 +23,7 @@ public class ErrorHttpStatusMapper {
             case OVER_MAX_MEMBER:
             case ALREADY_INVITE_ACCOUNTS:
             case NO_ACCOUNTS_IN_EVENTS:
+            case OVER_MAIN_IMAGES:
             case BAD_REQUEST_ZOOMS:
                 return HttpStatus.BAD_REQUEST;
             default:
