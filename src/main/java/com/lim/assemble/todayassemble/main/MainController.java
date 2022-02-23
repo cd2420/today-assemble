@@ -1,12 +1,19 @@
 package com.lim.assemble.todayassemble.main;
 
+import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import com.lim.assemble.todayassemble.events.service.EventsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -14,10 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class MainController {
 
+    private final EventsService eventsService;
+
     @GetMapping("/home")
-    public String home(HttpServletRequest request) {
+    public ResponseEntity<List<EventsDto>> home(
+            @PageableDefault(size = 9, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            , HttpServletRequest request) {
         log.info("url: {}", request.getRequestURI());
-        return "hello world!!!!!!!";
+        return  ResponseEntity.ok(eventsService.getEventsList(pageable));
     }
 
 }
