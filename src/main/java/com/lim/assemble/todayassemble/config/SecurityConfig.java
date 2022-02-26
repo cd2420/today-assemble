@@ -76,6 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         new AuthenticationFilter(authenticationService)
                         , UsernamePasswordAuthenticationFilter.class
                 )
+            .logout()
+                .logoutSuccessUrl("/api/v1/logout")
         ;
     }
 

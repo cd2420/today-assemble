@@ -31,4 +31,11 @@ public class MainController {
         return  ResponseEntity.ok(eventsService.getEventsList(pageable));
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(
+           HttpServletRequest request) {
+        log.info("url: {}", request.getRequestURI());
+        return  ResponseEntity.ok().build();
+    }
+
 }
