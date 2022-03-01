@@ -9,6 +9,7 @@ import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
+import com.lim.assemble.todayassemble.config.AuthenticationService;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +39,10 @@ public class AccountsServiceImpl implements AccountsService {
 
     private final ValidationFactory validationFactory;
     private final PasswordEncoder passwordEncoder;
+
     private final EmailService emailService;
     private final LikesService likesService;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -73,7 +77,7 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public AccountsDto signUp(CreateAccountReq createAccountReq) {
+    public AccountsDto signUp(CreateAccountReq createAccountReq, HttpServletResponse response) {
         // createAccountReq validation check: {이메일 중복체크}
         validationFactory
                 .createValidation(ValidateType.ACCOUNT)
@@ -89,7 +93,7 @@ public class AccountsServiceImpl implements AccountsService {
 
         AccountsDto accountsDto
                 = AccountsDto.from(accountsRepository.save(accounts));
-
+        AuthenticationService.addJWTToken(response, accountsDto.getEmail());
         return accountsDto;
     }
 

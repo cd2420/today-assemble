@@ -4,6 +4,7 @@ import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface AccountsService {
@@ -13,7 +14,7 @@ public interface AccountsService {
 
     List<EventsDto> getAccountLikesEventList(Accounts accounts);
 
-    AccountsDto signUp(CreateAccountReq createAccountReq);
+    AccountsDto signUp(CreateAccountReq createAccountReq, HttpServletResponse response);
 
     EventsDto manageAccountLikesEvent(Long eventId, Accounts accounts);
 

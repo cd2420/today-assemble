@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
     private final AccountsService accountService;
     private final AccountsLoginServiceImpl accountsLoginService;
     private final AccountsRepository accountsRepository;
+    private final HttpServletResponse response;
 
     static final long EXPIRATION_TIME = 864_000_00;
     static final String SIGNING_KEY = "signingKey";
@@ -45,7 +47,7 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
         createAccountReq.setGender(Gender.MALE);
         createAccountReq.setAge(30);
         createAccountReq.setBirth(LocalDateTime.now());
-        accountService.signUp(createAccountReq);
+        accountService.signUp(createAccountReq, response);
 
         Accounts accounts = accountsRepository.findByEmail(createAccountReq.getEmail())
                 .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
