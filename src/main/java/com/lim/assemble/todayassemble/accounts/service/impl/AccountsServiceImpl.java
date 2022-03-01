@@ -180,4 +180,15 @@ public class AccountsServiceImpl implements AccountsService {
 
     }
 
+    @Override
+    @Transactional
+    public void login(AccountsCredentials accountsCredentials) {
+        Accounts accounts = accountsRepository.findByEmail(accountsCredentials.getEmail())
+                                            .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
+        accounts.generateLoginEmailToken();
+        // email 발송
+        Email email = (Email) emailService.sendEmail(accounts, EmailsType.LOGIN);
+        accounts.getEmailSet().add(email);
+    }
+
 }

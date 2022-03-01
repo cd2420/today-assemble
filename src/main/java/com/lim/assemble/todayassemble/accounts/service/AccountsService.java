@@ -25,4 +25,6 @@ public interface AccountsService {
     void passwordEncode(AccountReq accountReq);
 
     void deleteAccount(Long accountId, Accounts accounts);
+
+    void login(AccountsCredentials accountsCredentials);
 }

@@ -21,6 +21,18 @@ public class AccountsCUController {
 
     private final AccountsService accountsService;
 
+
+    // 패스워드 없이 로그인
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @RequestBody AccountsCredentials accountsCredentials
+            , HttpServletRequest request
+    ) {
+        log.info("api : {}, data : {}" , request.getRequestURI(), accountsCredentials);
+        accountsService.login(accountsCredentials);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
             @RequestBody @Valid CreateAccountReq createAccountReq

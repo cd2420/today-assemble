@@ -47,6 +47,10 @@ public class Accounts extends BaseEntity {
 
     private LocalDateTime emailCheckTokenGeneratedAt;
 
+    private String emailLoginToken;
+
+    private LocalDateTime emailLoginTokenGeneratedAt;
+
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
     private Set<AccountsMapperEvents> accountsEventsSet = new HashSet<>();
@@ -84,6 +88,12 @@ public class Accounts extends BaseEntity {
         this.emailCheckToken = UUID.randomUUID().toString();
         this.emailCheckTokenGeneratedAt = LocalDateTime.now();
         this.emailVerified = false;
+        return this;
+    }
+
+    public Accounts generateLoginEmailToken() {
+        this.emailLoginToken = UUID.randomUUID().toString();
+        this.emailLoginTokenGeneratedAt = LocalDateTime.now();
         return this;
     }
 
