@@ -20,8 +20,6 @@ public class AccountsDto {
 
     private String email;
 
-    private AccountsType accountType;
-
     private Gender gender;
 
     private Integer age;
@@ -39,7 +37,6 @@ public class AccountsDto {
                 .id(accounts.getId())
                 .name(accounts.getName())
                 .email(accounts.getEmail())
-                .accountType(accounts.getAccountType())
                 .gender(accounts.getGender())
                 .age(accounts.getAge())
                 .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getAccountsEventsSet()))

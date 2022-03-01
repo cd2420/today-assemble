@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -24,10 +25,11 @@ public class AccountsCUController {
     public ResponseEntity<AccountsDto> signUp(
             @RequestBody @Valid CreateAccountReq createAccountReq
             , HttpServletRequest request
+            , HttpServletResponse response
     ) {
         accountsService.passwordEncode(createAccountReq);
         log.info("api : {}, data : {}" , request.getRequestURI(), createAccountReq);
-        return ResponseEntity.ok(accountsService.signUp(createAccountReq));
+        return ResponseEntity.ok(accountsService.signUp(createAccountReq, response));
     }
 
     @PostMapping("/likes/events/{eventId}")
