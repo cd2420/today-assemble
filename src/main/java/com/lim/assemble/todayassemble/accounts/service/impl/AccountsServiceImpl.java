@@ -5,11 +5,11 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
+import com.lim.assemble.todayassemble.common.service.CommonService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
-import com.lim.assemble.todayassemble.config.AuthenticationService;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
@@ -42,6 +42,7 @@ public class AccountsServiceImpl implements AccountsService {
 
     private final EmailService emailService;
     private final LikesService likesService;
+    private final CommonService commonService;
 
 
     @Override
@@ -87,13 +88,14 @@ public class AccountsServiceImpl implements AccountsService {
         Accounts accounts = Accounts.from(createAccountReq).generateEmailCheckToken();
 
         // email 발송
-        Email email = (Email) emailService.sendEmail(accounts, EmailsType.SIGNUP);
+        Email email = (Email) emailService.sendEmail(accounts, EmailsType.VERIFY);
         accounts.setEmailSet(new HashSet<>());
         accounts.getEmailSet().add(email);
 
         AccountsDto accountsDto
                 = AccountsDto.from(accountsRepository.save(accounts));
-        AuthenticationService.addJWTToken(response, accountsDto.getEmail());
+
+        commonService.loginWithToken(response, accounts);
         return accountsDto;
     }
 
@@ -183,12 +185,16 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     @Transactional
     public void login(AccountsCredentials accountsCredentials) {
-        Accounts accounts = accountsRepository.findByEmail(accountsCredentials.getEmail())
-                                            .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
+        Accounts accounts = getAccountsByEmail(accountsCredentials.getEmail());
         accounts.generateLoginEmailToken();
         // email 발송
         Email email = (Email) emailService.sendEmail(accounts, EmailsType.LOGIN);
         accounts.getEmailSet().add(email);
+    }
+
+    private Accounts getAccountsByEmail(String email) {
+        return accountsRepository.findByEmail(email)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
     }
 
 }
