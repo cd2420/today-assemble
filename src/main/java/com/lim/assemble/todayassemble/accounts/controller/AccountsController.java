@@ -35,16 +35,6 @@ public class AccountsController {
         return ResponseEntity.ok(accountList);
     }
 
-    @GetMapping("/{accountId}")
-    public ResponseEntity<AccountsDto> getAccountByPathVariable(
-            @PathVariable Long accountId
-            , HttpServletRequest request
-    ) {
-        log.info("api : {}, data : {}" , request.getRequestURI(), accountId);
-        AccountsDto accountsDto = accountsService.getAccount(accountId);
-        return ResponseEntity.ok(accountsDto);
-    }
-
     @GetMapping("")
     public ResponseEntity<AccountsDto> getAccountByJwt(
             @CurrentAccount Accounts accounts
@@ -55,6 +45,16 @@ public class AccountsController {
             throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
         }
         AccountsDto accountsDto = accountsService.getAccount(accounts.getId());
+        return ResponseEntity.ok(accountsDto);
+    }
+
+    @GetMapping("/{accountId}")
+    public ResponseEntity<AccountsDto> getAccountByPathVariable(
+            @PathVariable Long accountId
+            , HttpServletRequest request
+    ) {
+        log.info("api : {}, data : {}" , request.getRequestURI(), accountId);
+        AccountsDto accountsDto = accountsService.getAccount(accountId);
         return ResponseEntity.ok(accountsDto);
     }
 
