@@ -47,6 +47,8 @@ public class Accounts extends BaseEntity {
 
     private LocalDateTime emailCheckTokenGeneratedAt;
 
+    private Boolean emailLoginVerified;
+
     private String emailLoginToken;
 
     private LocalDateTime emailLoginTokenGeneratedAt;
@@ -94,6 +96,7 @@ public class Accounts extends BaseEntity {
     public Accounts generateLoginEmailToken() {
         this.emailLoginToken = UUID.randomUUID().toString();
         this.emailLoginTokenGeneratedAt = LocalDateTime.now();
+        this.emailLoginVerified = false;
         return this;
     }
 
