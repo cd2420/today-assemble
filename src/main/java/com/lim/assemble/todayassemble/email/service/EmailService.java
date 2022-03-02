@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.email.service;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 
@@ -9,7 +10,6 @@ public interface EmailService {
 
     public Object sendEmail(Accounts accounts, EmailsType emailsType);
 
-    void verify(String email, String token);
+    AccountsDto emailToken(String email, String token, EmailsType emailsType, HttpServletResponse response);
 
-    boolean checkLoginToken(String email, String token, HttpServletResponse response);
 }

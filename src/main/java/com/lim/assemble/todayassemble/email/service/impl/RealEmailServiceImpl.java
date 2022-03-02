@@ -1,10 +1,11 @@
 package com.lim.assemble.todayassemble.email.service.impl;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.common.property.AppProperties;
+import com.lim.assemble.todayassemble.common.service.CommonService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
-import com.lim.assemble.todayassemble.config.AuthenticationService;
 import com.lim.assemble.todayassemble.email.dto.EmailMessage;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.repository.EmailRepository;
@@ -34,11 +35,12 @@ public class RealEmailServiceImpl implements EmailService {
 
     private final EmailRepository emailRepository;
     private final AccountsRepository accountsRepository;
+    private final CommonService commonService;
 
     @Override
     public Object sendEmail(Accounts accounts, EmailsType emailsType) {
         switch (emailsType) {
-            case SIGNUP:
+            case VERIFY:
             case LOGIN:
                 return getEmail(accounts, emailsType);
             default:
@@ -65,7 +67,7 @@ public class RealEmailServiceImpl implements EmailService {
         }
         return Email.builder()
                 .accounts(accounts)
-                .emailType(EmailsType.SIGNUP)
+                .emailType(emailsType)
                 .build();
 
     }
@@ -77,31 +79,36 @@ public class RealEmailServiceImpl implements EmailService {
         String payLoad = "";
         String subject = "";
         String token = "";
+        String type = "";
 
-        if (emailsType == EmailsType.SIGNUP) {
-            url = "check-email-token";
+        if (emailsType == EmailsType.VERIFY) {
+            url = "home";
             linkName = "이메일 인증하기";
             payLoad = "오늘의 모임 서비스를 사용하려면 링크를 클릭하세요.";
             subject = "오늘의 모임, 회원 가입 인증";
             token = accounts.getEmailCheckToken();
+            type = "email-verify";
         } else {
-            url = "login-email-token";
+            url = "home";
             linkName = "이메일 로그인하기";
             payLoad = "오늘의 모임 로그인 하시려면 링크를 클릭하세요.";
             subject = "오늘의 모임, 이메일로 로그인";
             token = accounts.getEmailLoginToken();
+            type = "email-login";
         }
 
         Context context = new Context();
         context.setVariable(
                 "link"
-                , "/api/v1/email/" + url +"?token=" + token
+                , "/" + url
+                        + "?token="  + token
                         + "&email=" + accounts.getEmail()
+                        + "&type="  + type
         );
         context.setVariable("nickname", accounts.getName());
         context.setVariable("linkName", linkName);
         context.setVariable("message", payLoad);
-        context.setVariable("host", appProperties.getHost());
+        context.setVariable("host", appProperties.getFront_host());
         String message = templateEngine.process("mail/simple-link", context);
 
         EmailMessage emailMessage = EmailMessage.builder()
@@ -114,28 +121,37 @@ public class RealEmailServiceImpl implements EmailService {
 
     @Override
     @Transactional
-    public void verify(String email, String token) {
-
-        Accounts accounts = accountsRepository.findByEmail(email)
-                            .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
-
-        if (!accounts.getEmailCheckToken().equals(token)) {
-            throw new TodayAssembleException(ErrorCode.WRONG_EMAIL_TOKEN);
-        } else {
-            accounts.setEmailVerified(true);
-        }
-
-    }
-
-    @Override
-    public boolean checkLoginToken(String email, String token, HttpServletResponse response) {
+    public AccountsDto emailToken(
+            String email
+            , String token
+            , EmailsType emailsType
+            , HttpServletResponse response) {
         Accounts accounts = accountsRepository.findByEmail(email)
                 .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
 
-        if (!accounts.getEmailLoginToken().equals(token)) {
-            return false;
+        boolean is_error = false;
+
+        if (EmailsType.VERIFY == emailsType) {
+            if (accounts.getEmailCheckToken().equals(token)) {
+                accounts.setEmailVerified(true);
+            } else {
+                is_error = true;
+            }
+
+        } else {
+            if (accounts.getEmailLoginToken().equals(token)) {
+                accounts.setEmailLoginVerified(true);
+            } else {
+                is_error = true;
+            }
         }
-        AuthenticationService.addJWTToken(response, email);
-        return true;
+
+        if (is_error) {
+            throw new TodayAssembleException(ErrorCode.WRONG_EMAIL_TOKEN);
+        }
+
+        commonService.loginWithToken(response, accounts);
+        return AccountsDto.from(accounts);
     }
+
 }

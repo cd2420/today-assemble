@@ -70,7 +70,7 @@ public class EntityFactory {
     private static Email createEmail(Accounts accounts) {
         return Email.builder()
                 .accounts(accounts)
-                .emailType(EmailsType.SIGNUP)
+                .emailType(EmailsType.VERIFY)
                 .build();
     }
 

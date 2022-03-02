@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.email.service.impl;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.email.service.EmailService;
@@ -22,17 +23,12 @@ public class TestEmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void verify(String email, String token) {
+    public AccountsDto emailToken(String email, String token, EmailsType emailsType, HttpServletResponse response) {
         log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
-        log.info("verify true email : {}, token: {}", email, token);
+        log.info("emailToken email : {}, token: {}", email, token);
         log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
+        return null;
     }
 
-    @Override
-    public boolean checkLoginToken(String email, String token, HttpServletResponse response) {
-        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
-        log.info("check Login Token email : {}, token: {}", email, token);
-        log.info("$$$$$$$$$$$$$$$$$$$$$$$$$");
-        return true;
-    }
+
 }
