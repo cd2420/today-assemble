@@ -119,41 +119,47 @@ public class AccountsServiceImpl implements AccountsService {
 
         accounts = getAccountsFromRepositoryByAccountId(accountId);
 
-        if (UpdateAccountsReq.class.equals(updateAccountsReq.getClass())) {
-            updateAccountBasic(accounts, updateAccountsReq);
-        } else {
-            updateAccountImage(accounts, (UpdateAccountsImageReq) updateAccountsReq);
-        }
-
+        updateAccount(accounts, updateAccountsReq);
         return AccountsDto.from(accounts);
     }
 
-    public void updateAccountBasic(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
-        String updatePassword = updateAccountsReq.getPassword();
+    public void updateAccount(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
 
-        if (!passwordEncoder.matches(updatePassword, accounts.getPassword())) {
-            updateAccountsReq.setPassword(passwordEncoder.encode(updatePassword));
+        accounts.setName(updateAccountsReq.getName());
+        accounts.setGender(updateAccountsReq.getGender());
+        accounts.setBirth(updateAccountsReq.getBirth());
+        accounts.setAge(updateAccountsReq.getAge());
+
+        if (updateAccountsReq.getAccountsImagesDto() != null) {
+            updateAccountsImage(accounts, updateAccountsReq.getAccountsImagesDto());
         }
-        accounts.update(updateAccountsReq);
-
     }
 
-    public void updateAccountImage(Accounts accounts, UpdateAccountsImageReq updateAccountsImageReq) {
-
+    public void updateAccountsImage(Accounts accounts, AccountsImagesDto accountsImagesDto) {
         AccountsImages accountsImages = accounts.getAccountsImages();
-        AccountsImagesDto accountsImagesDto = updateAccountsImageReq.getAccountsImagesDto();
 
         if (accountsImages != null) {
             accountsImages.setImage(accountsImagesDto.getImage());
         } else {
-
-            accounts.setAccountsImages(AccountsImages.builder()
+            accounts.setAccountsImages(
+                    AccountsImages.builder()
                     .accounts(accounts)
                     .imagesType(ImagesType.MAIN)
                     .image(accountsImagesDto.getImage())
                     .build()
             );
         }
+    }
+
+    public void updateAccountPassword(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
+        String updatePassword = updateAccountsReq.getPassword();
+
+        if (!passwordEncoder.matches(updatePassword, accounts.getPassword())) {
+            updateAccountsReq.setPassword(passwordEncoder.encode(updatePassword));
+        }
+
+        accounts.update(updateAccountsReq);
+
     }
 
     @Override
