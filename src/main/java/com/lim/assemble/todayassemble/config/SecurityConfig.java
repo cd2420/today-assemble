@@ -88,10 +88,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT"));
         configuration.setAllowCredentials(true);
         configuration.applyPermitDefaultValues();
-
         source.registerCorsConfiguration("/**", configuration);
         return source;
+
     }
 }
