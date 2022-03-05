@@ -8,6 +8,7 @@ import com.lim.assemble.todayassemble.likes.dto.LikesDto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -30,6 +31,8 @@ public class AccountsDto {
 
     private AccountsImagesDto accountsImagesDto;
 
+    private LocalDateTime birth;
+
     private Boolean emailVerified;
 
     public static AccountsDto from(Accounts accounts) {
@@ -42,6 +45,7 @@ public class AccountsDto {
                 .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getAccountsEventsSet()))
                 .likesDtos(LikesDto.returnLikesDtoSet(accounts.getLikesSet()))
                 .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))
+                .birth(accounts.getBirth())
                 .emailVerified(accounts.getEmailVerified())
                 .build();
     }
