@@ -119,12 +119,6 @@ public class AccountsServiceImpl implements AccountsService {
 
         accounts = getAccountsFromRepositoryByAccountId(accountId);
 
-        updateAccount(accounts, updateAccountsReq);
-        return AccountsDto.from(accounts);
-    }
-
-    public void updateAccount(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
-
         accounts.setName(updateAccountsReq.getName());
         accounts.setGender(updateAccountsReq.getGender());
         accounts.setBirth(updateAccountsReq.getBirth());
@@ -133,6 +127,12 @@ public class AccountsServiceImpl implements AccountsService {
         if (updateAccountsReq.getAccountsImagesDto() != null) {
             updateAccountsImage(accounts, updateAccountsReq.getAccountsImagesDto());
         }
+
+        if(!updateAccountsReq.getPassword().isEmpty()) {
+            updateAccountPassword(accounts, updateAccountsReq);
+        }
+
+        return AccountsDto.from(accounts);
     }
 
     public void updateAccountsImage(Accounts accounts, AccountsImagesDto accountsImagesDto) {
@@ -157,8 +157,7 @@ public class AccountsServiceImpl implements AccountsService {
         if (!passwordEncoder.matches(updatePassword, accounts.getPassword())) {
             updateAccountsReq.setPassword(passwordEncoder.encode(updatePassword));
         }
-
-        accounts.update(updateAccountsReq);
+        accounts.setPassword(updateAccountsReq.getPassword());
 
     }
 

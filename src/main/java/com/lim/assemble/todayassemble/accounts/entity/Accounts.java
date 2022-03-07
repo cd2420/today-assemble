@@ -100,9 +100,4 @@ public class Accounts extends BaseEntity {
         return this;
     }
 
-    public void update(UpdateAccountsReq updateAccountsReq) {
-        this.name = updateAccountsReq.getName();
-        this.password = updateAccountsReq.getPassword();
-
-    }
 }

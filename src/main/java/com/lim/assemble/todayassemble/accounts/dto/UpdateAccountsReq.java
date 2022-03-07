@@ -4,6 +4,7 @@ import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import lombok.Data;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -14,7 +15,8 @@ public class UpdateAccountsReq {
     @Size(min = 3, max = 10, message = ValidationMessage.WRONG_ACCOUNTS_NAME_FORM)
     private String name;
 
-//    @Size(min = 6, max = 20, message = ValidationMessage.WRONG_PASSWORD_FORM)
+    @Nullable
+    @Size(min = 6, max = 20, message = ValidationMessage.WRONG_PASSWORD_FORM)
     private String password;
 
     @NotNull

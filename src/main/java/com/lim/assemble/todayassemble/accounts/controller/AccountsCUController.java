@@ -69,21 +69,6 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsReq));
     }
 
-    @PutMapping("/{accountId}/image")
-    public ResponseEntity<AccountsDto> updateAccountImage(
-            @PathVariable Long accountId
-            , @RequestBody @Valid UpdateAccountsImageReq updateAccountsImageReq
-            , @CurrentAccount Accounts accounts
-            , HttpServletRequest request
-    ) {
-        log.info("api : {}, accountId : {}"
-                , request.getRequestURI()
-                , accountId
-        );
-
-        return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsImageReq));
-    }
-
     @DeleteMapping("/{accountId}")
     public ResponseEntity<Void> deleteAccount(
             @PathVariable Long accountId
