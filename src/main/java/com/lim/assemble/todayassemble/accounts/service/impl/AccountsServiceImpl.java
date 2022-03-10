@@ -128,7 +128,7 @@ public class AccountsServiceImpl implements AccountsService {
             updateAccountsImage(accounts, updateAccountsReq.getAccountsImagesDto());
         }
 
-        if(!updateAccountsReq.getPassword().isEmpty()) {
+        if(updateAccountsReq.getPassword() != null && !updateAccountsReq.getPassword().isEmpty()) {
             updateAccountPassword(accounts, updateAccountsReq);
         }
 
