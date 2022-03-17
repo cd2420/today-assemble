@@ -56,6 +56,14 @@ public class EventsServiceImpl implements EventsService {
         return EventsDto.from(findEventsById(eventId));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getParticipateEventsAccounts(Long eventId) {
+        return accountsEventsRepository.findByEventsId(eventId)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
+                .size();
+    }
+
     private Events findEventsById(Long eventId) {
         return eventsRepository.findById(eventId)
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID));

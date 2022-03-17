@@ -32,4 +32,11 @@ public class EventsController {
     ) {
         return ResponseEntity.ok(eventsService.getEvents(eventId));
     }
+
+    @GetMapping("{eventId}/accounts")
+    public ResponseEntity<Integer> getParticipateEventsAccounts(
+            @PathVariable Long eventId
+    ) {
+        return ResponseEntity.ok(eventsService.getParticipateEventsAccounts(eventId));
+    }
 }

@@ -17,6 +17,8 @@ public interface EventsService {
 
     EventsDto getEvents(Long eventId);
 
+    Integer getParticipateEventsAccounts(Long eventId);
+
     EventsDto createEvents(CreateEventsReq createEventsReq, Accounts accounts);
 
     EventsDto updateEvents(UpdateEventsReqBase updateEventsReqBase, Accounts accounts);
