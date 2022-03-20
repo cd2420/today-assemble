@@ -1,11 +1,9 @@
 package com.lim.assemble.todayassemble.events.dto;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
-import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.entity.Events;
-import com.lim.assemble.todayassemble.likes.dto.LikesDto;
+import com.lim.assemble.todayassemble.likes.dto.LikesAccountsDto;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
 import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.Builder;
@@ -46,7 +44,7 @@ public class EventsDto {
 
     private Integer nowMembers;
 
-    private Set<LikesDto> likesDtos;
+    private Set<LikesAccountsDto> likesAccountsDtos;
 
     private Set<EventsImagesDto> eventsImagesDtos;
 
@@ -69,7 +67,7 @@ public class EventsDto {
                 .longitude(events.getLongitude())
                 .latitude(events.getLatitude())
                 .nowMembers(events.getAccountsEventsSet().size())
-                .likesDtos(LikesDto.returnLikesDtoSet(events.getLikesSet()))
+                .likesAccountsDtos(LikesAccountsDto.returnLikesDtoSet(events.getLikesSet()))
                 .eventsImagesDtos(EventsImagesDto.returnEventsImagesDtoSet(events.getEventsImagesSet()))
                 .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
                 .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))

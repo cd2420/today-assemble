@@ -1,10 +1,10 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
-import com.lim.assemble.todayassemble.common.type.AccountsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import com.lim.assemble.todayassemble.likes.dto.LikesDto;
+import com.lim.assemble.todayassemble.likes.dto.LikesAccountsDto;
+import com.lim.assemble.todayassemble.likes.dto.LikesEventsDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,7 +27,7 @@ public class AccountsDto {
 
     private Set<EventsDto> eventsDtos;
 
-    private Set<LikesDto> likesDtos;
+    private Set<LikesEventsDto> likesDtos;
 
     private AccountsImagesDto accountsImagesDto;
 
@@ -43,7 +43,7 @@ public class AccountsDto {
                 .gender(accounts.getGender())
                 .age(accounts.getAge())
                 .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getAccountsEventsSet()))
-                .likesDtos(LikesDto.returnLikesDtoSet(accounts.getLikesSet()))
+                .likesDtos(LikesEventsDto.returnLikesDtoSet(accounts.getLikesSet()))
                 .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))
                 .birth(accounts.getBirth())
                 .emailVerified(accounts.getEmailVerified())
