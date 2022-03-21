@@ -25,7 +25,7 @@ public interface EventsService {
 
     void deleteEvents(Long eventsId, Accounts accounts);
 
-    AccountsEventsDto<AccountsDto> participateEventsManage(Long eventsId, Accounts accounts);
+    AccountsEventsDto<EventsDto> participateEventsManage(Long eventsId, Accounts accounts);
 
     AccountsEventsDto<EventsDto> inviteEvents(Long eventsId, Accounts accounts, Long inviteAccountsId);
 

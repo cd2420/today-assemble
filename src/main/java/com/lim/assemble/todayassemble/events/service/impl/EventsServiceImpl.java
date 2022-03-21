@@ -53,6 +53,13 @@ public class EventsServiceImpl implements EventsService {
     @Override
     @Transactional(readOnly = true)
     public EventsDto getEvents(Long eventId) {
+
+        // 필요한 데이터:
+        // events 데이터
+        // , events에 참여한 인원
+        // , events 좋아요 누른 리스트
+        // , 해당 events에 참가 유무
+        // , 해당 events에 좋아요 누른지 유무
         return EventsDto.from(findEventsById(eventId));
     }
 
@@ -274,12 +281,12 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional
-    public AccountsEventsDto<AccountsDto> participateEventsManage(Long eventsId, Accounts accounts) {
+    public AccountsEventsDto<EventsDto> participateEventsManage(Long eventsId, Accounts accounts) {
 
         Events events = findEventsById(eventsId);
         accounts = accountsRepository.getById(accounts.getId());
         accountsMappingEvents(accounts, events);
-        AccountsEventsDto<AccountsDto> accountsEventsDto = AccountsEventsDto.from(accounts);
+        AccountsEventsDto<EventsDto> accountsEventsDto = AccountsEventsDto.from(events);
         return accountsEventsDto;
     }
 
