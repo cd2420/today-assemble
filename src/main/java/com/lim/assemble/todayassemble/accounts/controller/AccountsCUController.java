@@ -33,6 +33,7 @@ public class AccountsCUController {
         return ResponseEntity.ok().build();
     }
 
+    // 회원가입
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
             @RequestBody @Valid CreateAccountReq createAccountReq
@@ -44,6 +45,7 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.signUp(createAccountReq, response));
     }
 
+    // '좋아요' 관리
     @PostMapping("/likes/events/{eventId}")
     public ResponseEntity<EventsDto> manageAccountLikesEvent(
             @PathVariable Long eventId
@@ -54,6 +56,7 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.manageAccountLikesEvent(eventId, accounts));
     }
 
+    // 계정 수정
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountsDto> updateAccount(
             @PathVariable Long accountId
@@ -69,6 +72,7 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsReq));
     }
 
+    // 계정 삭제
     @DeleteMapping("/{accountId}")
     public ResponseEntity<Void> deleteAccount(
             @PathVariable Long accountId
