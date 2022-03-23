@@ -34,4 +34,6 @@ public interface EventsService {
             , Accounts accounts
             , UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq
     );
+
+    Integer getEventsListSize();
 }

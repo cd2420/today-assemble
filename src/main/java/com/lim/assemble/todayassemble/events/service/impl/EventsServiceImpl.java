@@ -25,10 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,14 +49,16 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional(readOnly = true)
+    public Integer getEventsListSize() {
+        return Optional.of(eventsRepository.findAll())
+                .orElse(new ArrayList<Events>())
+                .size();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public EventsDto getEvents(Long eventId) {
 
-        // 필요한 데이터:
-        // events 데이터
-        // , events에 참여한 인원
-        // , events 좋아요 누른 리스트
-        // , 해당 events에 참가 유무
-        // , 해당 events에 좋아요 누른지 유무
         return EventsDto.from(findEventsById(eventId));
     }
 
@@ -338,4 +337,6 @@ public class EventsServiceImpl implements EventsService {
         AccountsEventsDto<AccountsDto> accountsEventsDto = AccountsEventsDto.from(accounts);
         return accountsEventsDto;
     }
+
+
 }
