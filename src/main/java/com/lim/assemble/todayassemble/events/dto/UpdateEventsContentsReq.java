@@ -16,14 +16,16 @@ public class UpdateEventsContentsReq extends UpdateEventsReqBase {
     private String description;
 
     @NotNull
-    @Size(min = 1, max = 30, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
+    @Min(value = 1, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
+    @Max(value = 30, message = ValidationMessage.WRONG_MAXNUMBERS_SIZE)
     private Integer maxMembers;
 
     @NotNull
     private LocalDateTime eventsTime;
 
     @NotNull
-    @Size(min = 1, max = 24, message = ValidationMessage.CHECK_TAKE_TIME)
+    @Min(value = 1, message = ValidationMessage.CHECK_TAKE_TIME)
+    @Max(value = 24, message = ValidationMessage.CHECK_TAKE_TIME)
     private Long takeTime;
 
 }
