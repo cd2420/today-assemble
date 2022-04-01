@@ -1,0 +1,25 @@
+
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/today-assemble
+    username: {dbUserName}
+    password: {dbPassword}
+
+    jpa:
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+      hibernate:
+        ddl-auto: create
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace

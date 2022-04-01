@@ -1,0 +1,26 @@
+server:
+  servlet:
+    encoding:
+      force-response: true
+
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/today-assemble
+    username: {dbUserName}
+    password: {dbPassword}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          socketFactory.class: javax.net.ssl.SSLSocketFactory
+          auth: true
+          starttls:
+            enable: true
