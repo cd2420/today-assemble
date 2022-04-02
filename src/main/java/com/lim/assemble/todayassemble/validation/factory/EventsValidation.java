@@ -232,8 +232,6 @@ public class EventsValidation implements Validation {
 
     private boolean checkEventTime(Events checkEvents, Events events) {
         LocalDateTime eventsStartTime = events.getEventsTime();
-        // time-zone 문제 때문에 jpa 전에 9시간 차이나는 문제발생
-        eventsStartTime = eventsStartTime.plusHours(9);
         LocalDateTime eventsEndTime = eventsStartTime.plusHours(events.getTakeTime());
 
         long eventsStartTimeMillSec = getLocalDateTimeToMillSec(eventsStartTime);
