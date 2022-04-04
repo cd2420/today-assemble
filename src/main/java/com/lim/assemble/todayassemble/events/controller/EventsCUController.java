@@ -41,7 +41,7 @@ public class EventsCUController {
     }
 
     /**
-     * Events 기본내용 수정
+     * Events 수정
      */
     @PutMapping("")
     public ResponseEntity<EventsDto> updateEvents(
@@ -59,25 +59,7 @@ public class EventsCUController {
     }
 
     /**
-     * Events tags 수정
-     */
-    @PutMapping("/tags")
-    public ResponseEntity<EventsDto> updateEventsTags(
-            @RequestBody @Valid UpdateEventsTagsReq updateEventsTagsReq
-            , @CurrentAccount Accounts accounts
-            , HttpServletRequest request
-    ) {
-
-        log.info("url : {}, data : {}"
-                , request.getRequestURI()
-                , updateEventsTagsReq
-        );
-
-        return ResponseEntity.ok(eventsService.updateEvents(updateEventsTagsReq, accounts));
-    }
-
-    /**
-     * Events images 수정
+     * Events sub images 수정
      */
     @PutMapping("/images")
     public ResponseEntity<EventsDto> updateEventsImages(
@@ -92,24 +74,6 @@ public class EventsCUController {
         );
 
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsImagesReq, accounts));
-    }
-
-    /**
-     * Events type 수정
-     */
-    @PutMapping("/type")
-    public ResponseEntity<EventsDto> updateEventsType(
-            @RequestBody @Valid UpdateEventsTypeReq updateEventsTypeReq
-            , @CurrentAccount Accounts accounts
-            , HttpServletRequest request
-    ) {
-
-        log.info("url : {}, data : {}"
-                , request.getRequestURI()
-                , updateEventsTypeReq
-        );
-
-        return ResponseEntity.ok(eventsService.updateEvents(updateEventsTypeReq, accounts));
     }
 
     /**
