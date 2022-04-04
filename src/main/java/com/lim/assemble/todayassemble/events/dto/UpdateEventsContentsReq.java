@@ -1,10 +1,14 @@
 package com.lim.assemble.todayassemble.events.dto;
 
 import com.lim.assemble.todayassemble.common.message.ValidationMessage;
+import com.lim.assemble.todayassemble.common.type.EventsType;
+import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 public class UpdateEventsContentsReq extends UpdateEventsReqBase {
@@ -27,5 +31,20 @@ public class UpdateEventsContentsReq extends UpdateEventsReqBase {
     @Min(value = 1, message = ValidationMessage.CHECK_TAKE_TIME)
     @Max(value = 24, message = ValidationMessage.CHECK_TAKE_TIME)
     private Long takeTime;
+
+    private Set<String> tags;
+
+    private Set<EventsImagesDto> images;
+
+//    @NotNull
+    private EventsType eventsType;
+
+    private String address;
+
+    private String longitude;
+
+    private String latitude;
+
+    private Set<ZoomsDto> zooms;
 
 }

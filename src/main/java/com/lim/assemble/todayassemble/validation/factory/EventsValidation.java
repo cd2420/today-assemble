@@ -54,18 +54,12 @@ public class EventsValidation implements Validation {
         } else if (ValidateSituationType.UPDATE.equals(validateSituationType)) {
             // 수정 validate
             updateValidate((UpdateEventsContentsReq) target[0]);
-        } else if (ValidateSituationType.UPDATE_EVENTS_TYPE.equals(validateSituationType)) {
-            // 이벤트 타입 수정시 validate
-            updateTypeValidate((UpdateEventsTypeReq) target[0]);
-        } else if(ValidateSituationType.UPDATE_TAGS.equals(validateSituationType)) {
-            // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
-            updateTagsOrDeleteEventsValidate((UpdateEventsReqBase) target[0]);
-        }  else if(ValidateSituationType.UPDATE_IMAGES.equals(validateSituationType)) {
-            // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
+        } else if(ValidateSituationType.UPDATE_IMAGES.equals(validateSituationType)) {
+            // 이미지 수정시 validate
             updateEventsImagesValidate((UpdateEventsImagesReq) target[0]);
         } else if(ValidateSituationType.DELETE.equals(validateSituationType)) {
-            // 이미지, 태그 타입 수정시 validate || event 삭제시 validate
-            updateTagsOrDeleteEventsValidate((UpdateEventsReqBase) target[0]);
+            //  event 삭제시 validate
+            deleteEventsValidate((UpdateEventsReqBase) target[0]);
         } else if(ValidateSituationType.EVENTS_PARTICIPATE.equals(validateSituationType)) {
             // 모임 참여할 때 참여가능한지 validate
             participateValidate((Long) target[0]);
@@ -94,16 +88,7 @@ public class EventsValidation implements Validation {
         }
     }
 
-    private void updateTypeValidate(UpdateEventsTypeReq target) {
-        // events가 존재하는지 체크.
-        // 해당 event 주인이 본인이 맞는지 체크.
-        validateEventsHost(target.getAccountsId(), checkExistEvents(target.getId()).getAccounts().getId());
-
-        // offline일 경우 주소값 필수 체크 , online일 경우 줌 값 필수 체크
-        validateEventsType(target);
-    }
-
-    private void validateEventsType(UpdateEventsTypeReq target) {
+    private void validateEventsType(UpdateEventsContentsReq target) {
         if (target.getEventsType().equals(EventsType.OFFLINE)) {
             String address = target.getAddress();
             String latitude = target.getLatitude();
@@ -138,7 +123,7 @@ public class EventsValidation implements Validation {
         }
     }
 
-    private void updateTagsOrDeleteEventsValidate(UpdateEventsReqBase target) {
+    private void deleteEventsValidate(UpdateEventsReqBase target) {
 
         // events가 존재하는지 체크.
         // 해당 event 주인이 본인이 맞는지 체크.
@@ -161,6 +146,10 @@ public class EventsValidation implements Validation {
         // 기존에 있는 event 시간이랑 겹치는 체크.
         events.setAccounts(eventsAccounts);
         validateEventsTime(events);
+
+        // 모임 type 체크
+        validateEventsType(updateEventsContentsReq);
+
     }
 
     private Events checkExistEvents(Long eventsId) {
@@ -180,15 +169,15 @@ public class EventsValidation implements Validation {
 
     private void createValidate(Events target) {
         // offline일 경우 주소값 필수 체크 , online일 경우 줌 값 필수 체크
-        UpdateEventsTypeReq checkForType = UpdateEventsTypeReq.builder()
-                                                .eventsType(target.getEventsType())
-                                                .address(target.getAddress())
-                                                .longitude(target.getLongitude())
-                                                .latitude(target.getLatitude())
-                                                .zooms(target.getZoomsSet().stream()
-                                                        .map(ZoomsDto::from)
-                                                        .collect(Collectors.toSet()))
-                                                .build();
+        UpdateEventsContentsReq checkForType = new UpdateEventsContentsReq();
+        checkForType.setEventsType(target.getEventsType());
+        checkForType.setAddress(target.getAddress());
+        checkForType.setLongitude(target.getLongitude());
+        checkForType.setLatitude(target.getLatitude());
+        checkForType.setZooms(target.getZoomsSet().stream()
+                .map(ZoomsDto::from)
+                .collect(Collectors.toSet()));
+
         validateEventsType(checkForType);
 
         // 기존에 있는 event 시간이랑 겹치는 체크.

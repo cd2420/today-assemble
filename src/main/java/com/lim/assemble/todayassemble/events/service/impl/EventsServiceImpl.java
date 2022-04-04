@@ -165,60 +165,87 @@ public class EventsServiceImpl implements EventsService {
     @Override
     @Transactional
     public EventsDto updateEvents(UpdateEventsReqBase updateEventsReqBase, Accounts accounts) {
+        Events events = eventsRepository.getById(updateEventsReqBase.getId());
         EventsDto eventsDto = EventsDto.builder().build();
         updateEventsReqBase.setAccountsId(accounts.getId());
         // updateEventsReqBase 를 구체화한 객체에 따라 분기
         if (UpdateEventsContentsReq.class.equals(updateEventsReqBase.getClass())) {
-            eventsDto = updateEventsContents((UpdateEventsContentsReq) updateEventsReqBase);
-        } else if (UpdateEventsTagsReq.class.equals(updateEventsReqBase.getClass())) {
-            eventsDto = updateEventsTags((UpdateEventsTagsReq) updateEventsReqBase);
+            eventsDto = updateEventsContents(events, (UpdateEventsContentsReq) updateEventsReqBase);
         } else if (UpdateEventsImagesReq.class.equals(updateEventsReqBase.getClass())) {
-            eventsDto = updateEventsImages((UpdateEventsImagesReq) updateEventsReqBase);
-        } else if (UpdateEventsTypeReq.class.equals(updateEventsReqBase.getClass())) {
-            eventsDto = updateEventsType((UpdateEventsTypeReq) updateEventsReqBase);
+            eventsDto = updateEventsImages(events, (UpdateEventsImagesReq) updateEventsReqBase);
         }
 
         return eventsDto;
     }
 
-    public EventsDto updateEventsContents(UpdateEventsContentsReq updateEventsContentsReq) {
+    public EventsDto updateEventsContents(Events events, UpdateEventsContentsReq updateEventsContentsReq) {
         // updateEventsReq validation check : { 호스트가 수정할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크, 호스트가 맞는지 체크}
         validationFactory.createValidation(ValidateType.EVENT).validate(ValidateSituationType.UPDATE, updateEventsContentsReq);
 
         // events 수정
-        Events events = eventsRepository.getById(updateEventsContentsReq.getId());
         events.update(updateEventsContentsReq);
+
+        // events tag 수정
+        if (updateEventsContentsReq.getTags() != null && updateEventsContentsReq.getTags().size() > 0) {
+            updateEventsTags(events, updateEventsContentsReq.getTags());
+        }
+
+        // events image 수정
+        if (updateEventsContentsReq.getImages() != null && updateEventsContentsReq.getImages().size() > 0) {
+            UpdateEventsImagesReq updateEventsImagesReq = new UpdateEventsImagesReq();
+            updateEventsImagesReq.setId(updateEventsContentsReq.getId());
+            updateEventsImagesReq.setAccountsId(updateEventsContentsReq.getAccountsId());
+            updateEventsImagesReq.setImages(updateEventsContentsReq.getImages());
+            updateEventsImages(events, updateEventsImagesReq);
+        }
+
+        // events Type 수정
+        updateEventsType(events, updateEventsContentsReq);
 
         return EventsDto.from(events);
     }
 
-    public EventsDto updateEventsTags(UpdateEventsTagsReq updateEventsTagsReq) {
-
-        // updateEventsTagsReq validation check : {호스트가 맞는지 체크}
-        validationFactory.createValidation(ValidateType.EVENT).validate(ValidateSituationType.UPDATE_TAGS, updateEventsTagsReq);
+    public void updateEventsTags(Events events, Set<String> tags) {
 
         // events tag 수정
-        Events events = eventsRepository.getById(updateEventsTagsReq.getId());
         if (events.getTagsSet() != null) {
             events.getTagsSet().clear();
         } else {
             events.setTagsSet(new HashSet<>());
         }
         events.getTagsSet().addAll(
-                updateEventsTagsReq.getTags().stream()
-                    .map(tags -> Tags.of(tags, events))
+                tags.stream()
+                    .map(tag -> Tags.of(tag, events))
                     .collect(Collectors.toSet())
         );
-
-        return EventsDto.from(events);
     }
 
-    public EventsDto updateEventsImages(UpdateEventsImagesReq updateEventsImagesReq) {
+    public void updateEventsType(Events events, UpdateEventsContentsReq updateEventsTypeReq) {
+
+        // 1.Type 별 코드 수정
+        events.getZoomsSet().clear();
+        events.setAddress("");
+        events.setLongitude("");
+        events.setLatitude("");
+        events.setEventsType(updateEventsTypeReq.getEventsType());
+        // 1-1. Type 이 Offline -> Online 되는 경우
+        if (EventsType.ONLINE.equals(updateEventsTypeReq.getEventsType())) {
+            events.getZoomsSet().addAll(
+                    updateEventsTypeReq.getZooms().stream()
+                            .map(zoomsDto -> Zooms.of(zoomsDto, events))
+                            .collect(Collectors.toSet())
+            );
+        } else {
+            // 1-2. Type 이 Online -> Offline 되는 경우
+            events.setAddress(updateEventsTypeReq.getAddress());
+            events.setLongitude(updateEventsTypeReq.getLongitude());
+            events.setLatitude(updateEventsTypeReq.getLatitude());
+        }
+    }
+
+    public EventsDto updateEventsImages(Events events, UpdateEventsImagesReq updateEventsImagesReq) {
         // updateEventsImagesReq validation check : {호스트가 맞는지 체크}
         validationFactory.createValidation(ValidateType.EVENT).validate(ValidateSituationType.UPDATE_IMAGES, updateEventsImagesReq);
-
-        // events Images 수정
-        Events events = eventsRepository.getById(updateEventsImagesReq.getId());
 
         if (events.getEventsImagesSet() != null) {
             events.getEventsImagesSet().clear();
@@ -234,36 +261,6 @@ public class EventsServiceImpl implements EventsService {
 
         return EventsDto.from(events);
     }
-
-    public EventsDto updateEventsType(UpdateEventsTypeReq updateEventsTypeReq) {
-        // updateEventsTypeReq validation check : {호스트가 맞는지 체크, Type 별 주소 값 또는 줌 값 필수 체크}
-        validationFactory.createValidation(ValidateType.EVENT).validate(ValidateSituationType.UPDATE_EVENTS_TYPE, updateEventsTypeReq);
-
-        // 1.Type 별 코드 수정
-        Events events = eventsRepository.getById(updateEventsTypeReq.getId());
-        events.getZoomsSet().clear();
-        events.setAddress("");
-        events.setLongitude("");
-        events.setLatitude("");
-        events.setEventsType(updateEventsTypeReq.getEventsType());
-        // 1-1. Type 이 Offline -> Online 되는 경우
-        if (EventsType.ONLINE.equals(updateEventsTypeReq.getEventsType())) {
-            events.getZoomsSet().addAll(
-                    updateEventsTypeReq.getZooms().stream()
-                        .map(zoomsDto -> Zooms.of(zoomsDto, events))
-                        .collect(Collectors.toSet())
-            );
-        } else {
-            // 1-2. Type 이 Online -> Offline 되는 경우
-            events.setAddress(updateEventsTypeReq.getAddress());
-            events.setLongitude(updateEventsTypeReq.getLongitude());
-            events.setLatitude(updateEventsTypeReq.getLatitude());
-        }
-
-        return EventsDto.from(events);
-
-    }
-
 
     @Override
     @Transactional

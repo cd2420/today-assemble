@@ -35,9 +35,9 @@ public class Tags extends BaseEntity {
                 .build();
     }
 
-    public static Tags of(String tags, Events events) {
+    public static Tags of(String tag, Events events) {
         return Tags.builder()
-                .name(tags)
+                .name(tag)
                 .events(events)
                 .build();
     }
