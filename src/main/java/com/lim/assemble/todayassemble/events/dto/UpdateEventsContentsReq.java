@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-public class UpdateEventsContentsReq extends UpdateEventsReqBase {
+public class UpdateEventsContentsReq extends UpdateEventsImagesReq {
 
     @NotBlank
     @Size(min = 1, max = 50, message = ValidationMessage.WRONG_EVENTS_NAME_FORM)

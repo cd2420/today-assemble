@@ -186,26 +186,21 @@ public class EventsServiceImpl implements EventsService {
         events.update(updateEventsContentsReq);
 
         // events tag 수정
-        if (updateEventsContentsReq.getTags() != null && updateEventsContentsReq.getTags().size() > 0) {
-            updateEventsTags(events, updateEventsContentsReq.getTags());
-        }
+        updateEventsTags(events, updateEventsContentsReq.getTags());
+
 
         // events image 수정
-        if (updateEventsContentsReq.getImages() != null && updateEventsContentsReq.getImages().size() > 0) {
-            UpdateEventsImagesReq updateEventsImagesReq = new UpdateEventsImagesReq();
-            updateEventsImagesReq.setId(updateEventsContentsReq.getId());
-            updateEventsImagesReq.setAccountsId(updateEventsContentsReq.getAccountsId());
-            updateEventsImagesReq.setImages(updateEventsContentsReq.getImages());
-            updateEventsImages(events, updateEventsImagesReq);
-        }
+        updateEventsImages(events, updateEventsContentsReq);
 
-        // events Type 수정
-        updateEventsType(events, updateEventsContentsReq);
 
         return EventsDto.from(events);
     }
 
     public void updateEventsTags(Events events, Set<String> tags) {
+
+        if (tags == null || tags.size() <= 0) {
+            tags = new HashSet<>();
+        }
 
         // events tag 수정
         if (events.getTagsSet() != null) {
@@ -253,8 +248,13 @@ public class EventsServiceImpl implements EventsService {
             events.setEventsImagesSet(new HashSet<>());
         }
 
+        Set<EventsImagesDto> eventsImagesDtos = new HashSet<>();
+        if (updateEventsImagesReq.getImages() != null && updateEventsImagesReq.getImages().size() > 0) {
+            eventsImagesDtos = updateEventsImagesReq.getImages();
+        }
+
         events.getEventsImagesSet().addAll(
-                updateEventsImagesReq.getImages().stream()
+                eventsImagesDtos.stream()
                     .map(images -> EventsImages.of(images, events))
                     .collect(Collectors.toSet())
         );
