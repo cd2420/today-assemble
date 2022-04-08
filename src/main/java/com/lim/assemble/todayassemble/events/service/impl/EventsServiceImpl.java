@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,10 +42,9 @@ public class EventsServiceImpl implements EventsService {
     @Override
     @Transactional(readOnly = true)
     public List<EventsDto> getEventsList(Pageable pageable) {
-        return eventsRepository.findAll(pageable).stream()
+        return eventsRepository.getEventsList(pageable, LocalDateTime.now()).stream()
                 .map(EventsDto::from)
                 .collect(Collectors.toList());
-
     }
 
     @Override

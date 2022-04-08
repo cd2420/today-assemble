@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 import javax.annotation.Generated;
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Generated("com.lim.assemble.todayassemble.events.entity.Events")
@@ -33,6 +34,22 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
         JPQLQuery<Events> query = jpaQueryFactory
                 .selectFrom(events)
                 .where(events.hostAccountsId.eq(events.accounts.id))
+                .orderBy(events.createdAt.desc());
+        long totalCount = query.fetchCount();
+        List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
+        return new PageImpl<>(results, pageable, totalCount);
+    }
+
+    @Override
+    public PageImpl<Events> getEventsList(Pageable pageable, LocalDateTime localDateTime) {
+        JPAQueryFactory factory = new JPAQueryFactory(entityManager);
+        QEvents events = QEvents.events;
+
+        JPQLQuery<Events> query = jpaQueryFactory
+                .selectFrom(events)
+                .where(events.hostAccountsId.eq(events.accounts.id)
+                        .and(events.eventsTime.after(localDateTime))
+                )
                 .orderBy(events.createdAt.desc());
         long totalCount = query.fetchCount();
         List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
