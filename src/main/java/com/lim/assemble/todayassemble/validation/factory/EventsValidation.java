@@ -247,7 +247,18 @@ public class EventsValidation implements Validation {
     }
 
     private void participateValidate(Long eventsId) {
+
+        // 인원 수가 가능한지 체크
         checkOverMaxMembers(eventsId);
+
+        // 오늘 날짜 기준 이전 모임은 참가 불가능
+        Events events = eventsRepository.findById(eventsId)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID));
+
+        if (events.getEventsTime().isBefore(LocalDateTime.now())) {
+            throw new TodayAssembleException(ErrorCode.IMPOSSIBLE_PARTICIPATE_TIME);
+        }
+
     }
 
     private void checkOverMaxMembers(Long eventsId) {

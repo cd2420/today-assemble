@@ -25,6 +25,7 @@ public enum ErrorCode {
     , ALREADY_INVITE_ACCOUNTS("이미 초대된 계정입니다.")
     , NO_ACCOUNTS_IN_EVENTS("초대 되지 않은 계정입니다.")
     , OVER_MAIN_IMAGES("MAIN 이미지는 하나만 가능합니다.")
+    , IMPOSSIBLE_PARTICIPATE_TIME("참여 가능한 시간대가 아닙니다.")
 
     , BAD_REQUEST_ZOOMS("요청된 Zoom 데이터가 잘못 되었습니다.")
 
