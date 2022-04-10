@@ -21,7 +21,7 @@ public class EventsController {
 
     @GetMapping("")
     public ResponseEntity<List<EventsDto>> getEventsList(
-            @PageableDefault(size = 8, sort = "eventsTime", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC)
                     Pageable pageable
             ) {
         return ResponseEntity.ok(eventsService.getEventsList(pageable));

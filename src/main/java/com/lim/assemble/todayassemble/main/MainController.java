@@ -26,7 +26,7 @@ public class MainController {
 
     @GetMapping("/home")
     public ResponseEntity<List<EventsDto>> home(
-            @PageableDefault(size = 8, sort = "eventsTime", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC) Pageable pageable
             , HttpServletRequest request) {
         log.info("url: {}", request.getRequestURI());
         return  ResponseEntity.ok(eventsService.getEventsList(pageable));
