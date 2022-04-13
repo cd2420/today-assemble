@@ -14,6 +14,7 @@ import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Events extends BaseEntity {
+public class Events extends BaseEntity implements Serializable {
 
     private String name;
 

@@ -3,6 +3,7 @@ package com.lim.assemble.todayassemble.accounts.service.impl;
 import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.service.CommonService;
@@ -13,12 +14,15 @@ import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.email.entity.Email;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import com.lim.assemble.todayassemble.likes.service.LikesService;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +40,7 @@ import java.util.stream.Collectors;
 public class AccountsServiceImpl implements AccountsService {
 
     private final AccountsRepository accountsRepository;
+    private final AccountsEventsRepository accountsEventsRepository;
 
     private final ValidationFactory validationFactory;
     private final PasswordEncoder passwordEncoder;
@@ -74,6 +79,25 @@ public class AccountsServiceImpl implements AccountsService {
                 .orElseThrow(
                         () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT)
                 );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventsDto> getAccountParticipateEvents(Pageable pageable, Accounts accounts) {
+
+        List<Events> eventsList = accountsEventsRepository.findByAccountsId(accounts.getId())
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
+                .stream()
+                .map(item -> item.getEvents())
+                .collect(Collectors.toList());
+
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), eventsList.size());
+        final PageImpl<Events> page = new PageImpl<>(eventsList.subList(start, end), pageable, eventsList.size());
+
+        return page.stream()
+                .map(EventsDto::from)
+                .collect(Collectors.toList());
     }
 
     @Override

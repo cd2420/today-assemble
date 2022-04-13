@@ -9,6 +9,9 @@ import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,6 +68,18 @@ public class AccountsController {
     ) {
         log.info("api : {}" , request.getRequestURI());
         List<EventsDto> eventsDtoList = accountsService.getAccountLikesEventList(accounts);
+        return ResponseEntity.ok(eventsDtoList);
+    }
+
+    @GetMapping("/events")
+    public ResponseEntity<List<EventsDto>> getAccountParticipateEvents(
+            @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+            , @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC)
+                    Pageable pageable
+    ) {
+        log.info("api : {}" , request.getRequestURI());
+        List<EventsDto> eventsDtoList = accountsService.getAccountParticipateEvents(pageable, accounts);
         return ResponseEntity.ok(eventsDtoList);
     }
 

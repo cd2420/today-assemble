@@ -53,6 +53,15 @@ public class EventsDto {
     private Set<ZoomsDto> zoomsDtos;
 
     public static EventsDto from(Events events) {
+        return getEventsDto(events);
+    }
+
+    public static EventsDto from(AccountsMapperEvents accountsMapperEvents) {
+        Events events = accountsMapperEvents.getEvents();
+        return getEventsDto(events);
+    }
+
+    private static EventsDto getEventsDto(Events events) {
         return EventsDto.builder()
                 .id(events.getId())
                 .name(events.getName())
@@ -75,7 +84,6 @@ public class EventsDto {
     }
 
 
-
     public static Set<EventsDto> returnEventsDtoSet(Set<AccountsMapperEvents> accountsMapperEvents) {
         if (accountsMapperEvents == null) {
             return new HashSet<>();
@@ -86,24 +94,5 @@ public class EventsDto {
 
     }
 
-    public static EventsDto from(AccountsMapperEvents accountsMapperEvents) {
-        Events events = accountsMapperEvents.getEvents();
-        return EventsDto.builder()
-                .id(events.getId())
-                .name(events.getName())
-                .hostAccountsId(events.getHostAccountsId())
-                .description(events.getDescription())
-                .maxMembers(events.getMaxMembers())
-                .likes(events.getLikesSet() == null ? 0 : events.getLikesSet().size())
-                .eventsType(events.getEventsType())
-                .eventsTime(events.getEventsTime())
-                .takeTime(events.getTakeTime())
-                .address(events.getAddress())
-                .longitude(events.getLongitude())
-                .latitude(events.getLatitude())
-                .eventsImagesDtos(EventsImagesDto.returnEventsImagesDtoSet(events.getEventsImagesSet()))
-                .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
-                .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))
-                .build();
-    }
+
 }

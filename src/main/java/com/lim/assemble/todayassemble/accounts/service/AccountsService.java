@@ -3,6 +3,7 @@ package com.lim.assemble.todayassemble.accounts.service;
 import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -27,4 +28,7 @@ public interface AccountsService {
     void deleteAccount(Long accountId, Accounts accounts);
 
     void login(AccountsCredentials accountsCredentials);
+
+    List<EventsDto> getAccountParticipateEvents(Pageable pageable, Accounts accounts);
+
 }

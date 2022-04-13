@@ -6,6 +6,7 @@ import com.lim.assemble.todayassemble.events.entity.Events;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "accounts_mapper_events")
@@ -14,7 +15,9 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountsMapperEvents extends BaseEntity {
+public class AccountsMapperEvents extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounts_id", nullable = false)

@@ -2,16 +2,15 @@ package com.lim.assemble.todayassemble.accounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
-import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsReq;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.AccountsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import com.lim.assemble.todayassemble.email.entity.Email;
-import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +22,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Accounts extends BaseEntity {
+public class Accounts extends BaseEntity implements Serializable {
 
     private String name;
 
