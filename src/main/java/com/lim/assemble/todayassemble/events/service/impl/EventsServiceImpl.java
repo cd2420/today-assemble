@@ -49,10 +49,18 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Integer getEventsListSize() {
-        return Optional.of(eventsRepository.findAll())
-                .orElse(new ArrayList<Events>())
-                .size();
+    public Integer getEventsListSize(Accounts accounts) {
+        Integer result;
+        if (accounts == null) {
+            result = Optional.of(eventsRepository.findByEventsTimeGreaterThan(LocalDateTime.now()))
+                    .orElse(new ArrayList<Events>())
+                    .size();
+        } else {
+            result =  accountsEventsRepository.findByAccountsId(accounts.getId())
+                    .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
+                    .size();
+        }
+        return result;
     }
 
     @Override

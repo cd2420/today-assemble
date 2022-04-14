@@ -1,5 +1,7 @@
 package com.lim.assemble.todayassemble.events.controller;
 
+import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
+@Slf4j
 public class EventsController {
 
     private final EventsService eventsService;
@@ -28,8 +31,10 @@ public class EventsController {
     }
 
     @GetMapping("/size")
-    public ResponseEntity<Integer> getEventsListSize( ) {
-        return ResponseEntity.ok(eventsService.getEventsListSize());
+    public ResponseEntity<Integer> getEventsListSize(
+            @CurrentAccount Accounts accounts
+    ) {
+        return ResponseEntity.ok(eventsService.getEventsListSize(accounts));
     }
 
     @GetMapping("{eventId}")
