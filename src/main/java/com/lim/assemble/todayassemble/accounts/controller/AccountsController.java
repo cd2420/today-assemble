@@ -65,9 +65,11 @@ public class AccountsController {
     public ResponseEntity<List<EventsDto>> getAccountLikesEventList(
             @CurrentAccount Accounts accounts
             , HttpServletRequest request
+            , @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC)
+                    Pageable pageable
     ) {
         log.info("api : {}" , request.getRequestURI());
-        List<EventsDto> eventsDtoList = accountsService.getAccountLikesEventList(accounts);
+        List<EventsDto> eventsDtoList = accountsService.getAccountLikesEventList(pageable, accounts);
         return ResponseEntity.ok(eventsDtoList);
     }
 

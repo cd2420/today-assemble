@@ -13,7 +13,7 @@ public interface AccountsService {
 
     AccountsDto getAccount(Long accountId);
 
-    List<EventsDto> getAccountLikesEventList(Accounts accounts);
+    List<EventsDto> getAccountLikesEventList(Pageable pageable, Accounts accounts);
 
     AccountsDto signUp(CreateAccountReq createAccountReq, HttpServletResponse response);
 

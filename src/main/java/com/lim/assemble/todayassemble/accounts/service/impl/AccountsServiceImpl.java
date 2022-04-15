@@ -69,9 +69,13 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventsDto> getAccountLikesEventList(Accounts accounts) {
+    public List<EventsDto> getAccountLikesEventList(Pageable pageable, Accounts accounts) {
         accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
-        return likesService.getAccountLikesEventList(accounts);
+        List<EventsDto> accountLikesEventList = likesService.getAccountLikesEventList(accounts);
+
+        final PageImpl<EventsDto> page = getPageImpl(pageable, accountLikesEventList);
+
+        return page.stream().collect(Collectors.toList());
     }
 
     private Accounts getAccountsFromRepositoryByAccountId(Long accountId) {
@@ -91,13 +95,18 @@ public class AccountsServiceImpl implements AccountsService {
                 .map(item -> item.getEvents())
                 .collect(Collectors.toList());
 
-        final int start = (int) pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), eventsList.size());
-        final PageImpl<Events> page = new PageImpl<>(eventsList.subList(start, end), pageable, eventsList.size());
+        final PageImpl<Events> page = getPageImpl(pageable, eventsList);
 
         return page.stream()
                 .map(EventsDto::from)
                 .collect(Collectors.toList());
+    }
+
+    private <T> PageImpl<T> getPageImpl(Pageable pageable, List<T> list) {
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), list.size());
+        final PageImpl<T> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
+        return page;
     }
 
     @Override
