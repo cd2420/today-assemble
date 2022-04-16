@@ -73,6 +73,17 @@ public class AccountsController {
         return ResponseEntity.ok(eventsDtoList);
     }
 
+    @GetMapping("/likes/events/size")
+    public ResponseEntity<Integer> getAccountLikesEventSize(
+            @CurrentAccount Accounts accounts
+            , HttpServletRequest request
+
+    ) {
+        log.info("api : {}" , request.getRequestURI());
+        Integer total = accountsService.getAccountLikesEventSize(accounts.getId());
+        return ResponseEntity.ok(total);
+    }
+
     @GetMapping("/events")
     public ResponseEntity<List<EventsDto>> getAccountParticipateEvents(
             @CurrentAccount Accounts accounts

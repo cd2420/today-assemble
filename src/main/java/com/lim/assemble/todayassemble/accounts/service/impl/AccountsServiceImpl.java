@@ -17,6 +17,7 @@ import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import com.lim.assemble.todayassemble.likes.repository.LikesRepository;
 import com.lim.assemble.todayassemble.likes.service.LikesService;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class AccountsServiceImpl implements AccountsService {
 
     private final AccountsRepository accountsRepository;
     private final AccountsEventsRepository accountsEventsRepository;
+    private final LikesRepository likesRepository;
 
     private final ValidationFactory validationFactory;
     private final PasswordEncoder passwordEncoder;
@@ -100,6 +102,15 @@ public class AccountsServiceImpl implements AccountsService {
         return page.stream()
                 .map(EventsDto::from)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getAccountLikesEventSize(Long id) {
+
+        return likesRepository.findByAccountsId(id)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
+                .size();
     }
 
     private <T> PageImpl<T> getPageImpl(Pageable pageable, List<T> list) {
