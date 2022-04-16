@@ -96,5 +96,12 @@ public class AccountsController {
         return ResponseEntity.ok(eventsDtoList);
     }
 
+    @GetMapping("/events/size")
+    public ResponseEntity<Integer> getParticipateEventSize(
+            @CurrentAccount Accounts accounts
+    ) {
+        return ResponseEntity.ok(accountsService.getParticipateEventSize(accounts.getId()));
+    }
+
 
 }

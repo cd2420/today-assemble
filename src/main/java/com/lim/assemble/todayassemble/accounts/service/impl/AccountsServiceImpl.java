@@ -113,6 +113,15 @@ public class AccountsServiceImpl implements AccountsService {
                 .size();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getParticipateEventSize(Long id) {
+
+        return accountsEventsRepository.findByAccountsId(id)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
+                .size();
+    }
+
     private <T> PageImpl<T> getPageImpl(Pageable pageable, List<T> list) {
         final int start = (int) pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), list.size());

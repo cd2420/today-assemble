@@ -31,10 +31,8 @@ public class EventsController {
     }
 
     @GetMapping("/size")
-    public ResponseEntity<Integer> getEventsListSize(
-            @CurrentAccount Accounts accounts
-    ) {
-        return ResponseEntity.ok(eventsService.getEventsListSize(accounts));
+    public ResponseEntity<Integer> getEventsListSize() {
+        return ResponseEntity.ok(eventsService.getEventsListSize());
     }
 
     @GetMapping("{eventId}")

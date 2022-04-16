@@ -32,4 +32,6 @@ public interface AccountsService {
     List<EventsDto> getAccountParticipateEvents(Pageable pageable, Accounts accounts);
 
     Integer getAccountLikesEventSize(Long id);
+
+    Integer getParticipateEventSize(Long accounts);
 }
