@@ -66,7 +66,7 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 .selectFrom(events)
                 .where(events.eventsTime.after(localDateTime)
                         .and(events.name.containsIgnoreCase(keyword))
-                        .or(events.tagsSet.any().name.containsIgnoreCase(keyword)))
+                        .or(events.tagsSet.any().name.eq(keyword)))
                 .leftJoin(events.tagsSet, QTags.tags).fetchJoin()
                 .orderBy(events.eventsTime.asc())
                 .distinct();
