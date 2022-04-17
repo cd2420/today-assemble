@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,8 +70,9 @@ public class AccountsServiceImpl implements AccountsService {
     @Transactional(readOnly = true)
     public List<EventsDto> getAccountLikesEventList(Pageable pageable, Accounts accounts) {
         accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
-        List<EventsDto> accountLikesEventList = likesService.getAccountLikesEventList(accounts);
-
+        List<EventsDto> accountLikesEventList = likesService.getAccountLikesEventList(accounts)
+                                                            .stream().sorted(Comparator.comparing(EventsDto::getEventsTime))
+                                                            .collect(Collectors.toList());
         final PageImpl<EventsDto> page = getPageImpl(pageable, accountLikesEventList);
 
         return page.stream().collect(Collectors.toList());
@@ -95,6 +93,7 @@ public class AccountsServiceImpl implements AccountsService {
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
                 .stream()
                 .map(item -> item.getEvents())
+                .sorted(Comparator.comparing(Events::getEventsTime))
                 .collect(Collectors.toList());
 
         final PageImpl<Events> page = getPageImpl(pageable, eventsList);

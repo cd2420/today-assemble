@@ -1,7 +1,5 @@
 package com.lim.assemble.todayassemble.events.controller;
 
-import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
-import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class EventsController {
 
     @GetMapping("")
     public ResponseEntity<List<EventsDto>> getEventsList(
-            @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.ASC)
                     Pageable pageable
             ) {
         return ResponseEntity.ok(eventsService.getEventsList(pageable));

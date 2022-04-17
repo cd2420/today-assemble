@@ -65,7 +65,7 @@ public class AccountsController {
     public ResponseEntity<List<EventsDto>> getAccountLikesEventList(
             @CurrentAccount Accounts accounts
             , HttpServletRequest request
-            , @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC)
+            , @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.ASC)
                     Pageable pageable
     ) {
         log.info("api : {}" , request.getRequestURI());
@@ -88,7 +88,7 @@ public class AccountsController {
     public ResponseEntity<List<EventsDto>> getAccountParticipateEvents(
             @CurrentAccount Accounts accounts
             , HttpServletRequest request
-            , @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.DESC)
+            , @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.ASC)
                     Pageable pageable
     ) {
         log.info("api : {}" , request.getRequestURI());
