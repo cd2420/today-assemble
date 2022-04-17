@@ -2,6 +2,7 @@ package com.lim.assemble.todayassemble.events.repository;
 
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.entity.QEvents;
+import com.lim.assemble.todayassemble.tags.entity.QTags;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +35,7 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
         JPQLQuery<Events> query = jpaQueryFactory
                 .selectFrom(events)
                 .where(events.hostAccountsId.eq(events.accounts.id))
-                .orderBy(events.createdAt.desc());
+                .orderBy(events.eventsTime.asc());
         long totalCount = query.fetchCount();
         List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<>(results, pageable, totalCount);
@@ -50,7 +51,26 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 .where(events.hostAccountsId.eq(events.accounts.id)
                         .and(events.eventsTime.after(localDateTime))
                 )
-                .orderBy(events.createdAt.desc());
+                .orderBy(events.eventsTime.asc());
+        long totalCount = query.fetchCount();
+        List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
+        return new PageImpl<>(results, pageable, totalCount);
+    }
+
+    @Override
+    public PageImpl<Events> findByKeyword(Pageable pageable, String keyword, LocalDateTime localDateTime) {
+        JPAQueryFactory factory = new JPAQueryFactory(entityManager);
+        QEvents events = QEvents.events;
+
+        JPQLQuery<Events> query = jpaQueryFactory
+                .selectFrom(events)
+                .where(events.eventsTime.after(localDateTime)
+                        .and(events.name.containsIgnoreCase(keyword))
+                        .or(events.tagsSet.any().name.containsIgnoreCase(keyword)))
+                .leftJoin(events.tagsSet, QTags.tags).fetchJoin()
+                .orderBy(events.eventsTime.asc())
+                .distinct();
+
         long totalCount = query.fetchCount();
         List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<>(results, pageable, totalCount);

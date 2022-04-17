@@ -58,6 +58,14 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<EventsDto> searchEventsList(String keyword, Pageable pageable) {
+        return eventsRepository.findByKeyword(pageable, keyword, LocalDateTime.now()).stream()
+                .map(EventsDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public EventsDto getEvents(Long eventId) {
 
         return EventsDto.from(findEventsById(eventId));

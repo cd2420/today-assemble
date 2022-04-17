@@ -10,10 +10,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 @RestController
@@ -38,6 +41,16 @@ public class MainController {
         log.info("url: {}", request.getRequestURI());
         SecurityContextHolder.clearContext();
         return  ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<EventsDto>> searchEventsList(
+            @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.ASC) Pageable pageable
+            , HttpServletRequest request) throws UnsupportedEncodingException {
+        log.info("url: {}", request.getRequestURI());
+        String keyword = URLDecoder.decode(request.getParameter("keyword"), "UTF-8");
+
+        return  ResponseEntity.ok(eventsService.searchEventsList(keyword, pageable));
     }
 
 }

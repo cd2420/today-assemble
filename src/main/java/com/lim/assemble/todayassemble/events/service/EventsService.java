@@ -36,4 +36,6 @@ public interface EventsService {
     );
 
     Integer getEventsListSize();
+
+    List<EventsDto> searchEventsList(String target, Pageable pageable);
 }

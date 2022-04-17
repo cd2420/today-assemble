@@ -11,4 +11,5 @@ public interface EventsRepository extends JpaRepository<Events, Long>, EventsCus
     List<Events> findByAccountsId(Long accountsId);
 
     List<Events> findByEventsTimeGreaterThan(LocalDateTime localDateTime);
+
 }
