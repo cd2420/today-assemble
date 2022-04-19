@@ -75,4 +75,22 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
         List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<>(results, pageable, totalCount);
     }
+
+    @Override
+    public Integer findByKeywordSize(String keyword, LocalDateTime localDateTime) {
+        JPAQueryFactory factory = new JPAQueryFactory(entityManager);
+        QEvents events = QEvents.events;
+
+        JPQLQuery<Events> query = jpaQueryFactory
+                .selectFrom(events)
+                .where(events.eventsTime.after(localDateTime)
+                        .and(events.name.containsIgnoreCase(keyword))
+                        .or(events.tagsSet.any().name.eq(keyword)))
+                .leftJoin(events.tagsSet, QTags.tags).fetchJoin()
+                .orderBy(events.eventsTime.asc())
+                .distinct();
+
+        long totalCount = query.fetchCount();
+        return Math.toIntExact(totalCount);
+    }
 }

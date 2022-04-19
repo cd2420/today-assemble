@@ -65,6 +65,11 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
+    public Integer searchEventsSize(String keyword) {
+        return eventsRepository.findByKeywordSize(keyword, LocalDateTime.now());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public EventsDto getEvents(Long eventId) {
 
