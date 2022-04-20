@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.events.dto;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.entity.Events;
@@ -52,6 +53,8 @@ public class EventsDto {
 
     private Set<ZoomsDto> zoomsDtos;
 
+    private Set<AccountsDto> accountsDtos;
+
     public static EventsDto from(Events events) {
         return getEventsDto(events);
     }
@@ -80,6 +83,7 @@ public class EventsDto {
                 .eventsImagesDtos(EventsImagesDto.returnEventsImagesDtoSet(events.getEventsImagesSet()))
                 .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
                 .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))
+                .accountsDtos(AccountsDto.returnAccountsDtoSet(events.getAccountsEventsSet()))
                 .build();
     }
 
