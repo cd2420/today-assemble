@@ -134,6 +134,7 @@ public class RealEmailServiceImpl implements EmailService {
         if (EmailsType.VERIFY == emailsType) {
             if (accounts.getEmailCheckToken().equals(token)) {
                 accounts.setEmailVerified(true);
+                accounts.setEmailCheckToken(null);
             } else {
                 is_error = true;
             }
@@ -141,6 +142,7 @@ public class RealEmailServiceImpl implements EmailService {
         } else {
             if (accounts.getEmailLoginToken().equals(token)) {
                 accounts.setEmailLoginVerified(true);
+                accounts.setEmailLoginToken(null);
             } else {
                 is_error = true;
             }
