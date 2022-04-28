@@ -1,15 +1,19 @@
 package com.lim.assemble.todayassemble.config;
 
+import com.lim.assemble.todayassemble.common.property.AppProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    // todo: allowOrigins 부분 동적으로 받아오도록 수정 필요
+    private final AppProperties appProperties;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/v1/**").allowCredentials(true).allowedOrigins("http://localhost:3000");
+        registry.addMapping("/api/v1/**").allowCredentials(true).allowedOrigins(appProperties.getFront_host());
     }
 }
