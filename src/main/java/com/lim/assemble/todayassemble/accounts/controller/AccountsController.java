@@ -29,6 +29,11 @@ public class AccountsController {
 
     private final AccountsService accountsService;
 
+    /**
+     * 회원 리스트 조회
+     * @param request
+     * @return
+     */
     @GetMapping("/list")
     public ResponseEntity<List<AccountsDto>> getAccountList(
             HttpServletRequest request
@@ -38,6 +43,12 @@ public class AccountsController {
         return ResponseEntity.ok(accountList);
     }
 
+    /**
+     * Jwt 로 회원 상세 조회
+     * @param accounts
+     * @param request
+     * @return
+     */
     @GetMapping("")
     public ResponseEntity<AccountsDto> getAccountByJwt(
             @CurrentAccount Accounts accounts
@@ -51,6 +62,12 @@ public class AccountsController {
         return ResponseEntity.ok(accountsDto);
     }
 
+    /**
+     * 회원 id(seq)로 회원 조회
+     * @param accountId
+     * @param request
+     * @return
+     */
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountsDto> getAccountByPathVariable(
             @PathVariable Long accountId
@@ -61,6 +78,13 @@ public class AccountsController {
         return ResponseEntity.ok(accountsDto);
     }
 
+    /**
+     * 내가 좋아요 누른 모임 리스트 조회
+     * @param accounts
+     * @param request
+     * @param pageable
+     * @return
+     */
     @GetMapping("/likes/events")
     public ResponseEntity<List<EventsDto>> getAccountLikesEventList(
             @CurrentAccount Accounts accounts
@@ -73,6 +97,12 @@ public class AccountsController {
         return ResponseEntity.ok(eventsDtoList);
     }
 
+    /**
+     * 좋아요 누른 모임 개수
+     * @param accounts
+     * @param request
+     * @return
+     */
     @GetMapping("/likes/events/size")
     public ResponseEntity<Integer> getAccountLikesEventSize(
             @CurrentAccount Accounts accounts
@@ -84,6 +114,13 @@ public class AccountsController {
         return ResponseEntity.ok(total);
     }
 
+    /**
+     * 내가 참여한 모임 리스트 조회
+     * @param accounts
+     * @param request
+     * @param pageable
+     * @return
+     */
     @GetMapping("/events")
     public ResponseEntity<List<EventsDto>> getAccountParticipateEvents(
             @CurrentAccount Accounts accounts
@@ -96,6 +133,11 @@ public class AccountsController {
         return ResponseEntity.ok(eventsDtoList);
     }
 
+    /**
+     * 내가 참여하 모임 리스트 개수
+     * @param accounts
+     * @return
+     */
     @GetMapping("/events/size")
     public ResponseEntity<Integer> getParticipateEventSize(
             @CurrentAccount Accounts accounts
