@@ -24,6 +24,16 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         setAuthenticationManager(authenticationManager);
     }
 
+    /**
+     * SecurityConfig > configureGlobal 에서 커스텀한 내용을 가지고 유저 인증.
+     * userDetailsService 가 구현한 loadUserByUsername 로 값 비교하여 인증처리.
+     * @param req
+     * @param res
+     * @return
+     * @throws AuthenticationException
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest req, HttpServletResponse res) throws AuthenticationException, IOException, ServletException
@@ -32,6 +42,8 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
                                                         .readValue(
                                                             req.getInputStream(), AccountsCredentials.class
                                                         );
+
+        // DaoAuthenticationProvider > retrieveUser 에서 설정한 UserDetailsService 사용하여 원래 데이터와 요청 데이터 비교.
         return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
                         accountsCredentials.getEmail()
@@ -41,6 +53,15 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         );
     }
 
+    /**
+     * Clients 에 jwt 발행
+     * @param req
+     * @param res
+     * @param chain
+     * @param auth
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void successfulAuthentication(
             HttpServletRequest req

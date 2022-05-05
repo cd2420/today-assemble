@@ -26,6 +26,11 @@ public class AuthenticationService {
     static final String SIGNING_KEY = "signingKey";
     static final String BEARER_PREFIX = "Bearer";
 
+    /**
+     * 사용자 email 을 담은 jwt 발행
+     * @param response
+     * @param email
+     */
     static public void addJWTToken(HttpServletResponse response, String email) {
         String jwtToken = Jwts.builder().setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -35,6 +40,11 @@ public class AuthenticationService {
         response.addHeader("Access-Control-Expose-Headers", "Authorization");
     }
 
+    /**
+     * jwt 으로 사용자 정보 확인 및 인증
+     * @param request
+     * @return
+     */
     public Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null){
