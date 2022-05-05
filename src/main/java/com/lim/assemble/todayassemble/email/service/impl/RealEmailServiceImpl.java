@@ -108,7 +108,7 @@ public class RealEmailServiceImpl implements EmailService {
         context.setVariable("nickname", accounts.getName());
         context.setVariable("linkName", linkName);
         context.setVariable("message", payLoad);
-        context.setVariable("host", appProperties.getFront_host());
+        context.setVariable("host", appProperties.getFronthost());
         String message = templateEngine.process("mail/simple-link", context);
 
         EmailMessage emailMessage = EmailMessage.builder()
