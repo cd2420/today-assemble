@@ -10,7 +10,6 @@ import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
 import com.lim.assemble.todayassemble.events.dto.UpdateEventsContentsReq;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
-import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,13 +28,11 @@ public class Events extends BaseEntity implements Serializable {
 
     private String name;
 
-    private Long hostAccountsId;
-
     @Lob @Basic(fetch = FetchType.EAGER)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounts_id", nullable = false)
+    @JoinColumn(name = "host_id", nullable = false)
     @JsonIgnore
     private Accounts accounts;
 
@@ -70,17 +67,10 @@ public class Events extends BaseEntity implements Serializable {
     @JsonBackReference
     private Set<Tags> tagsSet = new HashSet<>();
 
-    @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
-    private Set<Zooms> zoomsSet = new HashSet<>();
-
-    // TODO 장소 데이터
-
     public static Events of(CreateEventsReq createEventsReq, Accounts accounts) {
 
         Events events = Events.builder()
                 .name(createEventsReq.getName())
-                .hostAccountsId(accounts.getId())
                 .description(createEventsReq.getDescription())
                 .accounts(accounts)
                 .maxMembers(createEventsReq.getMaxMembers())
@@ -94,7 +84,6 @@ public class Events extends BaseEntity implements Serializable {
                 .accountsEventsSet(new HashSet<>())
                 .eventsImagesSet(EventsImages.returnImagesSetFrom(createEventsReq))
                 .tagsSet(Tags.returnTagsSetFrom(createEventsReq))
-                .zoomsSet(Zooms.returnZoomsSetFrom(createEventsReq))
                 .build();
 
         events.getEventsImagesSet().stream()
@@ -102,9 +91,6 @@ public class Events extends BaseEntity implements Serializable {
 
         events.getTagsSet().stream()
                 .forEach(tags -> tags.setEvents(events));
-
-        events.getZoomsSet().stream()
-                .forEach(zooms -> zooms.setEvents(events));
 
         return events;
     }
