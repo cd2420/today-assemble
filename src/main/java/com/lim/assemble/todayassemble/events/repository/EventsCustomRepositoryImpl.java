@@ -34,7 +34,7 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
         JPQLQuery<Events> query = jpaQueryFactory
                 .selectFrom(events)
-                .where(events.hostAccountsId.eq(events.accounts.id))
+                .where(events.accounts.id.eq(events.accounts.id))
                 .orderBy(events.eventsTime.asc());
         long totalCount = query.fetchCount();
         List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
@@ -48,7 +48,7 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
         JPQLQuery<Events> query = jpaQueryFactory
                 .selectFrom(events)
-                .where(events.hostAccountsId.eq(events.accounts.id)
+                .where(events.accounts.id.eq(events.accounts.id)
                         .and(events.eventsTime.after(localDateTime))
                 )
                 .orderBy(events.eventsTime.asc());

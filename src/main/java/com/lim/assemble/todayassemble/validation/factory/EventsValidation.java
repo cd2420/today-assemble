@@ -148,7 +148,7 @@ public class EventsValidation implements Validation {
         validateEventsTime(events);
 
         // 모임 type 체크
-        validateEventsType(updateEventsContentsReq);
+//        validateEventsType(updateEventsContentsReq);
 
     }
 
@@ -169,16 +169,16 @@ public class EventsValidation implements Validation {
 
     private void createValidate(Events target) {
         // offline일 경우 주소값 필수 체크 , online일 경우 줌 값 필수 체크
-        UpdateEventsContentsReq checkForType = new UpdateEventsContentsReq();
-        checkForType.setEventsType(target.getEventsType());
-        checkForType.setAddress(target.getAddress());
-        checkForType.setLongitude(target.getLongitude());
-        checkForType.setLatitude(target.getLatitude());
-        checkForType.setZooms(target.getZoomsSet().stream()
-                .map(ZoomsDto::from)
-                .collect(Collectors.toSet()));
+//        UpdateEventsContentsReq checkForType = new UpdateEventsContentsReq();
+//        checkForType.setEventsType(target.getEventsType());
+//        checkForType.setAddress(target.getAddress());
+//        checkForType.setLongitude(target.getLongitude());
+//        checkForType.setLatitude(target.getLatitude());
+//        checkForType.setZooms(target.getZoomsSet().stream()
+//                .map(ZoomsDto::from)
+//                .collect(Collectors.toSet()));
 
-        validateEventsType(checkForType);
+//        validateEventsType(checkForType);
 
         // 기존에 있는 event 시간이랑 겹치는 체크.
         validateEventsTime(target);

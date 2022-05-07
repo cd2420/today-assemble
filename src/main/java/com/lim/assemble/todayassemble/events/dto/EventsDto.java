@@ -6,7 +6,6 @@ import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.likes.dto.LikesAccountsDto;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
-import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -51,8 +50,6 @@ public class EventsDto {
 
     private Set<TagsDto> tagsDtos;
 
-    private Set<ZoomsDto> zoomsDtos;
-
     private Set<AccountsDto> accountsDtos;
 
     public static EventsDto from(Events events) {
@@ -68,7 +65,7 @@ public class EventsDto {
         return EventsDto.builder()
                 .id(events.getId())
                 .name(events.getName())
-                .hostAccountsId(events.getHostAccountsId())
+                .hostAccountsId(events.getAccounts().getId())
                 .description(events.getDescription())
                 .maxMembers(events.getMaxMembers())
                 .likes(events.getLikesSet() == null ? 0 : events.getLikesSet().size())
@@ -82,7 +79,6 @@ public class EventsDto {
                 .likesAccountsDtos(LikesAccountsDto.returnLikesDtoSet(events.getLikesSet()))
                 .eventsImagesDtos(EventsImagesDto.returnEventsImagesDtoSet(events.getEventsImagesSet()))
                 .tagsDtos(TagsDto.returnTagsDtoSet(events.getTagsSet()))
-                .zoomsDtos(ZoomsDto.returnZoomsDtoSet(events.getZoomsSet()))
                 .accountsDtos(AccountsDto.returnAccountsDtoSet(events.getAccountsEventsSet()))
                 .build();
     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -27,26 +28,33 @@ public class EventsController {
     public ResponseEntity<List<EventsDto>> getEventsList(
             @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.ASC)
                     Pageable pageable
+            , HttpServletRequest request
             ) {
+        log.info("api : {}" , request.getRequestURI());
         return ResponseEntity.ok(eventsService.getEventsList(pageable));
     }
 
     @GetMapping("/size")
-    public ResponseEntity<Integer> getEventsListSize() {
+    public ResponseEntity<Integer> getEventsListSize(HttpServletRequest request) {
+        log.info("api : {}" , request.getRequestURI());
         return ResponseEntity.ok(eventsService.getEventsListSize());
     }
 
     @GetMapping("{eventId}")
     public ResponseEntity<EventsDto> getEventsDetail(
             @PathVariable Long eventId
+            , HttpServletRequest request
     ) {
+        log.info("api : {}" , request.getRequestURI());
         return ResponseEntity.ok(eventsService.getEvents(eventId));
     }
 
     @GetMapping("{eventId}/accounts")
     public ResponseEntity<Integer> getParticipateEventsAccounts(
             @PathVariable Long eventId
+            , HttpServletRequest request
     ) {
+        log.info("api : {}" , request.getRequestURI());
         return ResponseEntity.ok(eventsService.getParticipateEventsAccounts(eventId));
     }
 }

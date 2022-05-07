@@ -148,7 +148,7 @@ public class EventsServiceImpl implements EventsService {
         deleteAccountsMapperEventsSet(accountsMapperEvents, events.getAccountsEventsSet());
 
         // 호스트인 경우, 해당 events 삭제
-        if (accounts.getId().equals(events.getHostAccountsId())) {
+        if (accounts.getId().equals(events.getAccounts().getId())) {
             eventsRepository.delete(events);
         }
     }
@@ -227,29 +227,6 @@ public class EventsServiceImpl implements EventsService {
                     .map(tag -> Tags.of(tag, events))
                     .collect(Collectors.toSet())
         );
-    }
-
-    public void updateEventsType(Events events, UpdateEventsContentsReq updateEventsTypeReq) {
-
-        // 1.Type 별 코드 수정
-        events.getZoomsSet().clear();
-        events.setAddress("");
-        events.setLongitude("");
-        events.setLatitude("");
-        events.setEventsType(updateEventsTypeReq.getEventsType());
-        // 1-1. Type 이 Offline -> Online 되는 경우
-        if (EventsType.ONLINE.equals(updateEventsTypeReq.getEventsType())) {
-            events.getZoomsSet().addAll(
-                    updateEventsTypeReq.getZooms().stream()
-                            .map(zoomsDto -> Zooms.of(zoomsDto, events))
-                            .collect(Collectors.toSet())
-            );
-        } else {
-            // 1-2. Type 이 Online -> Offline 되는 경우
-            events.setAddress(updateEventsTypeReq.getAddress());
-            events.setLongitude(updateEventsTypeReq.getLongitude());
-            events.setLatitude(updateEventsTypeReq.getLatitude());
-        }
     }
 
     public EventsDto updateEventsImages(Events events, UpdateEventsImagesReq updateEventsImagesReq) {
