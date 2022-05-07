@@ -58,7 +58,7 @@ public class AccountsController {
         if (accounts == null ) {
             throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
         }
-        AccountsDto accountsDto = accountsService.getAccount(accounts.getId());
+        AccountsDto accountsDto = AccountsDto.from(accounts);
         return ResponseEntity.ok(accountsDto);
     }
 
@@ -145,5 +145,49 @@ public class AccountsController {
         return ResponseEntity.ok(accountsService.getParticipateEventSize(accounts.getId()));
     }
 
+    /**
+     * 내가 참여중인 모임인지 확인
+     * @param accounts
+     * @param eventsId
+     * @param request
+     * @return
+     */
+    @GetMapping("/events/{eventsId}")
+    public ResponseEntity<Boolean> checkAccountParticipateEvents(
+            @CurrentAccount Accounts accounts
+            , @PathVariable Long eventsId
+            , HttpServletRequest request
+    ) {
+        log.info("api : {}" , request.getRequestURI());
 
+        boolean result = false;
+        if (accounts.getAccountsEventsSet() != null) {
+            result = accounts.getAccountsEventsSet().stream()
+                    .anyMatch(item -> item.getEvents().getId().equals(eventsId));
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 내가 좋아요한 모임인지 확인
+     * @param accounts
+     * @param eventsId
+     * @param request
+     * @return
+     */
+    @GetMapping("/likes/{eventsId}")
+    public ResponseEntity<Boolean> checkAccountLikesEvents(
+            @CurrentAccount Accounts accounts
+            , @PathVariable Long eventsId
+            , HttpServletRequest request
+    ) {
+        log.info("api : {}" , request.getRequestURI());
+
+        boolean result = false;
+        if (accounts.getAccountsEventsSet() != null) {
+            result = accounts.getLikesSet().stream()
+                    .anyMatch(item -> item.getEvents().getId().equals(eventsId));
+        }
+        return ResponseEntity.ok(result);
+    }
 }

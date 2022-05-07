@@ -3,8 +3,6 @@ package com.lim.assemble.todayassemble.accounts.dto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.Gender;
-import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import com.lim.assemble.todayassemble.likes.dto.LikesEventsDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,10 +25,6 @@ public class AccountsDto {
 
     private Integer age;
 
-    private Set<EventsDto> eventsDtos;
-
-    private Set<LikesEventsDto> likesDtos;
-
     private AccountsImagesDto accountsImagesDto;
 
     private LocalDateTime birth;
@@ -44,8 +38,6 @@ public class AccountsDto {
                 .email(accounts.getEmail())
                 .gender(accounts.getGender())
                 .age(accounts.getAge())
-                .eventsDtos(EventsDto.returnEventsDtoSet(accounts.getAccountsEventsSet()))
-                .likesDtos(LikesEventsDto.returnLikesDtoSet(accounts.getLikesSet()))
                 .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))
                 .birth(accounts.getBirth())
                 .emailVerified(accounts.getEmailVerified())
