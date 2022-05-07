@@ -155,9 +155,6 @@ public class AccountsServiceImpl implements AccountsService {
     @Transactional
     public EventsDto manageAccountLikesEvent(Long eventId, Accounts accounts) {
 
-        // 영속성 관리에 등록하기 위해 accounts를 이렇게 한번더 호출.
-        accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
-
         return likesService.manageLikes(eventId, accounts);
     }
 
@@ -168,8 +165,6 @@ public class AccountsServiceImpl implements AccountsService {
         validationFactory
                 .createValidation(ValidateType.ACCOUNT)
                 .validate(ValidateSituationType.UPDATE, new UpdateAccountsDto(accountId, accounts.getId()));
-
-        accounts = getAccountsFromRepositoryByAccountId(accountId);
 
         accounts.setName(updateAccountsReq.getName());
         accounts.setGender(updateAccountsReq.getGender());

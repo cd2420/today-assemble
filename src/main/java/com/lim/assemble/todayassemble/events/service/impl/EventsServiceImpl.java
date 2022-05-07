@@ -100,8 +100,6 @@ public class EventsServiceImpl implements EventsService {
         Events events = Events.of(createEventsReq, accounts);
         validationFactory.createValidation(ValidateType.EVENT).validate(ValidateSituationType.CREATE, events);
 
-        accounts = accountsRepository.findById(accounts.getId()).get();
-
         // events 생성
         events = eventsRepository.save(events);
         accountsMappingEvents(accounts, events);
@@ -202,10 +200,8 @@ public class EventsServiceImpl implements EventsService {
         // events tag 수정
         updateEventsTags(events, updateEventsContentsReq.getTags());
 
-
         // events image 수정
         updateEventsImages(events, updateEventsContentsReq);
-
 
         return EventsDto.from(events);
     }
@@ -271,7 +267,6 @@ public class EventsServiceImpl implements EventsService {
     public AccountsEventsDto<EventsDto> participateEventsManage(Long eventsId, Accounts accounts) {
 
         Events events = findEventsById(eventsId);
-        accounts = accountsRepository.getById(accounts.getId());
         accountsMappingEvents(accounts, events);
         AccountsEventsDto<EventsDto> accountsEventsDto = AccountsEventsDto.from(events);
         return accountsEventsDto;
@@ -310,7 +305,6 @@ public class EventsServiceImpl implements EventsService {
                 ValidateSituationType.RESPONSE_EVENTS_INVITE
                 , eventsId, accounts.getId());
 
-        accounts = accountsRepository.getById(accounts.getId());
         Events events = eventsRepository.getById(eventsId);
         AccountsMapperEvents accountsMapperEvents = accountsEventsRepository
                 .findByAccountsIdAndEventsId(accounts.getId(), eventsId).get();
