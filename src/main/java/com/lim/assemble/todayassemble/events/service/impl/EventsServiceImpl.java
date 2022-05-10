@@ -223,17 +223,24 @@ public class EventsServiceImpl implements EventsService {
 
     public void updateEventsTags(Events events, Set<String> tags) {
 
+        Set<Tags> tagsSet = events.getTagsSet();
+
         if (tags == null || tags.size() <= 0) {
+            if (tagsSet == null) {
+                return;
+            }
             tags = new HashSet<>();
         }
 
         // events tag 수정
-        if (events.getTagsSet() != null) {
+
+        if (tagsSet != null) {
             events.getTagsSet().clear();
         } else {
             events.setTagsSet(new HashSet<>());
         }
-        events.getTagsSet().addAll(
+
+        tagsSet.addAll(
                 tags.stream()
                     .map(tag -> Tags.of(tag, events))
                     .collect(Collectors.toSet())
