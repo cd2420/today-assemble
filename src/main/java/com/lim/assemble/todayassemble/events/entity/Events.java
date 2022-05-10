@@ -111,6 +111,8 @@ public class Events extends BaseEntity implements Serializable {
         this.maxMembers = updateEventsContentsReq.getMaxMembers();
         this.eventsTime = updateEventsContentsReq.getEventsTime();
         this.takeTime = updateEventsContentsReq.getTakeTime();
-
+        this.address = updateEventsContentsReq.getAddress();
+        this.latitude = updateEventsContentsReq.getLatitude();
+        this.longitude = updateEventsContentsReq.getLongitude();
     }
 }
