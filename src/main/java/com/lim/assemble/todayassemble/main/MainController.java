@@ -59,4 +59,22 @@ public class MainController {
         return  ResponseEntity.ok(eventsService.searchEventsSize(keyword));
     }
 
+    @GetMapping("/search/place")
+    public ResponseEntity<List<EventsDto>> searchEventsListByPlace(
+            @PageableDefault(size = 9, sort = "eventsTime", direction = Sort.Direction.ASC) Pageable pageable
+            , HttpServletRequest request) throws UnsupportedEncodingException {
+        log.info("url: {}", request.getRequestURI());
+        String keyword = URLDecoder.decode(request.getParameter("keyword"), "UTF-8");
+        return  ResponseEntity.ok(eventsService.searchEventsListByPlace(keyword, pageable));
+    }
+
+    @GetMapping("/search/place/size")
+    public ResponseEntity<Integer> searchEventsSizeByPlace(
+            HttpServletRequest request) throws UnsupportedEncodingException {
+        log.info("url: {}", request.getRequestURI());
+        String keyword = URLDecoder.decode(request.getParameter("keyword"), "UTF-8");
+
+        return  ResponseEntity.ok(eventsService.searchEventsSizeByPlace(keyword));
+    }
+
 }

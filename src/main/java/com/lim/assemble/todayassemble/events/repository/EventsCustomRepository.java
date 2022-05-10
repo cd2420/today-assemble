@@ -16,4 +16,8 @@ public interface EventsCustomRepository {
 
     Integer findByKeywordSize(String keyword, LocalDateTime localDateTime);
 
+    PageImpl<Events> findByPlace(Pageable pageable, String keyword, LocalDateTime localDateTime);
+
+    Integer findByPlaceSize(String keyword, LocalDateTime localDateTime);
+
 }

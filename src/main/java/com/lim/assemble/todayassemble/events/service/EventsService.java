@@ -40,4 +40,8 @@ public interface EventsService {
     List<EventsDto> searchEventsList(String target, Pageable pageable);
 
     Integer searchEventsSize(String keyword);
+
+    List<EventsDto> searchEventsListByPlace(String keyword, Pageable pageable);
+
+    Integer searchEventsSizeByPlace(String keyword);
 }

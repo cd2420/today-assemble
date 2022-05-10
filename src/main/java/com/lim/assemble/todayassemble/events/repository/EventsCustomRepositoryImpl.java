@@ -93,4 +93,41 @@ public class EventsCustomRepositoryImpl extends QuerydslRepositorySupport implem
         long totalCount = query.fetchCount();
         return Math.toIntExact(totalCount);
     }
+
+    @Override
+    public PageImpl<Events> findByPlace(Pageable pageable, String keyword, LocalDateTime localDateTime) {
+        JPAQueryFactory factory = new JPAQueryFactory(entityManager);
+        QEvents events = QEvents.events;
+
+        JPQLQuery<Events> query = jpaQueryFactory
+                .selectFrom(events)
+                .where(events.eventsTime.after(localDateTime)
+                        .and(events.address.containsIgnoreCase(keyword))
+                        )
+                .leftJoin(events.tagsSet, QTags.tags).fetchJoin()
+                .orderBy(events.eventsTime.asc())
+                .distinct();
+
+        long totalCount = query.fetchCount();
+        List<Events> results = getQuerydsl().applyPagination(pageable, query).fetch();
+        return new PageImpl<>(results, pageable, totalCount);
+    }
+
+    @Override
+    public Integer findByPlaceSize(String keyword, LocalDateTime localDateTime) {
+        JPAQueryFactory factory = new JPAQueryFactory(entityManager);
+        QEvents events = QEvents.events;
+
+        JPQLQuery<Events> query = jpaQueryFactory
+                .selectFrom(events)
+                .where(events.eventsTime.after(localDateTime)
+                        .and(events.address.containsIgnoreCase(keyword))
+                )
+                .leftJoin(events.tagsSet, QTags.tags).fetchJoin()
+                .orderBy(events.eventsTime.asc())
+                .distinct();
+
+        long totalCount = query.fetchCount();
+        return Math.toIntExact(totalCount);
+    }
 }

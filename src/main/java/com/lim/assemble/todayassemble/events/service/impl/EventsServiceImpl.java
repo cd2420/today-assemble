@@ -65,8 +65,23 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Integer searchEventsSize(String keyword) {
         return eventsRepository.findByKeywordSize(keyword, LocalDateTime.now());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventsDto> searchEventsListByPlace(String keyword, Pageable pageable) {
+        return eventsRepository.findByPlace(pageable, keyword, LocalDateTime.now()).stream()
+                .map(EventsDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer searchEventsSizeByPlace(String keyword) {
+        return eventsRepository.findByPlaceSize(keyword, LocalDateTime.now());
     }
 
     @Override
