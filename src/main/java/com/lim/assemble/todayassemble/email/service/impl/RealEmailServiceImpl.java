@@ -74,7 +74,7 @@ public class RealEmailServiceImpl implements EmailService {
 
     private EmailMessage getEmailMessage(Accounts accounts, EmailsType emailsType) {
 
-        String url = "";
+//        String url = "";
         String linkName = "";
         String payLoad = "";
         String subject = "";
@@ -82,14 +82,14 @@ public class RealEmailServiceImpl implements EmailService {
         String type = "";
 
         if (emailsType == EmailsType.VERIFY) {
-            url = "home";
+//            url = "home";
             linkName = "이메일 인증하기";
             payLoad = "오늘의 모임 서비스를 사용하려면 링크를 클릭하세요.";
             subject = "오늘의 모임, 회원 가입 인증";
             token = accounts.getEmailCheckToken();
             type = "email-verify";
         } else {
-            url = "home";
+//            url = "home";
             linkName = "이메일 로그인하기";
             payLoad = "오늘의 모임 로그인 하시려면 링크를 클릭하세요.";
             subject = "오늘의 모임, 이메일로 로그인";
@@ -100,7 +100,9 @@ public class RealEmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariable(
                 "link"
-                , "/" + url
+                ,
+                "/"
+//                        + url
                         + "?token="  + token
                         + "&email=" + accounts.getEmail()
                         + "&type="  + type
