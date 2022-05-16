@@ -5,7 +5,6 @@ import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
-import com.lim.assemble.todayassemble.accounts.service.impl.AccountsLoginServiceImpl;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
@@ -28,7 +27,6 @@ import java.util.HashSet;
 public class WithAccountSecurityContextFacotry implements WithSecurityContextFactory<WithAccount> {
 
     private final AccountsService accountService;
-    private final AccountsLoginServiceImpl accountsLoginService;
     private final AccountsRepository accountsRepository;
     private final HttpServletResponse response;
 
@@ -56,7 +54,7 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
         accounts.setAccountsEventsSet(new HashSet<>());
         accountsRepository.flush();
 
-        UserDetails principal = accountsLoginService.loadUserByUsername(createAccountReq.getEmail());
+        UserDetails principal = accountService.loadUserByUsername(createAccountReq.getEmail());
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);

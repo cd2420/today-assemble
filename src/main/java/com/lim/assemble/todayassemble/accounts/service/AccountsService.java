@@ -4,11 +4,12 @@ import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public interface AccountsService {
+public interface AccountsService extends UserDetailsService {
     List<AccountsDto> getAccountList();
 
     AccountsDto getAccount(Long accountId);

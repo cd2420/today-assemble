@@ -2,7 +2,7 @@ package com.lim.assemble.todayassemble.config;
 
 
 import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
-import com.lim.assemble.todayassemble.accounts.service.impl.AccountsLoginServiceImpl;
+import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +20,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final AccountsLoginServiceImpl accountsLoginService;
+    private final AccountsService accountsService;
 
     static final long EXPIRATION_TIME = 864_000_00;
     static final String SIGNING_KEY = "signingKey";
@@ -55,7 +55,7 @@ public class AuthenticationService {
                     .getSubject();
 
             if (user != null) {
-                UserAccount userAccount = (UserAccount) accountsLoginService.loadUserByUsername(user);
+                UserAccount userAccount = (UserAccount) accountsService.loadUserByUsername(user);
                 return new UsernamePasswordAuthenticationToken(userAccount, "", userAccount.getAuthorities());
             } else {
                 throw new TodayAssembleException(ErrorCode.FAILED_AUTHENTICATION);

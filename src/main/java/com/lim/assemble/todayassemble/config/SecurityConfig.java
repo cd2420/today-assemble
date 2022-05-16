@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.config;
 
-import com.lim.assemble.todayassemble.accounts.service.impl.AccountsLoginServiceImpl;
+import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.filter.AuthenticationFilter;
 import com.lim.assemble.todayassemble.common.filter.LoginFilter;
 import com.lim.assemble.todayassemble.common.type.AccountsType;
@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,16 +29,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AccountsLoginServiceImpl accountsLoginService;
+    private final AccountsService accountsService;
     private final AuthenticationService authenticationService;
-
-    /**
-     * 어떤 암호화 기법을 할지 설정하는 부분.
-    */
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     /**
      * (SecurityContextHolder 에 Authentication 담겨있음)
@@ -64,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(accountsLoginService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(accountsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     /**

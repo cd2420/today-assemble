@@ -8,7 +8,6 @@ import com.lim.assemble.todayassemble.common.service.CommonService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.email.dto.EmailMessage;
 import com.lim.assemble.todayassemble.email.entity.Email;
-import com.lim.assemble.todayassemble.email.repository.EmailRepository;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
@@ -33,7 +32,6 @@ public class RealEmailServiceImpl implements EmailService {
     private final AppProperties appProperties;
     private final TemplateEngine templateEngine;
 
-    private final EmailRepository emailRepository;
     private final AccountsRepository accountsRepository;
     private final CommonService commonService;
 

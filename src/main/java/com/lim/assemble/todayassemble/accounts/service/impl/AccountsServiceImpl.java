@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -249,4 +251,11 @@ public class AccountsServiceImpl implements AccountsService {
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Accounts accounts = accountsRepository.findByEmail(email)
+                .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
+        return new UserAccount(accounts);
+    }
 }
