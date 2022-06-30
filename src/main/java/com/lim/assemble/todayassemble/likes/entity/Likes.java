@@ -9,7 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users_like_events")
+@Table(name = "accounts_like_events")
 @Getter
 @Setter
 @Builder

@@ -29,5 +29,5 @@ public class AccountsMapperEvents extends BaseEntity implements Serializable {
     @JsonIgnore
     private Events events;
 
-    private Boolean accept;
+    private Boolean isParticipating;
 }

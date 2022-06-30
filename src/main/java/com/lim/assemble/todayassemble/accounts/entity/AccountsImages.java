@@ -5,12 +5,14 @@ import com.lim.assemble.todayassemble.common.entity.Images;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "accounts_images")
 @Getter
+@NoArgsConstructor
 public class AccountsImages extends Images {
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -26,10 +28,6 @@ public class AccountsImages extends Images {
 
         super(imagesType, image);
         this.accounts = accounts;
-    }
-
-    public AccountsImages() {
-        super();
     }
 
 }

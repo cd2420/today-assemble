@@ -9,13 +9,15 @@ import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
-import com.lim.assemble.todayassemble.events.dto.*;
+import com.lim.assemble.todayassemble.events.dto.EventsImagesDto;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsContentsReq;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsImagesReq;
+import com.lim.assemble.todayassemble.events.dto.UpdateEventsReqBase;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.entity.EventsImages;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
-import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -103,25 +105,9 @@ public class EventsValidation implements Validation {
             ) {
                 throw new TodayAssembleException("OFFLINE > 주소 값 누락", ErrorCode.BAD_REQUEST);
             }
-        } else {
-            Set<ZoomsDto> zooms = target.getZooms();
-            if (zooms == null || zooms.isEmpty()) {
-                throw new TodayAssembleException("ONLINE > ZOOM 값 누락", ErrorCode.BAD_REQUEST);
-            } else {
-                chekZoomsValidate(zooms);
-            }
         }
     }
 
-    private void chekZoomsValidate(Set<ZoomsDto> zooms) {
-        for (ZoomsDto zoomsDto : zooms) {
-            if (zoomsDto.getStatus() == null
-                || zoomsDto.getUrl() == null
-                || zoomsDto.getUrl().isEmpty()) {
-                throw new TodayAssembleException(ErrorCode.BAD_REQUEST_ZOOMS);
-            }
-        }
-    }
 
     private void deleteEventsValidate(UpdateEventsReqBase target) {
 
@@ -266,7 +252,7 @@ public class EventsValidation implements Validation {
         int participationMember = (int) optional.orElseThrow(
                 () -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
                 .stream()
-                .filter(AccountsMapperEvents::getAccept).count();
+                .filter(AccountsMapperEvents::getIsParticipating).count();
 
         Events events = eventsRepository.findById(eventsId).get();
         int checkMaxMember = (int) events.getMaxMembers();

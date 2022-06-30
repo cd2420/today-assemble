@@ -6,7 +6,6 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
-import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.events.dto.*;
@@ -18,7 +17,6 @@ import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
 import com.lim.assemble.todayassemble.validation.ValidationFactory;
-import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -136,7 +134,7 @@ public class EventsServiceImpl implements EventsService {
             AccountsMapperEvents accountsMapperEvents = AccountsMapperEvents.builder()
                     .accounts(accounts)
                     .events(events)
-                    .accept(true)
+                    .isParticipating(true)
                     .build();
             createAccountMapperEvents(accounts, events, accountsMapperEvents);
         }
@@ -308,7 +306,7 @@ public class EventsServiceImpl implements EventsService {
         AccountsMapperEvents accountsMapperEvents = AccountsMapperEvents.builder()
                 .accounts(inviteAccounts)
                 .events(events)
-                .accept(false)
+                .isParticipating(false)
                 .build();
 
         createAccountMapperEvents(inviteAccounts, events, accountsMapperEvents);
@@ -332,7 +330,7 @@ public class EventsServiceImpl implements EventsService {
                 .findByAccountsIdAndEventsId(accounts.getId(), eventsId).get();
 
         if (updateAccountsMapperEventsReq.getResponse()) {
-            accountsMapperEvents.setAccept(true);
+            accountsMapperEvents.setIsParticipating(true);
             createAccountMapperEvents(accounts, events, accountsMapperEvents);
         } else {
             leaveEvents(accountsMapperEvents, accounts, events);

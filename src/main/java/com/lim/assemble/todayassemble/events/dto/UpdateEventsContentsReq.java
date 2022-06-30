@@ -2,8 +2,6 @@ package com.lim.assemble.todayassemble.events.dto;
 
 import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.EventsType;
-import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
-import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -44,7 +42,5 @@ public class UpdateEventsContentsReq extends UpdateEventsImagesReq {
     private String longitude;
 
     private String latitude;
-
-    private Set<ZoomsDto> zooms;
 
 }

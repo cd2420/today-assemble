@@ -3,7 +3,6 @@ package com.lim.assemble.todayassemble.events.dto;
 import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
-import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -47,6 +46,5 @@ public class CreateEventsReq {
 
     private Set<TagsDto> tagsSet;
 
-    private Set<ZoomsDto> zoomsSet;
 
 }
