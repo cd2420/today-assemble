@@ -154,18 +154,6 @@ public class EventsValidation implements Validation {
     }
 
     private void createValidate(Events target) {
-        // offline일 경우 주소값 필수 체크 , online일 경우 줌 값 필수 체크
-//        UpdateEventsContentsReq checkForType = new UpdateEventsContentsReq();
-//        checkForType.setEventsType(target.getEventsType());
-//        checkForType.setAddress(target.getAddress());
-//        checkForType.setLongitude(target.getLongitude());
-//        checkForType.setLatitude(target.getLatitude());
-//        checkForType.setZooms(target.getZoomsSet().stream()
-//                .map(ZoomsDto::from)
-//                .collect(Collectors.toSet()));
-
-//        validateEventsType(checkForType);
-
         // 기존에 있는 event 시간이랑 겹치는 체크.
         validateEventsTime(target);
 
@@ -206,30 +194,18 @@ public class EventsValidation implements Validation {
     }
 
     private boolean checkEventTime(Events checkEvents, Events events) {
-        LocalDateTime eventsStartTime = events.getEventsTime();
+        LocalDateTime eventsStartTime = events.getEventsTime().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDateTime eventsEndTime = eventsStartTime.plusHours(events.getTakeTime());
 
-        long eventsStartTimeMillSec = getLocalDateTimeToMillSec(eventsStartTime);
-        long eventsEndTimeMillSec = getLocalDateTimeToMillSec(eventsEndTime);
-
-        LocalDateTime checkStartTime = checkEvents.getEventsTime();
+        LocalDateTime checkStartTime = checkEvents.getEventsTime().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDateTime checkEndTime = checkStartTime.plusHours(checkEvents.getTakeTime());
 
-        long checkStartTimeMillSec = getLocalDateTimeToMillSec(checkStartTime);
-        long checkEndTimeMillSec = getLocalDateTimeToMillSec(checkEndTime);
-
-        if ((eventsStartTimeMillSec >= checkStartTimeMillSec && eventsStartTimeMillSec <= checkEndTimeMillSec)
-            || (eventsEndTimeMillSec >= checkStartTimeMillSec && eventsEndTimeMillSec <= checkEndTimeMillSec)) {
+        if ((eventsStartTime.isAfter(checkStartTime)  && eventsStartTime.isBefore(checkEndTime))
+            || (eventsEndTime.isAfter(checkStartTime) && eventsEndTime.isBefore(checkEndTime))) {
             return false;
         }
         return true;
 
-    }
-
-    private long getLocalDateTimeToMillSec(LocalDateTime localDateTime) {
-        return localDateTime.atZone(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli();
     }
 
     private void participateValidate(Long eventsId) {
