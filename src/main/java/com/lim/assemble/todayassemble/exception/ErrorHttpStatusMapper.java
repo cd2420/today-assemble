@@ -25,7 +25,6 @@ public class ErrorHttpStatusMapper {
             case NO_ACCOUNTS_IN_EVENTS:
             case OVER_MAIN_IMAGES:
             case IMPOSSIBLE_PARTICIPATE_TIME:
-            case BAD_REQUEST_ZOOMS:
                 return HttpStatus.BAD_REQUEST;
             default:
                 return HttpStatus.INTERNAL_SERVER_ERROR;

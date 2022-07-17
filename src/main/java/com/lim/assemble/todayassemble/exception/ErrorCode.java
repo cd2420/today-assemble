@@ -27,8 +27,6 @@ public enum ErrorCode {
     , OVER_MAIN_IMAGES("MAIN 이미지는 하나만 가능합니다.")
     , IMPOSSIBLE_PARTICIPATE_TIME("참여 가능한 시간대가 아닙니다.")
 
-    , BAD_REQUEST_ZOOMS("요청된 Zoom 데이터가 잘못 되었습니다.")
-
     //////////////// server쪽 문제
     , FAIL_TO_SEND_EMAIL("이메일 전송에 실패했습니다.")
     , FAILED_AUTHENTICATION("인증에 실패했습니다.")
