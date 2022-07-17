@@ -223,25 +223,29 @@ public class EventsServiceImpl implements EventsService {
 
         Set<Tags> tagsSet = events.getTagsSet();
 
+        // 빈 tag 값이 넘어옴 <= 태그 전부 삭제.
         if (tags == null || tags.size() <= 0) {
+            // 기존 tag 값들이 없다면 종료.
             if (tagsSet == null) {
                 return;
             }
+            // 빈 tag 값 셋팅 할 준비.
             tags = new HashSet<>();
         }
 
         // events tag 수정
-
+        // 먼저 기존에 있는 tags 비우기.
         if (tagsSet != null) {
-            events.getTagsSet().clear();
+            tagsSet.clear();
         } else {
             events.setTagsSet(new HashSet<>());
         }
 
-        tagsSet.addAll(
+        // 수정 요청 사항으로 넘어온 tags 넣어주기.
+        events.getTagsSet().addAll(
                 tags.stream()
-                    .map(tag -> Tags.of(tag, events))
-                    .collect(Collectors.toSet())
+                        .map(tag -> Tags.of(tag, events)) // Tags Entity로 변환작업 및 Tags에도 events 셋팅.
+                        .collect(Collectors.toSet())
         );
     }
 
