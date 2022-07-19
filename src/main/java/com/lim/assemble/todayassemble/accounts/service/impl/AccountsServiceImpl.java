@@ -204,10 +204,8 @@ public class AccountsServiceImpl implements AccountsService {
         String updatePassword = updateAccountsReq.getPassword();
 
         if (!passwordEncoder.matches(updatePassword, accounts.getPassword())) {
-            updateAccountsReq.setPassword(passwordEncoder.encode(updatePassword));
+            accounts.setPassword(passwordEncoder.encode(updatePassword));
         }
-        accounts.setPassword(updateAccountsReq.getPassword());
-
     }
 
     @Override
