@@ -262,6 +262,9 @@ public class AccountsServiceImpl implements AccountsService {
                 .password(loadUserByUsernameAccounts.getPassword())
                 .emailVerified(loadUserByUsernameAccounts.getEmailVerified())
                 .accountType(loadUserByUsernameAccounts.getAccountType())
+                .name(loadUserByUsernameAccounts.getName())
+                .gender(loadUserByUsernameAccounts.getGender())
+                .birth(loadUserByUsernameAccounts.getBirth())
                 .build();
         return new UserAccount(accounts);
     }
