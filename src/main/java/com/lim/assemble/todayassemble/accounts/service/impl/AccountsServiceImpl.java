@@ -3,7 +3,9 @@ package com.lim.assemble.todayassemble.accounts.service.impl;
 import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
+import com.lim.assemble.todayassemble.accounts.projection.LoadUserByUsernameAccounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsProjectionRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.service.CommonService;
@@ -42,6 +44,7 @@ public class AccountsServiceImpl implements AccountsService {
     private final AccountsRepository accountsRepository;
     private final AccountsEventsRepository accountsEventsRepository;
     private final LikesRepository likesRepository;
+    private final AccountsProjectionRepository accountsProjectionRepository;
 
     private final ValidationFactory validationFactory;
     private final PasswordEncoder passwordEncoder;
@@ -252,8 +255,14 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Accounts accounts = accountsRepository.findByEmail(email)
+        LoadUserByUsernameAccounts loadUserByUsernameAccounts = accountsProjectionRepository.findByEmail(email)
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
+        Accounts accounts = Accounts.builder()
+                .email(loadUserByUsernameAccounts.getEmail())
+                .password(loadUserByUsernameAccounts.getPassword())
+                .emailVerified(loadUserByUsernameAccounts.getEmailVerified())
+                .accountType(loadUserByUsernameAccounts.getAccountType())
+                .build();
         return new UserAccount(accounts);
     }
 }
