@@ -2,13 +2,13 @@ package com.lim.assemble.todayassemble.validation.factory;
 
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsDto;
+import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.common.type.ValidateSituationType;
 import com.lim.assemble.todayassemble.common.type.ValidateType;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,7 @@ public class AccountsValidation implements Validation {
     }
 
     private void checkOverlappingAccountsEmail(CreateAccountReq createAccountReq) {
-        accountsRepository.findByEmail(createAccountReq.getEmail())
+        accountsRepository.findByEmail(createAccountReq.getEmail(), Accounts.class)
                 .ifPresent(check -> {
                     throw new TodayAssembleException(ErrorCode.ALREADY_EXISTS_USER);
                 });

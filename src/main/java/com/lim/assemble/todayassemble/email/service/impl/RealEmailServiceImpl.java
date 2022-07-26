@@ -126,7 +126,7 @@ public class RealEmailServiceImpl implements EmailService {
             , String token
             , EmailsType emailsType
             , HttpServletResponse response) {
-        Accounts accounts = accountsRepository.findByEmail(email)
+        Accounts accounts = accountsRepository.findByEmail(email, Accounts.class)
                 .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
 
         boolean is_error = false;

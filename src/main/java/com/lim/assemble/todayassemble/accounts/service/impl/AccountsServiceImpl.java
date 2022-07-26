@@ -5,7 +5,6 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
 import com.lim.assemble.todayassemble.accounts.projection.LoadUserByUsernameAccounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
-import com.lim.assemble.todayassemble.accounts.repository.AccountsProjectionRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.common.service.CommonService;
@@ -44,7 +43,6 @@ public class AccountsServiceImpl implements AccountsService {
     private final AccountsRepository accountsRepository;
     private final AccountsEventsRepository accountsEventsRepository;
     private final LikesRepository likesRepository;
-    private final AccountsProjectionRepository accountsProjectionRepository;
 
     private final ValidationFactory validationFactory;
     private final PasswordEncoder passwordEncoder;
@@ -248,14 +246,14 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     private Accounts getAccountsByEmail(String email) {
-        return accountsRepository.findByEmail(email)
+        return accountsRepository.findByEmail(email, Accounts.class)
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LoadUserByUsernameAccounts loadUserByUsernameAccounts = accountsProjectionRepository.findByEmail(email)
+        LoadUserByUsernameAccounts loadUserByUsernameAccounts = accountsRepository.findByEmail(email, LoadUserByUsernameAccounts.class)
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
         Accounts accounts = Accounts.builder()
                 .email(loadUserByUsernameAccounts.getEmail())

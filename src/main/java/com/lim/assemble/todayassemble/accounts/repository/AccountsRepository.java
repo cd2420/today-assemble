@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
-    Optional<Accounts> findByEmail(String email);
+
+//    @Query("SELECT distinct a FROM Accounts a left join fetch a.accountsEventsSet e where a.email = :email")
+    <T> Optional<T> findByEmail(String email, Class<T> type);
 }
