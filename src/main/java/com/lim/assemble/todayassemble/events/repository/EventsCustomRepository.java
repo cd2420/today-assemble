@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 public interface EventsCustomRepository {
 
-    PageImpl<Events> getEventsList(Pageable pageable);
-
     PageImpl<Events> getEventsList(Pageable pageable, LocalDateTime localDateTime);
 
     PageImpl<Events> findByKeyword(Pageable pageable, String keyword, LocalDateTime localDateTime);
