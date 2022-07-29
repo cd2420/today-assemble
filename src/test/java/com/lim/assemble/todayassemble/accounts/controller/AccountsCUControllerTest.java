@@ -4,10 +4,11 @@ import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
 import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
 import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
-import com.lim.assemble.todayassemble.accounts.dto.*;
+import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
+import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsReq;
+import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
-import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import com.lim.assemble.todayassemble.email.service.EmailService;
@@ -16,6 +17,7 @@ import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,6 +58,18 @@ class AccountsCUControllerTest {
 
     @Autowired
     EventsService eventsService;
+
+    @Autowired
+    WebApplicationContext context;
+
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+
 
     /**
      * 임의 데이터 생성으로 테스트
@@ -132,7 +148,7 @@ class AccountsCUControllerTest {
                 , null
                 , null
         );
-        EventsDto events = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        EventsDto events = eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
 
         MvcResult result = mockMvc.perform(post("/api/v1/accounts/likes/events/" + events.getId())
                 .header("Authorization", "Bearer" + " " + jwtToken)
@@ -157,8 +173,8 @@ class AccountsCUControllerTest {
                 , null
                 , null
         );
-        EventsDto events = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
-        events = accountsService.manageAccountLikesEvent(events.getId(), userAccount.getAccounts());
+        EventsDto events = eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
+        events = accountsService.manageAccountLikesEvent(events.getId(), (Accounts) userAccount.getAccounts());
         log.info("$$$$$$$$ original events_likes: {}", events.getLikes());
 
         MvcResult result = mockMvc.perform(post("/api/v1/accounts/likes/events/" + events.getId())
@@ -181,7 +197,7 @@ class AccountsCUControllerTest {
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
-        Accounts accounts = userAccount.getAccounts();
+        Accounts accounts = (Accounts) userAccount.getAccounts();
 
         updateAccountsReq.setName("김김대근");
         updateAccountsReq.setPassword("asdfasdf");
@@ -208,7 +224,7 @@ class AccountsCUControllerTest {
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
-        Accounts accounts = userAccount.getAccounts();
+        Accounts accounts = (Accounts) userAccount.getAccounts();
 
         updateAccountsReq.setName(accounts.getName());
         updateAccountsReq.setPassword("newPassword");
