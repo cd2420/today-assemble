@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 @RequiredArgsConstructor
-public class WithAccountSecurityContextFacotry implements WithSecurityContextFactory<WithAccount> {
+public class WithAccountSecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
 
     private final AccountsService accountService;
     private final AccountsRepository accountsRepository;
@@ -47,7 +47,7 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
         createAccountReq.setBirth(LocalDateTime.now());
         accountService.signUp(createAccountReq, response);
 
-        Accounts accounts = accountsRepository.findByEmail(createAccountReq.getEmail())
+        Accounts accounts = accountsRepository.findByEmail(createAccountReq.getEmail(), Accounts.class)
                 .orElseThrow( () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
         accounts.setEmailVerified(true);
         accounts.setLikesSet(new HashSet<>());
