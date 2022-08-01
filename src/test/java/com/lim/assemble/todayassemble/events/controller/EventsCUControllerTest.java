@@ -3,7 +3,7 @@ package com.lim.assemble.todayassemble.events.controller;
 import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
 import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
-import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
+import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFactory;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
@@ -15,8 +15,8 @@ import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
-import com.lim.assemble.todayassemble.zooms.dto.ZoomsDto;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +30,17 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,16 +58,27 @@ class EventsCUControllerTest {
     @Autowired
     AccountsService accountsService;
 
+    @Autowired
+    WebApplicationContext context;
+
     @MockBean
     EmailService emailService;
 
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+
     @Test
     @DisplayName("[POST] make events")
-    @WithAccount("임대근")
+    @WithAccount("TEST")
     @Transactional
     void givenCreateEventsReq_whenCreateEventsApi_thenReturnEventsDto() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
@@ -95,7 +108,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqWithImagesAndTags_whenCreateEventsApi_thenReturnEventsDto() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
         EventsImagesDto eventsImagesDto = new EventsImagesDto();
         eventsImagesDto.setImagesType(ImagesType.MAIN);
@@ -139,7 +152,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqWithZooms_whenCreateEventsApi_thenReturnEventsDto() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
 
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
@@ -172,14 +185,14 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqOverlapTime_whenCreateEventsApi_thenReturnException() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
         );
-        eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
         String json = asJsonString(createEventsReq);
 
         // when
@@ -206,7 +219,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenCreateEventsReqNotHaveAddressValue_whenCreateEventsApi_thenReturnException() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
@@ -235,38 +248,7 @@ class EventsCUControllerTest {
                 );
     }
 
-    @Test
-    @DisplayName("[POST] EXCEPTION - make events > EventsType: ONLINE > Not exist necessary value")
-    @WithAccount("임대근")
-    @Transactional
-    void givenCreateEventsReqNotHaveZoomValue_whenCreateEventsApi_thenReturnException() throws Exception {
-        // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
-        CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
-                EventsType.ONLINE
-                , null
-                , null
-        );
-        createEventsReq.setZoomsSet(new HashSet<>());
-        String json = asJsonString(createEventsReq);
 
-        // when
-        // then
-        mockMvc.perform(post("/api/v1/events")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .header("Authorization", "Bearer" + " " + jwtToken)
-                .with(csrf())
-                .accept(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().is4xxClientError())
-                .andExpect(
-                        result -> assertEquals(
-                                "ONLINE > ZOOM 값 누락"
-                                , result.getResolvedException().getMessage()
-                        )
-                );
-    }
 
     @Test
     @DisplayName("[PUT] update events")
@@ -274,7 +256,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsContentsReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
@@ -282,11 +264,11 @@ class EventsCUControllerTest {
                 , null
                 , null
         );
-        EventsDto eventsDto = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        EventsDto eventsDto = eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
 
         UpdateEventsContentsReq updateEventsContentsReq = new UpdateEventsContentsReq();
         updateEventsContentsReq.setId(eventsDto.getId());
-        updateEventsContentsReq.setAccountsId(userAccount.getAccounts().getId());
+        updateEventsContentsReq.setAccountsId(((Accounts) userAccount.getAccounts()).getId());
         updateEventsContentsReq.setName("~~~~수정~~~");
         updateEventsContentsReq.setDescription("!!!!!!!수정 확인!!!!");
         updateEventsContentsReq.setMaxMembers(15);
@@ -316,7 +298,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsImagesReq_whenUpdateEventsApi_thenEventsDto() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -326,7 +308,7 @@ class EventsCUControllerTest {
                 , null
         );
 
-        EventsDto eventsDto = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        EventsDto eventsDto = eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
 
         EventsImagesDto eventsImagesDto1 = new EventsImagesDto();
         eventsImagesDto1.setImagesType(ImagesType.MAIN);
@@ -341,7 +323,7 @@ class EventsCUControllerTest {
 
         UpdateEventsImagesReq updateEventsImagesReq = new UpdateEventsImagesReq();
         updateEventsImagesReq.setId(eventsDto.getId());
-        updateEventsImagesReq.setAccountsId(userAccount.getAccounts().getId());
+        updateEventsImagesReq.setAccountsId(((Accounts) userAccount.getAccounts()).getId());
         updateEventsImagesReq.setImages(images);
 
         String json = asJsonString(updateEventsImagesReq);
@@ -369,7 +351,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenUpdateEventsContentsReqNotEqualsHostAccounts_whenWrongHostAccounts_thenReturnException() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
@@ -377,7 +359,7 @@ class EventsCUControllerTest {
 
         UpdateEventsContentsReq updateEventsContentsReq = new UpdateEventsContentsReq();
         updateEventsContentsReq.setId(eventsDto.getId());
-        updateEventsContentsReq.setAccountsId(userAccount.getAccounts().getId());
+        updateEventsContentsReq.setAccountsId(((Accounts) userAccount.getAccounts()).getId());
         updateEventsContentsReq.setName("~~~~수정~~~");
         updateEventsContentsReq.setDescription("!!!!!!!수정 확인!!!!");
         updateEventsContentsReq.setMaxMembers(15);
@@ -407,7 +389,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenDeleteEventsId_whenDeleteEventsAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
@@ -415,7 +397,7 @@ class EventsCUControllerTest {
                 , null
                 , null
         );
-        EventsDto eventsDto = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        EventsDto eventsDto = eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
         // when
         // then
         mockMvc.perform(delete("/api/v1/events/" + eventsDto.getId())
@@ -433,7 +415,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenDeleteEventsIdNotEqualsHostAccounts_whenDeleteEventsAPI_thenReturnErrorMSG() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
 
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
         EventsDto eventsDto = eventsService.getEventsList(pageable).get(0);
@@ -459,7 +441,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenEventsId_whenParticipateEventsAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
@@ -483,7 +465,7 @@ class EventsCUControllerTest {
     @Transactional
     void givenEventsId_whenLeaveEventsAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Pageable pageable = PageRequest.of(0, 1, Sort.Direction.DESC, "createdAt");
@@ -514,14 +496,14 @@ class EventsCUControllerTest {
     @Transactional
     void givenEventsIdAndAccountsId_whenInviteEventsAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
                 , null
                 , null
         );
-        EventsDto eventsDto = eventsService.createEvents(createEventsReq, userAccount.getAccounts());
+        EventsDto eventsDto = eventsService.createEvents(createEventsReq, (Accounts) userAccount.getAccounts());
         AccountsDto account = accountsService.getAccount(1l);
         // when
         // then
@@ -543,36 +525,36 @@ class EventsCUControllerTest {
     @Transactional
     void givenEventsId_whenResponseEventsInviteAcceptAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
-        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Accounts targetAccounts = userAccount.getAccounts();
-        AccountsDto hostAccounts = accountsService.getAccount(1l);
-        EventsDto eventsDto = hostAccounts.getEventsDtos().stream()
-                .filter(item -> item.getHostAccountsId().equals(hostAccounts.getId()))
-                .findFirst()
-                .get();
-
-        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + targetAccounts.getId())
-                .header("Authorization", "Bearer" + " " + WithAccountSecurityContextFacotry.getJwtToken(hostAccounts.getEmail()) )
-                .with(csrf())
-                )
-                .andExpect(status().isOk())
-        ;
-        UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq = UpdateAccountsMapperEventsReq.builder().response(true).build();
-        String json = asJsonString(updateAccountsMapperEventsReq);
-        // when
-        // then
-        MvcResult result = mockMvc.perform(put("/api/v1/events/" + eventsDto.getId() + "/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .header("Authorization", "Bearer" + " " + jwtToken)
-                .with(csrf())
-        )
-                .andExpect(status().isOk())
-                .andReturn();
-
-
-        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+//        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+//        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Accounts targetAccounts = userAccount.getAccounts();
+//        AccountsDto hostAccounts = accountsService.getAccount(1l);
+//        EventsDto eventsDto = hostAccounts.getEventsDtos().stream()
+//                .filter(item -> item.getHostAccountsId().equals(hostAccounts.getId()))
+//                .findFirst()
+//                .get();
+//
+//        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + targetAccounts.getId())
+//                .header("Authorization", "Bearer" + " " + WithAccountSecurityContextFacotry.getJwtToken(hostAccounts.getEmail()) )
+//                .with(csrf())
+//                )
+//                .andExpect(status().isOk())
+//        ;
+//        UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq = UpdateAccountsMapperEventsReq.builder().response(true).build();
+//        String json = asJsonString(updateAccountsMapperEventsReq);
+//        // when
+//        // then
+//        MvcResult result = mockMvc.perform(put("/api/v1/events/" + eventsDto.getId() + "/accounts")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(json)
+//                .header("Authorization", "Bearer" + " " + jwtToken)
+//                .with(csrf())
+//        )
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//
+//        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
 
     }
 
@@ -582,36 +564,36 @@ class EventsCUControllerTest {
     @Transactional
     void givenEventsId_whenResponseEventsInviteRejectAPI_thenReturnStatusOk() throws Exception {
         // given
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
-        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Accounts targetAccounts = userAccount.getAccounts();
-        AccountsDto hostAccounts = accountsService.getAccount(1l);
-        EventsDto eventsDto = hostAccounts.getEventsDtos().stream()
-                .filter(item -> item.getHostAccountsId().equals(hostAccounts.getId()))
-                .findFirst()
-                .get();
-
-        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + targetAccounts.getId())
-                .header("Authorization", "Bearer" + " " + WithAccountSecurityContextFacotry.getJwtToken(hostAccounts.getEmail()) )
-                .with(csrf())
-        )
-                .andExpect(status().isOk())
-        ;
-        UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq = UpdateAccountsMapperEventsReq.builder().response(false).build();
-        String json = asJsonString(updateAccountsMapperEventsReq);
-        // when
-        // then
-        MvcResult result = mockMvc.perform(put("/api/v1/events/" + eventsDto.getId() + "/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .header("Authorization", "Bearer" + " " + jwtToken)
-                .with(csrf())
-        )
-                .andExpect(status().isOk())
-                .andReturn();
-
-
-        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
+//        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+//        UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Accounts targetAccounts = userAccount.getAccounts();
+//        AccountsDto hostAccounts = accountsService.getAccount(1l);
+//        EventsDto eventsDto = hostAccounts.getEventsDtos().stream()
+//                .filter(item -> item.getHostAccountsId().equals(hostAccounts.getId()))
+//                .findFirst()
+//                .get();
+//
+//        mockMvc.perform(post("/api/v1/events/" + eventsDto.getId() + "/accounts/" + targetAccounts.getId())
+//                .header("Authorization", "Bearer" + " " + WithAccountSecurityContextFacotry.getJwtToken(hostAccounts.getEmail()) )
+//                .with(csrf())
+//        )
+//                .andExpect(status().isOk())
+//        ;
+//        UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq = UpdateAccountsMapperEventsReq.builder().response(false).build();
+//        String json = asJsonString(updateAccountsMapperEventsReq);
+//        // when
+//        // then
+//        MvcResult result = mockMvc.perform(put("/api/v1/events/" + eventsDto.getId() + "/accounts")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(json)
+//                .header("Authorization", "Bearer" + " " + jwtToken)
+//                .with(csrf())
+//        )
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//
+//        log.info("$$$$$$$$$ result : {}", result.getResponse().getContentAsString());
 
     }
 

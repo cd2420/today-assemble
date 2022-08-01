@@ -3,7 +3,7 @@ package com.lim.assemble.todayassemble.accounts.controller;
 import com.lim.assemble.todayassemble.accounts.config.CreateEventsReqFactory;
 import com.lim.assemble.todayassemble.accounts.config.JsonToString;
 import com.lim.assemble.todayassemble.accounts.config.WithAccount;
-import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFacotry;
+import com.lim.assemble.todayassemble.accounts.config.WithAccountSecurityContextFactory;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.accounts.dto.UpdateAccountsReq;
 import com.lim.assemble.todayassemble.accounts.dto.UserAccount;
@@ -141,7 +141,7 @@ class AccountsCUControllerTest {
     @WithAccount("임대근")
     @Transactional
     void givenEventsId_whenManageAccountsCreateLikeEventApi_thenOK() throws Exception {
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
@@ -166,7 +166,7 @@ class AccountsCUControllerTest {
     @WithAccount("임대근")
     @Transactional
     void givenEventsId_whenManageAccountsDeleteLikeEventApi_thenOK() throws Exception {
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CreateEventsReq createEventsReq = CreateEventsReqFactory.getCreateEventsReq(
                 EventsType.OFFLINE
@@ -193,7 +193,7 @@ class AccountsCUControllerTest {
     @Transactional
     @WithAccount("임대근")
     void givenUpdateAccountsName_whenUpdateAccountsApi_thenAccountsDto() throws Exception {
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
@@ -220,7 +220,7 @@ class AccountsCUControllerTest {
     @Transactional
     @WithAccount("임대근")
     void givenUpdateAccountsPassword_whenUpdateAccountsApi_thenAccountsDto() throws Exception {
-        String jwtToken = WithAccountSecurityContextFacotry.getJwtToken();
+        String jwtToken = WithAccountSecurityContextFactory.getJwtToken();
         UserAccount userAccount = (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UpdateAccountsReq updateAccountsReq = new UpdateAccountsReq();
