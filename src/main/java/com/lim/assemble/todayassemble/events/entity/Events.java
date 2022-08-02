@@ -31,7 +31,7 @@ public class Events extends BaseEntity implements Serializable {
     @Lob @Basic(fetch = FetchType.EAGER)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "host_id", nullable = false)
     @JsonIgnore
     private Accounts accounts;

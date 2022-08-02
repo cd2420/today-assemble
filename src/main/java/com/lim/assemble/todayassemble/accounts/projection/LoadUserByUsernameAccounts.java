@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 public interface LoadUserByUsernameAccounts {
 
+    Long getId();
+
     String getEmail();
 
     String getPassword();
@@ -20,4 +22,6 @@ public interface LoadUserByUsernameAccounts {
     LocalDateTime getBirth();
 
     Gender getGender();
+
+    Integer getAge();
 }

@@ -163,11 +163,11 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public AccountsDto updateAccount(Long accountId, Accounts accounts, UpdateAccountsReq updateAccountsReq) {
-        // update 시킬려는 대상이 본인이 맞는지 확인.
-        validationFactory
-                .createValidation(ValidateType.ACCOUNT)
-                .validate(ValidateSituationType.UPDATE, new UpdateAccountsDto(accountId, accounts.getId()));
+    public AccountsDto updateAccount(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
+
+        accounts = accountsRepository.findById(accounts.getId()).orElseThrow(
+                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT)
+        );
 
         accounts.setName(updateAccountsReq.getName());
         accounts.setGender(updateAccountsReq.getGender());
@@ -263,7 +263,9 @@ public class AccountsServiceImpl implements AccountsService {
                 .name(loadUserByUsernameAccounts.getName())
                 .gender(loadUserByUsernameAccounts.getGender())
                 .birth(loadUserByUsernameAccounts.getBirth())
+                .age(loadUserByUsernameAccounts.getAge())
                 .build();
+        accounts.setId(loadUserByUsernameAccounts.getId());
         return new UserAccount(accounts);
     }
 }
