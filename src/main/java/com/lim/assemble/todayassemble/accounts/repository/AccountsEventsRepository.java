@@ -2,6 +2,7 @@ package com.lim.assemble.todayassemble.accounts.repository;
 
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +15,6 @@ public interface AccountsEventsRepository
 
     Optional<List<AccountsMapperEvents>> findByEventsId(Long eventsId);
 
-    Optional<List<AccountsMapperEvents>> findByAccountsId(Long accountsId);
+    @Query("SELECT ae FROM AccountsMapperEvents ae LEFT JOIN FETCH Accounts a ON ae.accounts = a WHERE a.email = :email")
+    Optional<List<AccountsMapperEvents>> findByAccountsEmail(String  email);
 }
