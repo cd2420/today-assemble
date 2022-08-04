@@ -16,6 +16,7 @@ public enum ErrorCode {
     , WRONG_EMAIL_TOKEN("이메일 토큰이 잘못되었습니다.")
     , NOT_MATCH_PASSWORD("패스워드가 일치하지 않습니다.")
     , NOT_GET_EMAIL_VERIFIED("이메일 인증을 수락하지 않았습니다.")
+    , WRONG_JWT("이메일 인증을 수락하지 않았습니다.")
 
     , DATE_OVERLAP("날짜가 겹칩니다")
     , NO_EVENTS_ID("잘못된 event id입니다.")
