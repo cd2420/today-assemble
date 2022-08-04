@@ -14,6 +14,8 @@ public interface AccountsService extends UserDetailsService {
 
     AccountsDto getAccount(Long accountId);
 
+    AccountsDto getAccount(Accounts accounts);
+
     List<EventsDto> getAccountLikesEventList(Pageable pageable, Accounts accounts);
 
     AccountsDto signUp(CreateAccountReq createAccountReq, HttpServletResponse response);
@@ -32,7 +34,11 @@ public interface AccountsService extends UserDetailsService {
 
     List<EventsDto> getAccountParticipateEvents(Pageable pageable, Accounts accounts);
 
-    Integer getAccountLikesEventSize(Long id);
+    Integer getAccountLikesEventSize(Accounts accounts);
 
-    Integer getParticipateEventSize(Long accounts);
+    Integer getParticipateEventSize(Accounts accounts);
+
+    Boolean checkAccountParticipateEvents(Accounts accounts, Long eventsId);
+
+    Boolean checkAccountLikesEvents(Accounts accounts, Long eventsId);
 }

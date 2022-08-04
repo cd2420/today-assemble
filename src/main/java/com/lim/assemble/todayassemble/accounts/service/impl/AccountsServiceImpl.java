@@ -3,6 +3,7 @@ package com.lim.assemble.todayassemble.accounts.service.impl;
 import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsImages;
+import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.accounts.projection.LoadUserByUsernameAccounts;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsEventsRepository;
 import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
@@ -71,8 +72,19 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional(readOnly = true)
+    public AccountsDto getAccount(Accounts accounts) {
+        if (accounts == null ) {
+            throw new TodayAssembleException(ErrorCode.WRONG_JWT);
+        }
+        accounts = getAccountsByEmail(accounts.getEmail());
+        return AccountsDto.from(accounts);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
     public List<EventsDto> getAccountLikesEventList(Pageable pageable, Accounts accounts) {
-        accounts = getAccountsFromRepositoryByAccountId(accounts.getId());
+        accounts = getAccountsByEmail(accounts.getEmail());
         List<EventsDto> accountLikesEventList = likesService.getAccountLikesEventList(accounts)
                                                             .stream().sorted(Comparator.comparing(EventsDto::getEventsTime))
                                                             .collect(Collectors.toList());
@@ -92,10 +104,10 @@ public class AccountsServiceImpl implements AccountsService {
     @Transactional(readOnly = true)
     public List<EventsDto> getAccountParticipateEvents(Pageable pageable, Accounts accounts) {
 
-        List<Events> eventsList = accountsEventsRepository.findByAccountsId(accounts.getId())
+        List<Events> eventsList = accountsEventsRepository.findByAccountsEmail(accounts.getEmail())
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
                 .stream()
-                .map(item -> item.getEvents())
+                .map(AccountsMapperEvents::getEvents)
                 .sorted(Comparator.comparing(Events::getEventsTime))
                 .collect(Collectors.toList());
 
@@ -108,18 +120,22 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Integer getAccountLikesEventSize(Long id) {
+    public Integer getAccountLikesEventSize(Accounts accounts) {
 
-        return likesRepository.findByAccountsId(id)
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
+        return likesRepository.findByAccountsEmail(accounts.getEmail())
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
                 .size();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Integer getParticipateEventSize(Long id) {
+    public Integer getParticipateEventSize(Accounts accounts) {
 
-        return accountsEventsRepository.findByAccountsId(id)
+        return accountsEventsRepository.findByAccountsEmail(accounts.getEmail())
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT))
                 .size();
     }
@@ -127,8 +143,7 @@ public class AccountsServiceImpl implements AccountsService {
     private <T> PageImpl<T> getPageImpl(Pageable pageable, List<T> list) {
         final int start = (int) pageable.getOffset();
         final int end = Math.min((start + pageable.getPageSize()), list.size());
-        final PageImpl<T> page = new PageImpl<>(list.subList(start, end), pageable, list.size());
-        return page;
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
 
     @Override
@@ -260,12 +275,29 @@ public class AccountsServiceImpl implements AccountsService {
                 .password(loadUserByUsernameAccounts.getPassword())
                 .emailVerified(loadUserByUsernameAccounts.getEmailVerified())
                 .accountType(loadUserByUsernameAccounts.getAccountType())
-                .name(loadUserByUsernameAccounts.getName())
-                .gender(loadUserByUsernameAccounts.getGender())
-                .birth(loadUserByUsernameAccounts.getBirth())
-                .age(loadUserByUsernameAccounts.getAge())
                 .build();
-        accounts.setId(loadUserByUsernameAccounts.getId());
         return new UserAccount(accounts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean checkAccountParticipateEvents(Accounts accounts, Long eventsId) {
+        accounts = getAccountsByEmail(accounts.getEmail());
+        if (accounts.getAccountsEventsSet() != null) {
+            return accounts.getAccountsEventsSet().stream()
+                    .anyMatch(item -> item.getEvents().getId().equals(eventsId));
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean checkAccountLikesEvents(Accounts accounts, Long eventsId) {
+        accounts = getAccountsByEmail(accounts.getEmail());
+        if (accounts.getAccountsEventsSet() != null) {
+            return accounts.getLikesSet().stream()
+                    .anyMatch(item -> item.getEvents().getId().equals(eventsId));
+        }
+        return false;
     }
 }
