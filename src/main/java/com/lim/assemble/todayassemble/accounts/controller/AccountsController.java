@@ -5,8 +5,6 @@ import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import com.lim.assemble.todayassemble.exception.ErrorCode;
-import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -55,10 +53,7 @@ public class AccountsController {
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
-        if (accounts == null ) {
-            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
-        }
-        AccountsDto accountsDto = AccountsDto.from(accounts);
+        AccountsDto accountsDto = accountsService.getAccount(accounts);
         return ResponseEntity.ok(accountsDto);
     }
 
@@ -110,7 +105,7 @@ public class AccountsController {
 
     ) {
         log.info("api : {}" , request.getRequestURI());
-        Integer total = accountsService.getAccountLikesEventSize(accounts.getId());
+        Integer total = accountsService.getAccountLikesEventSize(accounts);
         return ResponseEntity.ok(total);
     }
 
@@ -142,7 +137,7 @@ public class AccountsController {
     public ResponseEntity<Integer> getParticipateEventSize(
             @CurrentAccount Accounts accounts
     ) {
-        return ResponseEntity.ok(accountsService.getParticipateEventSize(accounts.getId()));
+        return ResponseEntity.ok(accountsService.getParticipateEventSize(accounts));
     }
 
     /**
@@ -159,12 +154,7 @@ public class AccountsController {
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
-
-        boolean result = false;
-        if (accounts.getAccountsEventsSet() != null) {
-            result = accounts.getAccountsEventsSet().stream()
-                    .anyMatch(item -> item.getEvents().getId().equals(eventsId));
-        }
+        Boolean result = accountsService.checkAccountParticipateEvents(accounts, eventsId);
         return ResponseEntity.ok(result);
     }
 
@@ -182,12 +172,7 @@ public class AccountsController {
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
-
-        boolean result = false;
-        if (accounts.getAccountsEventsSet() != null) {
-            result = accounts.getLikesSet().stream()
-                    .anyMatch(item -> item.getEvents().getId().equals(eventsId));
-        }
+        Boolean result = accountsService.checkAccountLikesEvents(accounts, eventsId);
         return ResponseEntity.ok(result);
     }
 }
