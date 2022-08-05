@@ -1,6 +1,7 @@
 package com.lim.assemble.todayassemble.likes.service.impl;
 
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.repository.EventsRepository;
@@ -21,9 +22,13 @@ public class LikesServiceImpl implements LikesService {
 
     private final LikesRepository likesRepository;
     private final EventsRepository eventsRepository;
+    private final AccountsRepository accountsRepository;
 
     @Override
     public EventsDto manageLikes(Long eventsId, Accounts accounts) {
+
+        accounts = accountsRepository.findByEmail(accounts.getEmail(), Accounts.class)
+                                        .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_ACCOUNT));
 
         Optional<Likes> likesOptional = likesRepository.findByAccountsIdAndEventsId(accounts.getId(), eventsId);
         Events events = eventsRepository.findById(eventsId)
@@ -36,7 +41,6 @@ public class LikesServiceImpl implements LikesService {
         } else {
             // 2. 좋아요가 없을 경우 -> 좋아요 생성
             createLikes(accounts, events);
-
         }
 
         return EventsDto.from(events);

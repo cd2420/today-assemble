@@ -25,9 +25,6 @@ public class AccountsCUController {
      * 패스워드 없이 로그인
      * 1. email로 로그인 token 발급
      * 2. 로그인 token 으로 로그인
-     * @param accountsCredentials
-     * @param request
-     * @return
      */
     @PostMapping("/login")
     public ResponseEntity<Void> login(
@@ -41,10 +38,6 @@ public class AccountsCUController {
 
     /**
      * 회원가입
-     * @param createAccountReq
-     * @param request
-     * @param response
-     * @return
      */
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
@@ -59,10 +52,6 @@ public class AccountsCUController {
 
     /**
      * 좋아요 관리
-     * @param eventId
-     * @param accounts
-     * @param request
-     * @return
      */
     @PostMapping("/likes/events/{eventId}")
     public ResponseEntity<EventsDto> manageAccountLikesEvent(
@@ -76,55 +65,33 @@ public class AccountsCUController {
 
     /**
      * 회원정보 수정
-     * @param accountId
-     * @param updateAccountsReq
-     * @param accounts
-     * @param request
-     * @return
      */
-    @PutMapping("/{accountId}")
+    @PutMapping("")
     public ResponseEntity<AccountsDto> updateAccount(
-            @PathVariable Long accountId
-            , @RequestBody @Valid UpdateAccountsReq updateAccountsReq
+             @RequestBody @Valid UpdateAccountsReq updateAccountsReq
             , @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
-        log.info("api : {}, accountId : {}"
-                , request.getRequestURI()
-                , accountId
-        );
+        log.info("api : {}, updateAccountsReq : {}", request.getRequestURI(), updateAccountsReq);
 
-        return ResponseEntity.ok(accountsService.updateAccount(accountId, accounts, updateAccountsReq));
+        return ResponseEntity.ok(accountsService.updateAccount(accounts, updateAccountsReq));
     }
 
     /**
      * 회원 탈퇴
-     * @param accountId
-     * @param accounts
-     * @param request
-     * @return
      */
-    @DeleteMapping("/{accountId}")
+    @DeleteMapping("")
     public ResponseEntity<Void> deleteAccount(
-            @PathVariable Long accountId
-            , @CurrentAccount Accounts accounts
+            @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
-        log.info("api : {}, accountId : {}"
-                , request.getRequestURI()
-                , accountId
-        );
-        accountsService.deleteAccount(accountId, accounts);
+        log.info("api : {}" , request.getRequestURI());
+        accountsService.deleteAccount(accounts);
         return ResponseEntity.ok().build();
     }
 
     /**
      * 초대 응답
-     * @param accountId
-     * @param eventId
-     * @param response
-     * @param request
-     * @return
      */
     @PutMapping("/{accountId}/events/{eventId}")
     public ResponseEntity<Void> responseInvite(

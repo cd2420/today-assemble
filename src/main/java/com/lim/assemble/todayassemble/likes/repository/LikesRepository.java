@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LikesRepository extends JpaRepository<Likes, Long> {
+
     Optional<Likes> findByAccountsIdAndEventsId(Long accountsId, Long eventId);
 
-    @Query("SELECT l FROM Likes l LEFT JOIN FETCH Accounts a ON l.accounts = a WHERE a.email = :email")
+    @Query(value = "SELECT l FROM Likes l WHERE l.accounts.email = :email AND l.events.id = :eventId")
+    Optional<Likes> findByAccountsEmailAndEventsId(String email, Long eventId);
+
+    @Query(value = "SELECT l FROM Likes l LEFT JOIN FETCH Accounts a ON l.accounts = a WHERE a.email = :email")
     Optional<List<Likes>> findByAccountsEmail(String email);
 }

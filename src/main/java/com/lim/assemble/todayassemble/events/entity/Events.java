@@ -86,10 +86,10 @@ public class Events extends BaseEntity implements Serializable {
                 .tagsSet(Tags.returnTagsSetFrom(createEventsReq))
                 .build();
 
-        events.getEventsImagesSet().stream()
+        events.getEventsImagesSet()
                 .forEach(eventsImages -> eventsImages.setEvents(events));
 
-        events.getTagsSet().stream()
+        events.getTagsSet()
                 .forEach(tags -> tags.setEvents(events));
 
         return events;

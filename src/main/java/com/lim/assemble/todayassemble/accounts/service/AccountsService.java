@@ -28,7 +28,7 @@ public interface AccountsService extends UserDetailsService {
 
     void passwordEncode(AccountReq accountReq);
 
-    void deleteAccount(Long accountId, Accounts accounts);
+    void deleteAccount(Accounts accounts);
 
     void login(AccountsCredentials accountsCredentials);
 

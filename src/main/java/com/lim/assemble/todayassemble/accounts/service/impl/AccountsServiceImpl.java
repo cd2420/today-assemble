@@ -180,9 +180,7 @@ public class AccountsServiceImpl implements AccountsService {
     @Transactional
     public AccountsDto updateAccount(Accounts accounts, UpdateAccountsReq updateAccountsReq) {
 
-        accounts = accountsRepository.findById(accounts.getId()).orElseThrow(
-                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT)
-        );
+        accounts = getAccountsByEmail(accounts.getEmail());
 
         accounts.setName(updateAccountsReq.getName());
         accounts.setGender(updateAccountsReq.getGender());
@@ -240,14 +238,9 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     @Transactional
-    public void deleteAccount(Long accountId, Accounts accounts) {
-        // delete 시킬려는 대상이 본인이 맞는지 확인.
-        validationFactory
-                .createValidation(ValidateType.ACCOUNT)
-                .validate(ValidateSituationType.UPDATE, new UpdateAccountsDto(accountId, accounts.getId()));
-
+    public void deleteAccount(Accounts accounts) {
+        accounts = getAccountsByEmail(accounts.getEmail());
         accountsRepository.delete(accounts);
-
     }
 
     @Override

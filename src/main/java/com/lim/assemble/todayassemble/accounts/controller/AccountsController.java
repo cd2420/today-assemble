@@ -29,8 +29,6 @@ public class AccountsController {
 
     /**
      * 회원 리스트 조회
-     * @param request
-     * @return
      */
     @GetMapping("/list")
     public ResponseEntity<List<AccountsDto>> getAccountList(
@@ -43,9 +41,6 @@ public class AccountsController {
 
     /**
      * Jwt 로 회원 상세 조회
-     * @param accounts
-     * @param request
-     * @return
      */
     @GetMapping("")
     public ResponseEntity<AccountsDto> getAccountByJwt(
@@ -59,9 +54,6 @@ public class AccountsController {
 
     /**
      * 회원 id(seq)로 회원 조회
-     * @param accountId
-     * @param request
-     * @return
      */
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountsDto> getAccountByPathVariable(
@@ -75,10 +67,6 @@ public class AccountsController {
 
     /**
      * 내가 좋아요 누른 모임 리스트 조회
-     * @param accounts
-     * @param request
-     * @param pageable
-     * @return
      */
     @GetMapping("/likes/events")
     public ResponseEntity<List<EventsDto>> getAccountLikesEventList(
@@ -94,9 +82,6 @@ public class AccountsController {
 
     /**
      * 좋아요 누른 모임 개수
-     * @param accounts
-     * @param request
-     * @return
      */
     @GetMapping("/likes/events/size")
     public ResponseEntity<Integer> getAccountLikesEventSize(
@@ -111,10 +96,6 @@ public class AccountsController {
 
     /**
      * 내가 참여한 모임 리스트 조회
-     * @param accounts
-     * @param request
-     * @param pageable
-     * @return
      */
     @GetMapping("/events")
     public ResponseEntity<List<EventsDto>> getAccountParticipateEvents(
@@ -130,8 +111,6 @@ public class AccountsController {
 
     /**
      * 내가 참여하 모임 리스트 개수
-     * @param accounts
-     * @return
      */
     @GetMapping("/events/size")
     public ResponseEntity<Integer> getParticipateEventSize(
@@ -142,10 +121,6 @@ public class AccountsController {
 
     /**
      * 내가 참여중인 모임인지 확인
-     * @param accounts
-     * @param eventsId
-     * @param request
-     * @return
      */
     @GetMapping("/events/{eventsId}")
     public ResponseEntity<Boolean> checkAccountParticipateEvents(
@@ -160,10 +135,6 @@ public class AccountsController {
 
     /**
      * 내가 좋아요한 모임인지 확인
-     * @param accounts
-     * @param eventsId
-     * @param request
-     * @return
      */
     @GetMapping("/likes/{eventsId}")
     public ResponseEntity<Boolean> checkAccountLikesEvents(
