@@ -65,8 +65,8 @@ public class Accounts extends BaseEntity implements Serializable {
     @JsonBackReference
     private Set<Likes> likesSet = new HashSet<>();
 
-    @OneToOne(mappedBy = "accounts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonBackReference
     private AccountsImages accountsImages;
 
     public static Accounts from(CreateAccountReq createAccountReq) {
