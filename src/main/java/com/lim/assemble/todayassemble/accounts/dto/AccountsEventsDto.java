@@ -15,7 +15,7 @@ public class AccountsEventsDto<T> {
     public static <T extends Accounts> AccountsEventsDto from(T t) {
 
         return AccountsEventsDto.builder()
-                .returnDto(AccountsDto.from(t, false))
+                .returnDto(AccountsDto.from(t))
                 .build();
 
     }

@@ -14,7 +14,7 @@ public interface AccountsService extends UserDetailsService {
 
     AccountsDto getAccount(Long accountId);
 
-    AccountsDto getAccount(Accounts accounts);
+    AccountsDto getAccount(Accounts accounts, Boolean returnDataWithImages);
 
     List<EventsDto> getAccountLikesEventList(Pageable pageable, Accounts accounts);
 

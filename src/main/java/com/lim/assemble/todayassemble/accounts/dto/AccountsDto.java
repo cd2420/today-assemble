@@ -31,14 +31,14 @@ public class AccountsDto {
 
     private Boolean emailVerified;
 
-    public static AccountsDto from(Accounts accounts, boolean isShowImage) {
+    public static AccountsDto from(Accounts accounts) {
         return AccountsDto.builder()
                 .id(accounts.getId())
                 .name(accounts.getName())
                 .email(accounts.getEmail())
                 .gender(accounts.getGender())
                 .age(accounts.getAge())
-                .accountsImagesDto(isShowImage ? AccountsImagesDto.returnDto(accounts.getAccountsImages()) : new AccountsImagesDto())
+                .accountsImagesDto(new AccountsImagesDto())
                 .birth(accounts.getBirth())
                 .emailVerified(accounts.getEmailVerified())
                 .build();
@@ -54,6 +54,14 @@ public class AccountsDto {
                 .build();
     }
 
+    public static AccountsDto from(Accounts accounts, Boolean returnDataWithImages) {
+        AccountsDto accountsDto = from(accounts);
+        if (returnDataWithImages) {
+            accountsDto.setAccountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()));
+        }
+        return accountsDto;
+    }
+
     public static Set<AccountsDto> returnAccountsDtoSet(Set<AccountsMapperEvents> accountsEventsSet) {
         if (accountsEventsSet == null) {
             return new HashSet<>();
@@ -62,4 +70,6 @@ public class AccountsDto {
                 .map(AccountsDto::from)
                 .collect(Collectors.toSet());
     }
+
+
 }
