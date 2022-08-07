@@ -15,10 +15,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class AccountsImages extends Images {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accounts_id")
-    @JsonIgnore
-    private Accounts accounts;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "accounts_id")
+//    @JsonIgnore
+//    private Accounts accounts;
 
     @Builder
     public AccountsImages(
@@ -27,7 +27,7 @@ public class AccountsImages extends Images {
             , Accounts accounts) {
 
         super(imagesType, image);
-        this.accounts = accounts;
+//        this.accounts = accounts;
     }
 
 }
