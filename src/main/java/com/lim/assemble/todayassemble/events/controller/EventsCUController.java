@@ -6,10 +6,13 @@ import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.service.EventsService;
+import com.lim.assemble.todayassemble.exception.ErrorCode;
+import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,7 +31,7 @@ public class EventsCUController {
     @PostMapping("")
     public ResponseEntity<EventsDto> createEvents(
            @RequestBody @Valid CreateEventsReq createEventsReq
-           , @CurrentAccount Accounts accounts
+           , @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -36,6 +39,10 @@ public class EventsCUController {
                 , request.getRequestURI()
                 , createEventsReq
         );
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
 
         return ResponseEntity.ok(eventsService.createEvents(createEventsReq, accounts));
     }
@@ -55,6 +62,10 @@ public class EventsCUController {
                 , updateEventsContentsReq
         );
 
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsContentsReq, accounts));
     }
 
@@ -73,6 +84,10 @@ public class EventsCUController {
                 , updateEventsImagesReq
         );
 
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsImagesReq, accounts));
     }
 
@@ -88,6 +103,11 @@ public class EventsCUController {
         log.info("url : {}"
                 , request.getRequestURI()
         );
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         eventsService.deleteEvents(eventsId, accounts);
         return ResponseEntity.ok().build();
 
@@ -106,6 +126,10 @@ public class EventsCUController {
         log.info("url : {}"
                 , request.getRequestURI()
         );
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
 
         return ResponseEntity.ok(eventsService.participateEventsManage(eventsId, accounts));
     }

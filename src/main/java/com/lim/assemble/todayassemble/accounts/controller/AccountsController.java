@@ -4,11 +4,12 @@ import com.lim.assemble.todayassemble.accounts.dto.AccountsCredentials;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
-import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
-import com.lim.assemble.todayassemble.common.service.CommonService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import io.swagger.annotations.*;
+import com.lim.assemble.todayassemble.exception.ErrorCode;
+import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,11 @@ public class AccountsController {
             , HttpServletRequest request
     ) {
         log.info("api : {}, images: {}" , request.getRequestURI(), images);
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         AccountsDto accountsDto = accountsService.getAccount(accounts, images);
         return ResponseEntity.ok(accountsDto);
     }
@@ -72,6 +78,11 @@ public class AccountsController {
                     Pageable pageable
     ) {
         log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         List<EventsDto> eventsDtoList = accountsService.getAccountLikesEventList(pageable, accounts);
         return ResponseEntity.ok(eventsDtoList);
     }
@@ -84,6 +95,11 @@ public class AccountsController {
 
     ) {
         log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         Integer total = accountsService.getAccountLikesEventSize(accounts);
         return ResponseEntity.ok(total);
     }
@@ -97,6 +113,11 @@ public class AccountsController {
                     Pageable pageable
     ) {
         log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         List<EventsDto> eventsDtoList = accountsService.getAccountParticipateEvents(pageable, accounts);
         return ResponseEntity.ok(eventsDtoList);
     }
@@ -105,7 +126,14 @@ public class AccountsController {
     @GetMapping("/events/size")
     public ResponseEntity<Integer> getParticipateEventSize(
             @ApiIgnore @CurrentAccount Accounts accounts
+            , HttpServletRequest request
     ) {
+        log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         return ResponseEntity.ok(accountsService.getParticipateEventSize(accounts));
     }
 
@@ -117,6 +145,11 @@ public class AccountsController {
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         Boolean result = accountsService.checkAccountParticipateEvents(accounts, eventsId);
         return ResponseEntity.ok(result);
     }
@@ -129,6 +162,11 @@ public class AccountsController {
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         Boolean result = accountsService.checkAccountLikesEvents(accounts, eventsId);
         return ResponseEntity.ok(result);
     }

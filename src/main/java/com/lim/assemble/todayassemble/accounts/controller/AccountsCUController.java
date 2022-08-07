@@ -4,6 +4,8 @@ import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import com.lim.assemble.todayassemble.exception.ErrorCode;
+import com.lim.assemble.todayassemble.exception.TodayAssembleException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +57,11 @@ public class AccountsCUController {
             , HttpServletRequest request
     ) {
         log.info("api : {}, eventId: {}" , request.getRequestURI(), eventId);
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         return ResponseEntity.ok(accountsService.manageAccountLikesEvent(eventId, accounts));
     }
 
@@ -67,6 +74,10 @@ public class AccountsCUController {
     ) {
         log.info("api : {}, updateAccountsReq : {}", request.getRequestURI(), updateAccountsReq);
 
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         return ResponseEntity.ok(accountsService.updateAccount(accounts, updateAccountsReq));
     }
 
@@ -77,6 +88,11 @@ public class AccountsCUController {
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
+
+        if (accounts == null) {
+            throw new TodayAssembleException(ErrorCode.NO_ACCOUNT);
+        }
+
         accountsService.deleteAccount(accounts);
         return ResponseEntity.ok().build();
     }
