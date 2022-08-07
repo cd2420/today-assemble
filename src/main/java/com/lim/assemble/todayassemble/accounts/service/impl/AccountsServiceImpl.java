@@ -293,4 +293,17 @@ public class AccountsServiceImpl implements AccountsService {
         }
         return false;
     }
+
+    @Override
+    public String getJWT(AccountsCredentials accountsCredentials, HttpServletResponse response) {
+        Accounts accounts = getAccountsByEmail(accountsCredentials.getEmail());
+        String checkPassword = accountsCredentials.getPassword();
+
+        if (passwordEncoder.matches(checkPassword, accounts.getPassword())) {
+            commonService.loginWithToken(response, accounts);
+            return response.getHeader("Authorization");
+        } else {
+            throw new TodayAssembleException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+    }
 }

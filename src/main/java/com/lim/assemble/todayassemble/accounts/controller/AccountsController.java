@@ -1,13 +1,14 @@
 package com.lim.assemble.todayassemble.accounts.controller;
 
+import com.lim.assemble.todayassemble.accounts.dto.AccountsCredentials;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.CurrentAccount;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
+import com.lim.assemble.todayassemble.accounts.repository.AccountsRepository;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
+import com.lim.assemble.todayassemble.common.service.CommonService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -42,7 +44,7 @@ public class AccountsController {
     @GetMapping("")
     public ResponseEntity<AccountsDto> getAccountByJwt(
             @ApiIgnore @CurrentAccount Accounts accounts
-            , @RequestParam Boolean images
+            , @ApiParam(value = "리턴받을 객체에 이미지 넣을지 말지 결정") @RequestParam Boolean images
             , HttpServletRequest request
     ) {
         log.info("api : {}, images: {}" , request.getRequestURI(), images);
@@ -53,7 +55,7 @@ public class AccountsController {
     @ApiOperation(value = "회원 id(seq)로 조회")
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountsDto> getAccountByPathVariable(
-            @PathVariable Long accountId
+            @ApiParam(value = "조회할 회원 ID(seq)") @PathVariable Long accountId
             , HttpServletRequest request
     ) {
         log.info("api : {}, data : {}" , request.getRequestURI(), accountId);
@@ -111,7 +113,7 @@ public class AccountsController {
     @GetMapping("/events/{eventsId}")
     public ResponseEntity<Boolean> checkAccountParticipateEvents(
             @ApiIgnore @CurrentAccount Accounts accounts
-            , @PathVariable Long eventsId
+            , @ApiParam(value = "참여중인 모임 id") @PathVariable Long eventsId
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
@@ -123,11 +125,22 @@ public class AccountsController {
     @GetMapping("/likes/{eventsId}")
     public ResponseEntity<Boolean> checkAccountLikesEvents(
             @ApiIgnore @CurrentAccount Accounts accounts
-            , @PathVariable Long eventsId
+            , @ApiParam(value = "'좋아요' 누른 모임 id") @PathVariable Long eventsId
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
         Boolean result = accountsService.checkAccountLikesEvents(accounts, eventsId);
         return ResponseEntity.ok(result);
+    }
+
+    @ApiOperation(value = "JWT 값 받아오기 - (오직 swagger 용)")
+    @GetMapping("/jwt")
+    public ResponseEntity<String> getJwt(
+
+            @ApiParam(value = "jwt 받기위한 회원 인증") AccountsCredentials accountsCredentials
+            , HttpServletResponse response
+    ) {
+        String jwt = accountsService.getJWT(accountsCredentials, response);
+        return ResponseEntity.ok(jwt);
     }
 }

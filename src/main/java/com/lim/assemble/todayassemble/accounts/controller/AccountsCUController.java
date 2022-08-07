@@ -5,6 +5,7 @@ import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class AccountsCUController {
     @ApiOperation(value = "패스워드 없이 로그인", notes = "1. email로 로그인 token 발급\n2. 로그인 token 으로 로그인")
     @PostMapping("/login")
     public ResponseEntity<Void> login(
-            @RequestBody AccountsCredentials accountsCredentials
+            @ApiParam(value = "로그인 정보") @RequestBody AccountsCredentials accountsCredentials
             , HttpServletRequest request
     ) {
         log.info("api : {}, data : {}" , request.getRequestURI(), accountsCredentials);
@@ -37,7 +38,7 @@ public class AccountsCUController {
     @ApiOperation(value = "회원가입")
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
-            @RequestBody @Valid CreateAccountReq createAccountReq
+            @ApiParam(value = "회원가입 정보") @RequestBody @Valid CreateAccountReq createAccountReq
             , HttpServletRequest request
             , HttpServletResponse response
     ) {
@@ -49,7 +50,7 @@ public class AccountsCUController {
     @ApiOperation(value = "좋아요 관리")
     @PostMapping("/likes/events/{eventId}")
     public ResponseEntity<EventsDto> manageAccountLikesEvent(
-            @PathVariable Long eventId
+            @ApiParam(value = "'좋아요' 관리할 모임 id") @PathVariable Long eventId
             ,@ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
@@ -60,7 +61,7 @@ public class AccountsCUController {
     @ApiOperation(value = "회원정보 수정")
     @PutMapping("")
     public ResponseEntity<AccountsDto> updateAccount(
-             @RequestBody @Valid UpdateAccountsReq updateAccountsReq
+            @ApiParam(value = "회원정보 수정 데이터") @RequestBody @Valid UpdateAccountsReq updateAccountsReq
             ,@ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {

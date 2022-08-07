@@ -41,4 +41,6 @@ public interface AccountsService extends UserDetailsService {
     Boolean checkAccountParticipateEvents(Accounts accounts, Long eventsId);
 
     Boolean checkAccountLikesEvents(Accounts accounts, Long eventsId);
+
+    String getJWT(AccountsCredentials accountsCredentials, HttpServletResponse response);
 }
