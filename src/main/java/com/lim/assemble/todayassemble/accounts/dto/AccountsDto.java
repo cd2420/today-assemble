@@ -31,14 +31,14 @@ public class AccountsDto {
 
     private Boolean emailVerified;
 
-    public static AccountsDto from(Accounts accounts) {
+    public static AccountsDto from(Accounts accounts, boolean isShowImage) {
         return AccountsDto.builder()
                 .id(accounts.getId())
                 .name(accounts.getName())
                 .email(accounts.getEmail())
                 .gender(accounts.getGender())
                 .age(accounts.getAge())
-                .accountsImagesDto(AccountsImagesDto.returnDto(accounts.getAccountsImages()))
+                .accountsImagesDto(isShowImage ? AccountsImagesDto.returnDto(accounts.getAccountsImages()) : new AccountsImagesDto())
                 .birth(accounts.getBirth())
                 .emailVerified(accounts.getEmailVerified())
                 .build();

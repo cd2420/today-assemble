@@ -59,7 +59,7 @@ public class AccountsServiceImpl implements AccountsService {
         return Optional.of(accountsRepository.findAll())
                 .orElse(new ArrayList<>())
                 .stream()
-                .map(AccountsDto::from)
+                .map(item -> AccountsDto.from(item, false))
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class AccountsServiceImpl implements AccountsService {
     @Transactional(readOnly = true)
     public AccountsDto getAccount(Long accountId) {
         Accounts accounts = getAccountsFromRepositoryByAccountId(accountId);
-        return AccountsDto.from(accounts);
+        return AccountsDto.from(accounts, true);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AccountsServiceImpl implements AccountsService {
             throw new TodayAssembleException(ErrorCode.WRONG_JWT);
         }
         accounts = getAccountsByEmail(accounts.getEmail());
-        return AccountsDto.from(accounts);
+        return AccountsDto.from(accounts, false);
     }
 
 
@@ -163,7 +163,7 @@ public class AccountsServiceImpl implements AccountsService {
         accounts.getEmailSet().add(email);
 
         AccountsDto accountsDto
-                = AccountsDto.from(accountsRepository.save(accounts));
+                = AccountsDto.from(accountsRepository.save(accounts), false);
 
         commonService.loginWithToken(response, accounts);
         return accountsDto;
@@ -195,7 +195,7 @@ public class AccountsServiceImpl implements AccountsService {
             updateAccountPassword(accounts, updateAccountsReq);
         }
 
-        return AccountsDto.from(accounts);
+        return AccountsDto.from(accounts, true);
     }
 
     public void updateAccountsImage(Accounts accounts, AccountsImagesDto accountsImagesDto) {

@@ -153,7 +153,7 @@ public class RealEmailServiceImpl implements EmailService {
         }
 
         commonService.loginWithToken(response, accounts);
-        return AccountsDto.from(accounts);
+        return AccountsDto.from(accounts, false);
     }
 
 }
