@@ -4,10 +4,12 @@ import com.lim.assemble.todayassemble.accounts.dto.*;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.service.AccountsService;
 import com.lim.assemble.todayassemble.events.dto.EventsDto;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +23,7 @@ public class AccountsCUController {
 
     private final AccountsService accountsService;
 
-    /**
-     * 패스워드 없이 로그인
-     * 1. email로 로그인 token 발급
-     * 2. 로그인 token 으로 로그인
-     */
+    @ApiOperation(value = "패스워드 없이 로그인", notes = "1. email로 로그인 token 발급\n2. 로그인 token 으로 로그인")
     @PostMapping("/login")
     public ResponseEntity<Void> login(
             @RequestBody AccountsCredentials accountsCredentials
@@ -36,9 +34,7 @@ public class AccountsCUController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * 회원가입
-     */
+    @ApiOperation(value = "회원가입")
     @PostMapping("/sign-up")
     public ResponseEntity<AccountsDto> signUp(
             @RequestBody @Valid CreateAccountReq createAccountReq
@@ -50,26 +46,22 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.signUp(createAccountReq, response));
     }
 
-    /**
-     * 좋아요 관리
-     */
+    @ApiOperation(value = "좋아요 관리")
     @PostMapping("/likes/events/{eventId}")
     public ResponseEntity<EventsDto> manageAccountLikesEvent(
             @PathVariable Long eventId
-            , @CurrentAccount Accounts accounts
+            ,@ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
         log.info("api : {}, eventId: {}" , request.getRequestURI(), eventId);
         return ResponseEntity.ok(accountsService.manageAccountLikesEvent(eventId, accounts));
     }
 
-    /**
-     * 회원정보 수정
-     */
+    @ApiOperation(value = "회원정보 수정")
     @PutMapping("")
     public ResponseEntity<AccountsDto> updateAccount(
              @RequestBody @Valid UpdateAccountsReq updateAccountsReq
-            , @CurrentAccount Accounts accounts
+            ,@ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
         log.info("api : {}, updateAccountsReq : {}", request.getRequestURI(), updateAccountsReq);
@@ -77,12 +69,10 @@ public class AccountsCUController {
         return ResponseEntity.ok(accountsService.updateAccount(accounts, updateAccountsReq));
     }
 
-    /**
-     * 회원 탈퇴
-     */
+    @ApiOperation(value = "회원 탈퇴")
     @DeleteMapping("")
     public ResponseEntity<Void> deleteAccount(
-            @CurrentAccount Accounts accounts
+            @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
         log.info("api : {}" , request.getRequestURI());
@@ -93,25 +83,25 @@ public class AccountsCUController {
     /**
      * 초대 응답
      */
-    @PutMapping("/{accountId}/events/{eventId}")
-    public ResponseEntity<Void> responseInvite(
-            @PathVariable Long accountId
-            , @PathVariable Long eventId
-            , @RequestParam("response") Boolean response
-            , HttpServletRequest request
-    ) {
-        log.info("api : {}, accountId : {}, eventId : {}, response ; {} "
-                , request.getRequestURI()
-                , accountId
-                , eventId
-                , response
-        );
-        accountsService.responseInvite(
-                accountId
-                , eventId
-                , response
-        );
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping("/{accountId}/events/{eventId}")
+//    public ResponseEntity<Void> responseInvite(
+//            @PathVariable Long accountId
+//            , @PathVariable Long eventId
+//            , @RequestParam("response") Boolean response
+//            , HttpServletRequest request
+//    ) {
+//        log.info("api : {}, accountId : {}, eventId : {}, response ; {} "
+//                , request.getRequestURI()
+//                , accountId
+//                , eventId
+//                , response
+//        );
+//        accountsService.responseInvite(
+//                accountId
+//                , eventId
+//                , response
+//        );
+//        return ResponseEntity.ok().build();
+//    }
 
 }
