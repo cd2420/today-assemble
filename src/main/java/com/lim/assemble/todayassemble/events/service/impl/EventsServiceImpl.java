@@ -1,6 +1,5 @@
 package com.lim.assemble.todayassemble.events.service.impl;
 
-import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsEventsDto;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
@@ -50,7 +49,7 @@ public class EventsServiceImpl implements EventsService {
     public Integer getEventsListSize() {
 
         return Optional.of(eventsRepository.findByEventsTimeGreaterThan(LocalDateTime.now()))
-                .orElse(new ArrayList<Events>())
+                .orElse(new ArrayList<>())
                 .size();
     }
 
@@ -110,9 +109,7 @@ public class EventsServiceImpl implements EventsService {
         // 호스트가 생성할려는 모임이 기존에 자기가 만든 모임과 시간이 겹치는지 체크
         // , eventsType 별 필수 값 체크
         // }
-        accounts = accountsRepository.findByEmail(accounts.getEmail(), Accounts.class).orElseThrow(
-                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT)
-        );
+        accounts = getAccounts(accounts);
         Events events = Events.of(createEventsReq, accounts);
         validationFactory.createValidation(ValidateType.EVENT).validate(ValidateSituationType.CREATE, events);
 
@@ -125,7 +122,14 @@ public class EventsServiceImpl implements EventsService {
         );
     }
 
+    private Accounts getAccounts(Accounts accounts) {
+        return accountsRepository.findByEmail(accounts.getEmail(), Accounts.class).orElseThrow(
+                () -> new TodayAssembleException(ErrorCode.NO_ACCOUNT)
+        );
+    }
+
     public void accountsMappingEvents(Accounts accounts, Events events) {
+        accounts = getAccounts(accounts);
         Optional<AccountsMapperEvents> accountsMapperEventsOptional
                 = accountsEventsRepository.findByAccountsIdAndEventsId(accounts.getId(), events.getId());
 
@@ -195,6 +199,9 @@ public class EventsServiceImpl implements EventsService {
     public EventsDto updateEvents(UpdateEventsReqBase updateEventsReqBase, Accounts accounts) {
         Events events = eventsRepository.getById(updateEventsReqBase.getId());
         EventsDto eventsDto = EventsDto.builder().build();
+
+        accounts = getAccounts(accounts);
+
         updateEventsReqBase.setAccountsId(accounts.getId());
         // updateEventsReqBase 를 구체화한 객체에 따라 분기
         if (UpdateEventsContentsReq.class.equals(updateEventsReqBase.getClass())) {
@@ -280,6 +287,7 @@ public class EventsServiceImpl implements EventsService {
     @Transactional
     public void deleteEvents(Long eventsId, Accounts accounts) {
         // deleteEventsDto validation check : {호스트가 맞는지 체크}
+        accounts = getAccounts(accounts);
         DeleteEventsDto deleteEventsDto = new DeleteEventsDto();
         deleteEventsDto.setId(eventsId);
         deleteEventsDto.setAccountsId(accounts.getId());
@@ -294,58 +302,57 @@ public class EventsServiceImpl implements EventsService {
     public AccountsEventsDto<EventsDto> participateEventsManage(Long eventsId, Accounts accounts) {
 
         Events events = findEventsById(eventsId);
+        accounts = getAccounts(accounts);
         accountsMappingEvents(accounts, events);
-        AccountsEventsDto<EventsDto> accountsEventsDto = AccountsEventsDto.from(events);
-        return accountsEventsDto;
+        return (AccountsEventsDto<EventsDto>) AccountsEventsDto.from(events);
     }
 
-    @Override
-    @Transactional
-    public AccountsEventsDto<EventsDto> inviteEvents(Long eventsId, Accounts accounts, Long inviteAccountsId) {
-        // inviteEvents validation check : {호스트가 맞는지 체크, 최대 인원 초과하는지 체크, 초대 계정이 존재 하는지 체크 ,초대 할려는 사용자가 이미 있는지 체크}
-        validationFactory.createValidation(ValidateType.EVENT).validate(
-                ValidateSituationType.INVITE
-                , eventsId, accounts, inviteAccountsId
-        );
+//    @Override
+//    @Transactional
+//    public AccountsEventsDto<EventsDto> inviteEvents(Long eventsId, Accounts accounts, Long inviteAccountsId) {
+//        // inviteEvents validation check : {호스트가 맞는지 체크, 최대 인원 초과하는지 체크, 초대 계정이 존재 하는지 체크 ,초대 할려는 사용자가 이미 있는지 체크}
+//        validationFactory.createValidation(ValidateType.EVENT).validate(
+//                ValidateSituationType.INVITE
+//                , eventsId, accounts, inviteAccountsId
+//        );
+//
+//        Events events = eventsRepository.getById(eventsId);
+//        Accounts inviteAccounts = accountsRepository.getById(inviteAccountsId);
+//        AccountsMapperEvents accountsMapperEvents = AccountsMapperEvents.builder()
+//                .accounts(inviteAccounts)
+//                .events(events)
+//                .isParticipating(false)
+//                .build();
+//
+//        createAccountMapperEvents(inviteAccounts, events, accountsMapperEvents);
+//        AccountsEventsDto<EventsDto> eventsDto = AccountsEventsDto.from(events);
+//        return eventsDto;
+//    }
 
-        Events events = eventsRepository.getById(eventsId);
-        Accounts inviteAccounts = accountsRepository.getById(inviteAccountsId);
-        AccountsMapperEvents accountsMapperEvents = AccountsMapperEvents.builder()
-                .accounts(inviteAccounts)
-                .events(events)
-                .isParticipating(false)
-                .build();
-
-        createAccountMapperEvents(inviteAccounts, events, accountsMapperEvents);
-        AccountsEventsDto<EventsDto> eventsDto = AccountsEventsDto.from(events);
-        return eventsDto;
-    }
-
-    @Override
-    @Transactional
-    public AccountsEventsDto<AccountsDto> responseEventsInvite(
-            Long eventsId
-            , Accounts accounts
-            , UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq) {
-        // responseInviteEvents validation check : {해당 eventsId에 초대 된게 맞는 지 체크}
-        validationFactory.createValidation(ValidateType.EVENT).validate(
-                ValidateSituationType.RESPONSE_EVENTS_INVITE
-                , eventsId, accounts.getId());
-
-        Events events = eventsRepository.getById(eventsId);
-        AccountsMapperEvents accountsMapperEvents = accountsEventsRepository
-                .findByAccountsIdAndEventsId(accounts.getId(), eventsId).get();
-
-        if (updateAccountsMapperEventsReq.getResponse()) {
-            accountsMapperEvents.setIsParticipating(true);
-            createAccountMapperEvents(accounts, events, accountsMapperEvents);
-        } else {
-            leaveEvents(accountsMapperEvents, accounts, events);
-        }
-
-        AccountsEventsDto<AccountsDto> accountsEventsDto = AccountsEventsDto.from(accounts);
-        return accountsEventsDto;
-    }
+//    @Override
+//    @Transactional
+//    public AccountsEventsDto<AccountsDto> responseEventsInvite(
+//            Long eventsId
+//            , Accounts accounts
+//            , UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq) {
+//        // responseInviteEvents validation check : {해당 eventsId에 초대 된게 맞는 지 체크}
+//        validationFactory.createValidation(ValidateType.EVENT).validate(
+//                ValidateSituationType.RESPONSE_EVENTS_INVITE
+//                , eventsId, accounts.getId());
+//
+//        Events events = eventsRepository.getById(eventsId);
+//        AccountsMapperEvents accountsMapperEvents = accountsEventsRepository
+//                .findByAccountsIdAndEventsId(accounts.getId(), eventsId).get();
+//
+//        if (updateAccountsMapperEventsReq.getResponse()) {
+//            accountsMapperEvents.setIsParticipating(true);
+//            createAccountMapperEvents(accounts, events, accountsMapperEvents);
+//        } else {
+//            leaveEvents(accountsMapperEvents, accounts, events);
+//        }
+//
+//        return (AccountsEventsDto<AccountsDto>) AccountsEventsDto.from(accounts);
+//    }
 
 
 }

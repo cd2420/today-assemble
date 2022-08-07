@@ -113,40 +113,40 @@ public class EventsCUController {
     /**
      * Events 초대
      */
-    @PostMapping("/{eventsId}/accounts/{accountsId}")
-    public ResponseEntity<AccountsEventsDto<EventsDto>> inviteEvents(
-            @PathVariable Long eventsId
-            , @PathVariable Long accountsId
-            , @CurrentAccount Accounts accounts
-            , HttpServletRequest request
-    ) {
-
-        log.info("url : {}"
-                , request.getRequestURI()
-        );
-
-        return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
-    }
+//    @PostMapping("/{eventsId}/accounts/{accountsId}")
+//    public ResponseEntity<AccountsEventsDto<EventsDto>> inviteEvents(
+//            @PathVariable Long eventsId
+//            , @PathVariable Long accountsId
+//            , @CurrentAccount Accounts accounts
+//            , HttpServletRequest request
+//    ) {
+//
+//        log.info("url : {}"
+//                , request.getRequestURI()
+//        );
+//
+//        return ResponseEntity.ok(eventsService.inviteEvents(eventsId, accounts, accountsId));
+//    }
 
     /**
      * Events 초대 응답
      */
-    @PutMapping("/{eventsId}/accounts")
-    public ResponseEntity<AccountsEventsDto<AccountsDto>> responseEventsInvite(
-            @PathVariable Long eventsId
-            , @CurrentAccount Accounts accounts
-            , @RequestBody @Valid UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq
-            , HttpServletRequest request
-    ) {
-        log.info("url : {}, data : {}"
-                , request.getRequestURI()
-                , updateAccountsMapperEventsReq
-        );
-
-        return ResponseEntity.ok(eventsService.responseEventsInvite(
-                eventsId
-                , accounts
-                , updateAccountsMapperEventsReq)
-        );
-    }
+//    @PutMapping("/{eventsId}/accounts")
+//    public ResponseEntity<AccountsEventsDto<AccountsDto>> responseEventsInvite(
+//            @PathVariable Long eventsId
+//            , @CurrentAccount Accounts accounts
+//            , @RequestBody @Valid UpdateAccountsMapperEventsReq updateAccountsMapperEventsReq
+//            , HttpServletRequest request
+//    ) {
+//        log.info("url : {}, data : {}"
+//                , request.getRequestURI()
+//                , updateAccountsMapperEventsReq
+//        );
+//
+//        return ResponseEntity.ok(eventsService.responseEventsInvite(
+//                eventsId
+//                , accounts
+//                , updateAccountsMapperEventsReq)
+//        );
+//    }
 }
