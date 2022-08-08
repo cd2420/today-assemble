@@ -8,6 +8,8 @@ import com.lim.assemble.todayassemble.events.dto.*;
 import com.lim.assemble.todayassemble.events.service.EventsService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,10 @@ public class EventsCUController {
 
     private final EventsService eventsService;
 
-    /**
-     * Events 생성
-     */
+    @ApiOperation(value = "모임 생성", notes = "JWT 토큰 필수")
     @PostMapping("")
     public ResponseEntity<EventsDto> createEvents(
-           @RequestBody @Valid CreateEventsReq createEventsReq
+           @ApiParam(value = "모임 생성 데이터") @RequestBody @Valid CreateEventsReq createEventsReq
            , @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
@@ -47,13 +47,11 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.createEvents(createEventsReq, accounts));
     }
 
-    /**
-     * Events 수정
-     */
+    @ApiOperation(value = "모임 수정", notes = "JWT 토큰 필수")
     @PutMapping("")
     public ResponseEntity<EventsDto> updateEvents(
-            @RequestBody @Valid UpdateEventsContentsReq updateEventsContentsReq
-            , @CurrentAccount Accounts accounts
+            @ApiParam(value = "모임 수정 데이터 - 이미지 데이터 제외") @RequestBody @Valid UpdateEventsContentsReq updateEventsContentsReq
+            , @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -69,13 +67,11 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsContentsReq, accounts));
     }
 
-    /**
-     * Events sub images 수정
-     */
+    @ApiOperation(value = "모임 이미지 관리", notes = "JWT 토큰 필수")
     @PutMapping("/images")
     public ResponseEntity<EventsDto> updateEventsImages(
-            @RequestBody @Valid UpdateEventsImagesReq updateEventsImagesReq
-            , @CurrentAccount Accounts accounts
+            @ApiParam(value = "모임 이미지 데이터") @RequestBody @Valid UpdateEventsImagesReq updateEventsImagesReq
+            , @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 
@@ -91,13 +87,11 @@ public class EventsCUController {
         return ResponseEntity.ok(eventsService.updateEvents(updateEventsImagesReq, accounts));
     }
 
-    /**
-     * Events 삭제
-     */
+    @ApiOperation(value = "모임 삭제", notes = "JWT 토큰 필수")
     @DeleteMapping("/{eventsId}")
     public ResponseEntity<Void> deleteEvents(
-            @PathVariable Long eventsId
-            , @CurrentAccount Accounts accounts
+            @ApiParam(value = "삭제할 모임 Id(seq)") @PathVariable Long eventsId
+            , @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
         log.info("url : {}"
@@ -113,13 +107,11 @@ public class EventsCUController {
 
     }
 
-    /**
-     * Events 참여 관리
-     */
+    @ApiOperation(value = "모임 참여 관리", notes = "JWT 토큰 필수")
     @PostMapping("/{eventsId}/accounts")
     public ResponseEntity<AccountsEventsDto<EventsDto>> participateEventsManage(
-            @PathVariable Long eventsId
-            , @CurrentAccount Accounts accounts
+            @ApiParam(value = "참여 관리할 모임 Id(seq)") @PathVariable Long eventsId
+            , @ApiIgnore @CurrentAccount Accounts accounts
             , HttpServletRequest request
     ) {
 

@@ -15,7 +15,7 @@ public interface EventsService {
 
     EventsDto getEvents(Long eventId);
 
-    Integer getParticipateEventsAccounts(Long eventId);
+    Integer getParticipateEventsAccountsSize(Long eventId);
 
     EventsDto createEvents(CreateEventsReq createEventsReq, Accounts accounts);
 

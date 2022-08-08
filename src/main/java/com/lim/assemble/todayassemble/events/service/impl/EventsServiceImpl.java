@@ -90,7 +90,7 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Integer getParticipateEventsAccounts(Long eventId) {
+    public Integer getParticipateEventsAccountsSize(Long eventId) {
         return accountsEventsRepository.findByEventsId(eventId)
                 .orElseThrow(() -> new TodayAssembleException(ErrorCode.NO_EVENTS_ID))
                 .size();
