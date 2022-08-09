@@ -1,4 +1,4 @@
-# 🙋‍♂️ Today-Assembel - 오늘의 모임 백엔드 서버
+# 🙋‍♂️ Today-Assemble - 오늘의 모임 백엔드 서버
 
 <br>
 
