@@ -1,5 +1,6 @@
 *.class
 *.iml
+application.yml
 /target/classes/com.lim.assemble.todayassemble.mapper/AccountsMapper.xml
 /.idea/compiler.xml
 /.idea/dbnavigator.xml
