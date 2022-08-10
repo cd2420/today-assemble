@@ -3,7 +3,6 @@ package com.lim.assemble.todayassemble.events.dto;
 import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.EventsType;
 import com.lim.assemble.todayassemble.tags.dto.TagsDto;
-import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-@Builder
 public class CreateEventsReq {
 
     @NotBlank
