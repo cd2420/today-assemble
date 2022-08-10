@@ -1,11 +1,13 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +29,7 @@ public class AccountsDto {
 
     private AccountsImagesDto accountsImagesDto;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime birth;
 
     private Boolean emailVerified;
