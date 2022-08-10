@@ -1,5 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class UpdateAccountsReq {
     private Gender gender;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime birth;
 
     @NotNull
