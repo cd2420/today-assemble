@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.accounts.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.accounts.dto.CreateAccountReq;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.AccountsType;
@@ -52,20 +52,19 @@ public class Accounts extends BaseEntity {
     private LocalDateTime emailLoginTokenGeneratedAt;
 
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<AccountsMapperEvents> accountsEventsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     @Setter
     private Set<Email> emailSet = new HashSet<>();
 
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<Likes> likesSet = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonBackReference
     private AccountsImages accountsImages;
 
     public static Accounts from(CreateAccountReq createAccountReq) {

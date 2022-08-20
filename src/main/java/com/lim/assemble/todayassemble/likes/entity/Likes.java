@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.likes.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.events.entity.Events;
@@ -19,12 +19,12 @@ public class Likes extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounts_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Accounts accounts;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "events_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Events events;
 
 

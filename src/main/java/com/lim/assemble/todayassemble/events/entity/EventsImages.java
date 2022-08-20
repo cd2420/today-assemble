@@ -1,7 +1,6 @@
 package com.lim.assemble.todayassemble.events.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.lim.assemble.todayassemble.common.entity.Images;
 import com.lim.assemble.todayassemble.common.type.ImagesType;
 import com.lim.assemble.todayassemble.events.dto.CreateEventsReq;
@@ -23,7 +22,7 @@ public class EventsImages extends Images {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "events_id")
-    @JsonIgnore
+    @JsonBackReference
     private Events events;
 
     @Builder

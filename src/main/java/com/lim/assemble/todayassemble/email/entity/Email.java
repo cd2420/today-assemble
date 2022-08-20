@@ -1,6 +1,6 @@
 package com.lim.assemble.todayassemble.email.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
@@ -19,7 +19,7 @@ public class Email extends BaseEntity {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounts_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Accounts accounts;
 
     @Enumerated(EnumType.STRING)

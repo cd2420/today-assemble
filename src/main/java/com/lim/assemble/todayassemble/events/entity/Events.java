@@ -1,7 +1,7 @@
 package com.lim.assemble.todayassemble.events.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.entity.BaseEntity;
@@ -32,7 +32,7 @@ public class Events extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "host_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Accounts accounts;
 
     private Integer maxMembers;
@@ -51,19 +51,19 @@ public class Events extends BaseEntity {
     private String latitude;
 
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<EventsImages> eventsImagesSet = new HashSet<>();
 
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<Likes> likesSet = new HashSet<>();
 
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<AccountsMapperEvents> accountsEventsSet = new HashSet<>();
 
     @OneToMany(mappedBy = "events", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
     private Set<Tags> tagsSet = new HashSet<>();
 
     public static Events of(CreateEventsReq createEventsReq, Accounts accounts) {
