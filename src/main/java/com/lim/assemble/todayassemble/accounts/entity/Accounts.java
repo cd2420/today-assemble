@@ -10,7 +10,6 @@ import com.lim.assemble.todayassemble.likes.entity.Likes;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +21,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Accounts extends BaseEntity implements Serializable {
+public class Accounts extends BaseEntity {
 
     private String name;
 

@@ -13,7 +13,6 @@ import com.lim.assemble.todayassemble.tags.entity.Tags;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +23,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Events extends BaseEntity implements Serializable {
+public class Events extends BaseEntity {
 
     private String name;
 

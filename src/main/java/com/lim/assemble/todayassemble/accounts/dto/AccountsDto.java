@@ -7,7 +7,6 @@ import com.lim.assemble.todayassemble.common.type.Gender;
 import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
