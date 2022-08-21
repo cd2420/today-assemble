@@ -1,6 +1,5 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lim.assemble.todayassemble.accounts.entity.Accounts;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.Gender;
@@ -28,7 +27,7 @@ public class AccountsDto {
 
     private AccountsImagesDto accountsImagesDto;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime birth;
 
     private Boolean emailVerified;

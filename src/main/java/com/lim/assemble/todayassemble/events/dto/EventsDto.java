@@ -1,6 +1,5 @@
 package com.lim.assemble.todayassemble.events.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lim.assemble.todayassemble.accounts.dto.AccountsDto;
 import com.lim.assemble.todayassemble.accounts.entity.AccountsMapperEvents;
 import com.lim.assemble.todayassemble.common.type.EventsType;
@@ -33,7 +32,7 @@ public class EventsDto {
 
     private EventsType eventsType;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime eventsTime;
 
     private Long takeTime;
