@@ -7,7 +7,9 @@ import com.lim.assemble.todayassemble.common.property.AppProperties;
 import com.lim.assemble.todayassemble.common.service.CommonService;
 import com.lim.assemble.todayassemble.common.type.EmailsType;
 import com.lim.assemble.todayassemble.email.dto.EmailMessage;
+import com.lim.assemble.todayassemble.email.factory.EmailFactory;
 import com.lim.assemble.todayassemble.email.entity.Email;
+import com.lim.assemble.todayassemble.email.factory.EmailForm;
 import com.lim.assemble.todayassemble.email.service.EmailService;
 import com.lim.assemble.todayassemble.exception.ErrorCode;
 import com.lim.assemble.todayassemble.exception.TodayAssembleException;
@@ -31,22 +33,18 @@ public class RealEmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final AppProperties appProperties;
     private final TemplateEngine templateEngine;
+    private final EmailFactory emailFactory;
 
     private final AccountsRepository accountsRepository;
     private final CommonService commonService;
 
     @Override
     public Object sendEmail(Accounts accounts, EmailsType emailsType) {
-        switch (emailsType) {
-            case VERIFY:
-            case LOGIN:
-                return getEmail(accounts, emailsType);
-            default:
-                return null;
-        }
+        return getEmail(accounts, emailsType);
     }
 
     private Email getEmail(Accounts accounts, EmailsType emailsType) {
+
         EmailMessage emailMessage = getEmailMessage(accounts, emailsType);
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -72,28 +70,8 @@ public class RealEmailServiceImpl implements EmailService {
 
     private EmailMessage getEmailMessage(Accounts accounts, EmailsType emailsType) {
 
-//        String url = "";
-        String linkName = "";
-        String payLoad = "";
-        String subject = "";
-        String token = "";
-        String type = "";
-
-        if (emailsType == EmailsType.VERIFY) {
-//            url = "home";
-            linkName = "이메일 인증하기";
-            payLoad = "오늘의 모임 서비스를 사용하려면 링크를 클릭하세요.";
-            subject = "오늘의 모임, 회원 가입 인증";
-            token = accounts.getEmailCheckToken();
-            type = "email-verify";
-        } else {
-//            url = "home";
-            linkName = "이메일 로그인하기";
-            payLoad = "오늘의 모임 로그인 하시려면 링크를 클릭하세요.";
-            subject = "오늘의 모임, 이메일로 로그인";
-            token = accounts.getEmailLoginToken();
-            type = "email-login";
-        }
+        EmailForm emailForm = emailFactory.createValidation(emailsType);
+        emailForm.setToken(accounts);
 
         Context context = new Context();
         context.setVariable(
@@ -101,19 +79,19 @@ public class RealEmailServiceImpl implements EmailService {
                 ,
                 "/"
 //                        + url
-                        + "?token="  + token
+                        + "?token="  + emailForm.getToken()
                         + "&email=" + accounts.getEmail()
-                        + "&type="  + type
+                        + "&type="  + emailForm.getType()
         );
         context.setVariable("nickname", accounts.getName());
-        context.setVariable("linkName", linkName);
-        context.setVariable("message", payLoad);
+        context.setVariable("linkName", emailForm.getLinkName());
+        context.setVariable("message", emailForm.getPayLoad());
         context.setVariable("host", appProperties.getFronthost());
         String message = templateEngine.process("mail/simple-link", context);
 
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(accounts.getEmail())
-                .subject(subject)
+                .subject(emailForm.getSubject())
                 .message(message)
                 .build();
         return emailMessage;
