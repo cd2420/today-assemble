@@ -20,11 +20,8 @@ public class ValidationFactory {
     }
 
     public Validation createValidation(ValidateType validateType) {
-        if (validateType == ValidateType.ACCOUNT) {
-            return validationMap.get(ValidateType.ACCOUNT);
-        } else {
-            return validationMap.get(ValidateType.EVENT);
-        }
+
+        return validationMap.get(validateType);
 
     }
 

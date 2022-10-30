@@ -1,6 +1,7 @@
 package com.lim.assemble.todayassemble.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,7 +41,7 @@ public class GlobalErrorExceptionHandler {
     ) {
         String message =
                 ex.getBindingResult().getFieldErrors().stream()
-                        .map(x -> x.getDefaultMessage())
+                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
                         .collect(Collectors.toList()).get(0);
         log.info("$$$$$$$$$ url: {}, message: {}"
                 , request.getRequestURI()
@@ -52,5 +53,7 @@ public class GlobalErrorExceptionHandler {
                 , ErrorHttpStatusMapper.mapToStatus(badRequest)
         );
     }
+
+
 
 }

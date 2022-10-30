@@ -8,7 +8,6 @@ import com.lim.assemble.todayassemble.events.entity.Events;
 import com.lim.assemble.todayassemble.events.entity.EventsImages;
 import com.lim.assemble.todayassemble.likes.entity.Likes;
 import com.lim.assemble.todayassemble.tags.entity.Tags;
-import com.lim.assemble.todayassemble.zooms.entity.Zooms;
 
 import java.time.LocalDateTime;
 
@@ -38,20 +37,11 @@ public class EntityFactory {
             return createTags(
                     createEvents(createAccounts())
             );
-        } else {
-            return createZooms(
-                    createEvents(createAccounts())
-            );
         }
+        return null;
     }
 
-    private static Zooms createZooms(Events events) {
-        return Zooms.builder()
-                .events(events)
-                .url("~~~~/~~~/~~~/~~~.com")
-                .status(true)
-                .build();
-    }
+
 
     private static Tags createTags(Events events) {
         return Tags.builder()
@@ -86,7 +76,6 @@ public class EntityFactory {
     private static Events createEvents(Accounts accounts) {
         return Events.builder()
                 .name("스파이더맨 보러갈 모임")
-                .hostAccountsId(accounts.getId())
                 .description("영화 모임~~~~~~~~~~")
                 .accounts(accounts)
                 .maxMembers(4)

@@ -73,7 +73,6 @@ class EventsRepositoryTest {
             givenEventsList.add(
                     Events.builder()
                     .name("스파이더맨 보러갈 모임" + i)
-                    .hostAccountsId(accounts.getId())
                     .description("영화 모임~~~~~~~~~~")
                     .accounts(accounts)
                     .maxMembers(4)

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app")
 public class AppProperties {
 
-    private String host;
     private String fronthost;
+
 }

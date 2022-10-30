@@ -1,6 +1,5 @@
 package com.lim.assemble.todayassemble.accounts.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lim.assemble.todayassemble.common.message.ValidationMessage;
 import com.lim.assemble.todayassemble.common.type.Gender;
 import lombok.Data;
